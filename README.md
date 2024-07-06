@@ -8,7 +8,7 @@
                     |
                     main.py
 
-# pygame 与 Holdem 模块的交互
+# pygame 与 Holdem 模块的交互111
   1.holdem 中的玩家座位，即起始顺序，与 pygame 中绘画玩家列表里的索引(index)一致
   2.使用图形视窗(GUI) 或 文本界面(TUI)时，holdem()接收 pygame 或 命令行打印 的相关函数，于 Holdem 模块内进行操作，因为没个玩家下注后将更新并打印数据，否则将全部玩家下注和才打印数据
 
