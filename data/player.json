@@ -3,42 +3,36 @@
         {
             "Id": 1,
             "name": "Peter",
-            "username":"Peter",
             "password":"832jce83912",
             "chip": 1000
         },
         {
             "Id": 2,
             "name": "Amy",
-            "username":"Amy",
             "password":"832jce83912",
             "chip": 1000
         },
         {
             "Id": 3,
             "name": "Tom",
-            "username":"Tom",
             "password":"832jce83912",
             "chip": 1000
         },
         {
             "Id": 4,
             "name": "John",
-            "username":"John",
             "password":"832jce83912",
             "chip": 1000
         },
         {
             "Id": 1001,
             "name": "Rex",
-            "username":"Rex",
             "password":"12345",
             "chip": 10000
         },
         {
             "Id": 1002,
             "name": "Felix",
-            "username":"Felix",
             "password":"0000",
             "chip": 10000000
         }

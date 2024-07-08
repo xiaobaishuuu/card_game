@@ -244,10 +244,6 @@
 #         return True,sorted(pair_list,reverse=True)[:2]
 #     return False,(None,)
 
-
-a = {'rank':[1,0,0,1,8,3]}
-# print(one_pair(a))
-
 # 5 3 2
 # 6 4 2
 # 6 3 3
@@ -258,35 +254,3 @@ a = {'rank':[1,0,0,1,8,3]}
 # 5 4
 # 6 5
 # 7 6
-
-5 3
-6 4
-6 2
-7 5
-7 3
-def is_straight_flush(card_list):
-    return len(set(card['suit'] for card in card_list)) == 1 and sorted(['--23456789TJQKA'.index(card['rank']) for card in card_list]) == list(range(min(['--23456789TJQKA'.index(card['rank']) for card in card_list]), min(['--23456789TJQKA'.index(card['rank']) for card in card_list]) + 5))
-
-def is_four_of_a_kind(card_list):
-    return any(sum(card['rank'] == c['rank'] for c in card_list) == 4 for card in card_list)
-
-def is_full_house(card_list):
-    return len(set(card['rank'] for card in card_list)) == 2 and sorted([sum(card['rank'] == c['rank'] for c in card_list) for card in set(tuple(c.items()) for c in card_list)]) == [2, 3]
-
-def is_flush(card_list):
-    return len(set(card['suit'] for card in card_list)) == 1
-
-def is_straight(card_list):
-    return sorted(['--23456789TJQKA'.index(card['rank']) for card in card_list]) == list(range(min(['--23456789TJQKA'.index(card['rank']) for card in card_list]), min(['--23456789TJQKA'.index(card['rank']) for card in card_list]) + 5))
-
-def is_three_of_a_kind(card_list):
-    return any(sum(card['rank'] == c['rank'] for c in card_list) == 3 for card in card_list)
-
-def is_two_pair(card_list):
-    return sorted([sum(card['rank'] == c['rank'] for c in card_list) for card in set(tuple(c.items()) for c in card_list)]).count(2) == 2
-
-def is_one_pair(card_list):
-    return sorted([sum(card['rank'] == c['rank'] for c in card_list) for card in set(tuple(c.items()) for c in card_list)]).count(2) == 1
-
-a = {'rank':[1,0,0,1,8,3]}
-print(is_one_pair(a))

@@ -49,7 +49,7 @@ def draw_hand(handList:list[list],gameRound:int,fold = False):
 
 def draw_community(community:list,gameRound:int,deal_range:range,conditon_num:int):
     '''"deal_range" is the range of dealing card(start with 0)\n
-    "conditon_num" is  which round will deal the card in animation'''
+    "conditon_num" is which round will deal the card in animation'''
     for i in deal_range:
         if gameRound == conditon_num:
             draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],True)

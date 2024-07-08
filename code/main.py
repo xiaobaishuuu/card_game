@@ -2,9 +2,9 @@ from card_game import *
 from holdem import *
 from login import *
 
-game = Holdme(os.path.dirname(__file__).replace('code','data') + '\\player.json',
-              handList=[['2_1','3_1'],['4_1','5_1'],['6_1','7_1'],['8_1','9_1'],['10_1','11_1']],
-              communityCardsList=['12_1','13_1','14_1'])
+game = Holdme(os.path.dirname(__file__).replace('code','data') + '\\player.json')
+            #   ,handList=[['2_1','2_1'],['4_1','5_1'],['6_1','7_1'],['8_1','9_1'],['10_1','11_1']],
+            #   communityCardsList=['12_1','13_1','14_1','2_2','4_1'])
 game.init_player()
 game.check_game()
 def login_page():

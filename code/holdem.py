@@ -86,6 +86,7 @@ class Holdme:
                 self.deal_community(1)
             case 5:
                 pass
+        print('=========')
 
     def betting_round(self,choiceFunc = None,updateFunc = None):
         '''choiceFunc: for real player operate,\n
@@ -106,12 +107,14 @@ class Holdme:
                     elif seat == self.__big_blind:
                         least_bet = self.ante
                 # operate
+                self.__playersList[seat].combination()
                 result = self.__playersList[seat].decision(is_ante,least_bet,choiceFunc)
                 self.pot += result['bet']
                 least_bet = 0 if (seat == self.__big_blind and is_ante) else result['bet']
                 # find the next player and update in interface
                 current = (current + 1) % len(self.__playersList)
-                data = self.get_player_info('name'),self.get_player_info('chip')
+                data = self.get_player_info('name'),self.get_player_info('chip'),self.get_player_info('combination_name')
+                print(data)
                 updateFunc(*data)
                 # add one more round if someone raise
                 if result['choice'] == BET_RAISE:
@@ -142,7 +145,7 @@ class Holdme:
     def deal_community(self,get:int):
         """get == how many card will deal"""
         if len(self.communityCardsList) == 5:
-            Player.community.extend(self.communityCardsList)
+            Player.community = self.communityCardsList
             return None
         for i in range(get):
             element = random.choice(self.__pokerList)
