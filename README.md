@@ -6,7 +6,9 @@
    card_game.py             holdem.py
         |_______________________|
                     |
-                    main.py
+                  main.py
+
+
 
 # pygame 与 Holdem 模块的交互
   1.holdem 中的玩家座位，即起始顺序，与 pygame 中绘画玩家列表里的索引(index)一致
