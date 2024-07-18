@@ -244,11 +244,17 @@
 #         return True,sorted(pair_list,reverse=True)[:2]
 #     return False,(None,)
 
+        # if playerId == 2 and fold == True:
+        #     fold_layer = pygame.Surface((POKER_WIDTH*POKER_RATIO,POKER_HEIGHT*POKER_RATIO),pygame.SRCALPHA)
+        #     pygame.draw.rect(fold_layer,(0,0,0,128),fold_layer.get_rect(),0,2)
+        #     screen.blit(fold_layer,position)
+        # draw_hand(game.handList,r,game.get_players_info('fold')[2])
 # 5 3 2
 # 6 4 2
 # 6 3 3
 # 7 5 2
 # 7 4 3
+        # pygame.draw.rect(screen,POKER_PLACE_COLOR,(405+(GAP+POKER_WIDTH*POKER_TABLE_RATIO)*i,120,POKER_WIDTH*POKER_TABLE_RATIO,POKER_HEIGHT*POKER_TABLE_RATIO),3,5)
 
 # 2 1
 # 5 4

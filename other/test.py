@@ -52,11 +52,11 @@
 #         pygame.display.flip()
 #         if progress >= 1.0:
 #             break
-playersList = [1,2,3,4,5]
-small_blind = 0
-big_blind = small_blind + 1
-small_blind = 0 if small_blind >= len(playersList) else small_blind
-big_blind = 1 if big_blind >= len(playersList) else big_blind
+# playersList = [1,2,3,4,5]
+# small_blind = 0
+# big_blind = small_blind + 1
+# small_blind = 0 if small_blind >= len(playersList) else small_blind
+# big_blind = 1 if big_blind >= len(playersList) else big_blind
 
-print(small_blind,big_blind)
+# print(small_blind,big_blind)
 

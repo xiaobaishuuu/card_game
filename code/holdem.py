@@ -55,7 +55,7 @@ class Holdme:
             else:
                 self.__playersList.append(Bot(player['Id'],player['name'],player['chip']))
 
-    def get_player_info(self,key:str) -> list:
+    def get_players_info(self,key:str) -> list:
         '''for draw func\n
         return a list include all player info\n
         find the attr in playerslist by key'''
@@ -74,7 +74,6 @@ class Holdme:
         '''choiceFunc: for real player operate,\n
         updatFunc: update each player's chip after bet'''
         self.gameRound += 1
-        self.betting_round(choiceFunc,updateFunc)
         match self.gameRound:
             case 1:
                 self.deal_player()
@@ -86,6 +85,7 @@ class Holdme:
                 self.deal_community(1)
             case 5:
                 pass
+        self.betting_round(choiceFunc,updateFunc)
         print('=========')
 
     def betting_round(self,choiceFunc = None,updateFunc = None):
@@ -97,6 +97,7 @@ class Holdme:
         again = 1
         while again > 0:
             for seat in seat_range:
+                # avoid index error(small blind)
                 if seat >= len(self.__playersList):
                     seat -= len(self.__playersList)
                 # blind bet
@@ -106,15 +107,15 @@ class Holdme:
                         least_bet = self.ante/2
                     elif seat == self.__big_blind:
                         least_bet = self.ante
-                # operate
+                # get combination name
                 self.__playersList[seat].combination()
+                # operate
                 result = self.__playersList[seat].decision(is_ante,least_bet,choiceFunc)
                 self.pot += result['bet']
                 least_bet = 0 if (seat == self.__big_blind and is_ante) else result['bet']
                 # find the next player and update in interface
                 current = (current + 1) % len(self.__playersList)
-                data = self.get_player_info('name'),self.get_player_info('chip'),self.get_player_info('combination_name')
-                print(data)
+                data = self.get_players_info('name'),self.get_players_info('chip')
                 updateFunc(*data)
                 # add one more round if someone raise
                 if result['choice'] == BET_RAISE:

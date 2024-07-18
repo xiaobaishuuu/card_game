@@ -14,7 +14,7 @@ class Player():
         self.chip = chip
         self.hand = hand
         self.fold = fold
-        self.combination_name = ['','']
+        self.combo= ['','']
 
     def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> dict[str,int]:
         ''' return a dict["choice","bet"]'''
@@ -54,8 +54,7 @@ class Player():
             for name,check_func in check_dict.items():
                 result = check_func({'rank':rank,'suit':suit})
                 if result:
-                    self.combination_name = [name,result]
-                    # print(self.name,self.combination_name)
+                    self.combo = [name,result]
                     break
 
     def high_card(self,card_list):
@@ -141,8 +140,9 @@ class Bot(Player):
 
     def decision(self,is_ante,least_bet,choiceFunc):
         if self.fold:
-            return
-        if is_ante:
+            choice = FOLD
+            bet = 0
+        elif is_ante:
             choice = ANTE
             bet = least_bet
         else:
@@ -152,6 +152,3 @@ class Bot(Player):
             bet = least_bet
         self.chip -= bet
         return {'choice':choice,'bet':bet}
-a = Player(1,'1',1,['2_1','3_1','4_1','5_1','14_2'])
-a.combination()
-print(a.combination_name)

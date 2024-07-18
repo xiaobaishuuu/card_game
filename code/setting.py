@@ -46,6 +46,13 @@ BUTTON_ACTIVE_COLOR= (68, 45, 53)
 BUTTON_TOUCH_COLOR = (68, 45, 53)
 BUTTON_ACTIVE_TOUCH_COLOR = (255,255,255)
 
+#reminder
+REMINDER_FONT_SIZE = 20
+REMINDER_FONT_COLOR = (220, 220, 220)
+REMINDER_BG_COLOR = (204, 204, 204)
+
+#cheat
+CHEATING_MODE = False
 # ====================================NO CHANGE==========================================
 
 def load_poker(path) -> dict:
@@ -65,10 +72,12 @@ PLAYER_ICON = pygame.image.load(f'{imagePath}\\User.jpg')
 CARD_BACK = pygame.image.load(f'{imagePath}\\card_back.png')
 POKER = load_poker(imagePath)
 
+
 #init
 pygame.init()
 pygame.display.set_caption('Card Game')
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+# screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.RESIZABLE)
 screen.fill(SCREEN_COLOR)
 clock = pygame.time.Clock()
 
@@ -78,6 +87,9 @@ BETTING_SIZE_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',BETTING_SIZ
 SETTING_WIDTH_SCALE  = 0.6
 SETTING_HEIGHT_SCALE = 0.7
 buttonList = [...] #(in button.py)
+
+# reminder
+REMINDER_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',REMINDER_FONT_SIZE)
 
 #table
 TABLE_RECT  = pygame.Rect((SCREEN_WIDTH-TABLE_WIDTH)/2,(3/14)*(SCREEN_HEIGHT-TABLE_HEIGHT),TABLE_WIDTH,TABLE_HEIGHT)
@@ -91,7 +103,7 @@ PLAYER_INFO_BAR_POSITION= [(TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + 100),
                            (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + TABLE_HEIGHT),
                            (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + 100)]
 
-#cardz
+#card
 POKER_INITIAL_POSITION = [(SCREEN_WIDTH/2)-(POKER_WIDTH*POKER_RATIO/2),0]
 POKER_TABLE_START_POSITION = (SCREEN_WIDTH/2 - (POKER_WIDTH*POKER_RATIO/2) + (-(POKER_WIDTH*POKER_TABLE_RATIO - POKER_WIDTH*POKER_RATIO) -GAP -(POKER_WIDTH*POKER_RATIO))*2,
                               TABLE_RECT.y + 90 +(POKER_HEIGHT*POKER_TABLE_RATIO - POKER_HEIGHT*POKER_RATIO)/2)

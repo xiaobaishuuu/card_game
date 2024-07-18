@@ -12,10 +12,11 @@ def login_page():
 
 def update_game():
     draw_table()
-    draw_players(game.get_player_info('name'),game.get_player_info('chip'))
+    draw_players(game.get_players_info('name'),game.get_players_info('chip'))
     r = game.gameRound
     if r >= 1:
-        draw_hand(game.handList,r,game.get_player_info('fold')[2])
+        draw_hand(game.handList,r,game.get_players_info('fold'))
+    draw_reminder(game.get_players_info('combo'))
     if r >= 2:
         draw_community(game.communityCardsList,r,range(3),2)
     if r >= 3:
