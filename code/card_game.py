@@ -5,6 +5,7 @@ import time
 def login_page():
     """login"""
     screen.fill(SCREEN_COLOR)
+    pygame.draw.rect(screen,)
     
 def draw_table(num=5):
     '''num: number of poker place'''
