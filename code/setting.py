@@ -78,7 +78,6 @@ pygame.init()
 pygame.display.set_caption('Card Game')
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 # screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.RESIZABLE)
-screen.fill(SCREEN_COLOR)
 clock = pygame.time.Clock()
 
 #button

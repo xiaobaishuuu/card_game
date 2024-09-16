@@ -7,10 +7,15 @@ game = Holdme(os.path.dirname(__file__).replace('code','data') + '\\player.json'
             #   communityCardsList=['12_1','13_1','14_1','2_2','4_1'])
 game.init_player()
 game.check_game()
-def login_page():
-    pass
+
+def login():
+    login_page()
+    pygame.display.flip()
+
+
 
 def update_game():
+    screen.fill(SCREEN_COLOR)
     draw_table()
     draw_players(game.get_players_info('name'),game.get_players_info('chip'))
     r = game.gameRound
@@ -34,4 +39,5 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        update_game()
+        login()
+        # update_game()

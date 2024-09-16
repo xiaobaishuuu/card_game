@@ -2,6 +2,10 @@ from setting import *
 from button import *
 import time
 
+def login_page():
+    """login"""
+    screen.fill(SCREEN_COLOR)
+    
 def draw_table(num=5):
     '''num: number of poker place'''
     pygame.draw.rect(screen,TABLE_COLOR,TABLE_RECT,0,1000)
