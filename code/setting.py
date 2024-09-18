@@ -85,6 +85,7 @@ pygame.display.set_caption('Card Game')
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 # screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.RESIZABLE)
+clock = pygame.time.Clock()
 
 # login page
 LOGIN_BOX_RECT = pygame.Rect((SCREEN_WIDTH-LOGIN_BOX_WIDTH)/2,(SCREEN_HEIGHT-LOGIN_BOX_HEIGHT)/2,LOGIN_BOX_WIDTH,LOGIN_BOX_HEIGHT)
