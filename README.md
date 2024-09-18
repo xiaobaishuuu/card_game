@@ -2,8 +2,8 @@
     setting.py          |               |
         |            login.py       player.py
     button.py            |_____________|
-        |                       |
-   card_game.py             holdem.py
+        |                       |  
+     card_game.py             holdem.py
         |_______________________|
                     |
                   main.py
