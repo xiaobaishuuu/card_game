@@ -1,27 +1,87 @@
 from setting import *
 from button import *
+from input_box import *
 import time
+
+def start_animation():
+    start_time = time.time()
+    text = pygame.font.Font(size=96)
+    alpha = 0
+    a = text.render("WELCOME to Hold'em",True,(255,255,255))
+    position = ((SCREEN_WIDTH-a.get_width())/2,150)
+    while True:
+        clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        #check animation time
+        progress = min((time.time() - start_time) / 1, 1.0)
+        #change pos
+        init_pos = ((SCREEN_WIDTH-a.get_width())/2,(SCREEN_HEIGHT-a.get_height())/2)
+        x = init_pos[0] + (position[0] - init_pos[0]) * progress
+        y = init_pos[1] + (position[1] - init_pos[1]) * progress
+        if alpha < 255:
+            alpha += 0.05
+
+        a.set_alpha(alpha)
+        screen.blit(a,(x,y))
+        pygame.display.flip()
+        #end the animation
+        if progress >= 1.0 and alpha == 255:
+            break
+
+def input_box(box:pygame.Rect):
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            try:
+                if not box.collidepoint(event.pos) and event.type == pygame.MOUSEBUTTONDOWN:
+                    return
+            except AttributeError:
+                pass
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    user_text = user_text[:-1]
+                else:
+                    user_text += event.unicode
+
+        # pygame.draw.rect(screen,LOGIN_BOX_COLOR,LOGIN_BOX_RECT,0,100)
+        pygame.draw.rect(screen,(83, 67, 67),box,2)
+        screen.blit(INPUT_FONT.render(user_text,True,(231, 231, 231)),box)
+        pygame.display.flip()
 
 def draw_table(num=5):
     '''num: number of poker place'''
     pygame.draw.rect(screen,TABLE_COLOR,TABLE_RECT,0,1000)
+    # 130
     pygame.draw.rect(screen,TABLE_PADDING_COLOR,TABLE_RECT,50,1000)
     pygame.draw.rect(screen,TABLE_BORDER_COLOR,TABLE_RECT,10,1000)
     for i in range(num):
         x = TABLE_RECT.x + (TABLE_WIDTH - ((POKER_WIDTH*POKER_TABLE_RATIO)*num + GAP*(num-1)))/2 + ((POKER_WIDTH*POKER_TABLE_RATIO + GAP) * i)
-        y = ((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58
+        y = ((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58   # ac:cb = 9:49
         pygame.draw.rect(screen,POKER_PLACE_COLOR,(x,y,POKER_WIDTH*POKER_TABLE_RATIO,POKER_HEIGHT*POKER_TABLE_RATIO),3,5)
 
-def draw_reminder(playerCombination:list):
+def draw_reminder(playerCombination:list,bg_ratio = 1.3):
+    reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() # take the highest letter
     for player in playerCombination:
+        reminder = REMINDER_FONT.render(player[0],True,REMINDER_FONT_COLOR)
         if player == playerCombination[2]:
-            reminder = REMINDER_FONT.render(player[0],True,REMINDER_FONT_COLOR)
+            reminder_bg = pygame.Surface((reminder.get_width()*bg_ratio,reminder_height*bg_ratio),pygame.SRCALPHA)
+            pygame.draw.rect(reminder_bg,REMINDER_BG_COLOR,reminder_bg.get_rect(),0,12)
+            reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
+            # blit to screen
+            position = ((SCREEN_WIDTH - reminder.get_width()*bg_ratio)/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_HEIGHT*POKER_TABLE_RATIO + GAP)
+            screen.blit(reminder_bg,position)
+        # dont want to do this part
+        elif CHEATING_MODE:
+            pass
 
-            pygame.draw.rect(screen,(7, 61, 31),(SCREEN_WIDTH/2 - ((reminder.get_width()*1.2)/2),300,(reminder.get_width()*1.2),(reminder.get_height()*1.2)),0,15)
-            pygame.draw.rect(screen,REMINDER_FONT_COLOR,(SCREEN_WIDTH/2 - ((reminder.get_width()*1.2)/2),300,(reminder.get_width()*1.2),(reminder.get_height()*1.2)),1,13)
-
-            reminder = REMINDER_FONT.render(player[0],True,REMINDER_FONT_COLOR)
-            screen.blit(reminder,(640 - reminder.get_width()/2,300))
+# def draw_blind(small_blind= 1):
+#     pass
+#     a = pygame.Surface((TABLE_WIDTH*(16/29),TABLE_HEIGHT*(16/29)),pygame.SRCALPHA)
+#     pygame.draw.rect(a,(0,0,0),a.get_rect())
+#     screen.blit(a,(SCREEN_WIDTH/2 - TABLE_WIDTH*(16/29)/2,TABLE_RECT.y + (TABLE_HEIGHT*(16/29)/2)))
 
 def draw_players(playerName:list,playerChip:list):
     for i in range(len(PLAYER_INFO_BAR_LIST)):
@@ -36,7 +96,7 @@ def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:boo
     if deal:
         deal_animation(position)
     #player or community
-    if playerId == 2 or playerId == -1:
+    if playerId == 2 or playerId == -1 or CHEATING_MODE:
         screen.blit(pygame.transform.smoothscale_by(POKER[card_id],POKER_RATIO),position)
     #bot
     else:
@@ -72,7 +132,6 @@ def deal_animation(position:tuple,duration:int = 0.3):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                exit()
         #check animation time
         progress = min((time.time() - start_time) / duration, 1.0)
         #change pos
@@ -85,7 +144,7 @@ def deal_animation(position:tuple,duration:int = 0.3):
         if progress >= 1.0:
             break
 
-def check_button(playerChip:int,least_bet = 0,press = False,invalidList:list = []) -> dict[str,int]:
+def check_button(playerChip:int = -1,least_bet = 0,press = False,invalidList:list = [],buttonList:list[Button] = gamePageButtons) -> dict[str,int]:
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
     choice = FOLD
@@ -95,7 +154,6 @@ def check_button(playerChip:int,least_bet = 0,press = False,invalidList:list = [
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                exit()
             # elif event.type == pygame.VIDEORESIZE:
             #     screen = pygame.display.set_mode(event.size,pygame.RESIZABLE)
             # only check
@@ -106,12 +164,11 @@ def check_button(playerChip:int,least_bet = 0,press = False,invalidList:list = [
                     #either betting button press
                     if button.flag == 0:
                         press = True
+                    if button.flag == -1 and not button.rect.collidepoint(event.pos):
+                        return
         # only draw
         for button in buttonList:
             button.draw(screen,playerChip,invalidList)
         if press:
             break
     return {'choice':choice,'bet':button.get_raise() if choice == BET_RAISE else least_bet}
-
-def draw_blind(small_blind):
-    pass

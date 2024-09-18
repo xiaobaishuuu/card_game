@@ -57,6 +57,3 @@
 # big_blind = small_blind + 1
 # small_blind = 0 if small_blind >= len(playersList) else small_blind
 # big_blind = 1 if big_blind >= len(playersList) else big_blind
-
-# print(small_blind,big_blind)
-

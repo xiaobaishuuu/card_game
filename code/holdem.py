@@ -11,7 +11,7 @@ class Holdme:
                  handList:list[list] = [],
                  communityCardsList:list = [],
                  gameRound = 0,
-                 small_blind = 0):
+                 small_blind = 1):
         #finish: someone win the game
         #playersData: original data,only read
         #playerslist: players information, can change , length of it == player number
@@ -45,7 +45,6 @@ class Holdme:
             json.dump({'player_data':self.__playersData},fp,indent=4)
 
     def init_player(self,Id = 1001):
-        # self.check_game()
         #playerList is ordered by the player seat
         for player in self.__playersData:
             if player['Id'] == Id:
@@ -64,7 +63,7 @@ class Holdme:
     def check_game(self):
         """when someone win the game,change the blind seat"""
         self.small_blind = 0 if self.small_blind >= len(self.__playersList) else self.small_blind
-        self.__big_blind   = 1 if self.__big_blind >= len(self.__playersList) else self.__big_blind
+        self.__big_blind = 1 if self.__big_blind >= len(self.__playersList) else self.__big_blind
         if self.__finish:
             self.small_blind = self.small_blind + 1 if self.small_blind < 4 else 0
             self.__big_blind   = self.__big_blind + 1 if self.__big_blind < 4 else 0
@@ -84,7 +83,8 @@ class Holdme:
             case 4:
                 self.deal_community(1)
             case 5:
-                pass
+                self.check_winner()
+                self.__finish = True
         self.betting_round(choiceFunc,updateFunc)
         print('=========')
 
@@ -109,7 +109,7 @@ class Holdme:
                         least_bet = self.ante
                 # get combination name
                 self.__playersList[seat].combination()
-                # operate
+                # operation
                 result = self.__playersList[seat].decision(is_ante,least_bet,choiceFunc)
                 self.pot += result['bet']
                 least_bet = 0 if (seat == self.__big_blind and is_ante) else result['bet']
@@ -125,8 +125,11 @@ class Holdme:
             again -= 1
 
     def check_winner(self):
-        for player in self.__playersList:
-            player.combination()
+        s = [COMBO_RATING.index(player.combo[0]) for player in self.__playersList]
+        for player in s:
+            pass
+
+
 
     def deal_player(self):
         '''deal hand to self.handList'''

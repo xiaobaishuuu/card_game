@@ -7,3 +7,7 @@ FOLD  = 'fold'
 CALL = 'call'
 INCREASE = '+'
 DECREASE = '-'
+SIGN_IN = 'sign in'
+SIGN_UP = 'sign up'
+
+COMBO_RATING = ['high card', 'one pair', 'two pair', 'three of a kind', 'straight', 'flush', 'full house', 'four of a kind', 'straight flush']

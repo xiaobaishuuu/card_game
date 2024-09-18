@@ -11,6 +11,12 @@ SCREEN_COLOR = (242, 225, 231)
 # FPS setting
 FPS = 120
 
+#login page
+LOGIN_BOX_WIDTH = 720
+LOGIN_BOX_HEIGHT= 500
+LOGIN_BOX_COLOR = (211, 172, 172)
+INPUT_FONT_SIZE = 48
+
 #draw table
 TABLE_HEIGHT= 580
 TABLE_WIDTH = 1000
@@ -24,7 +30,7 @@ POKER_WIDTH = 500
 POKER_HEIGHT= 726
 POKER_RATIO =  0.175
 POKER_PLACE_COLOR = (204, 204, 204)
-POKER_TABLE_RATIO = 0.18
+POKER_TABLE_RATIO = 0.19
 
 #draw player
 PLAYER_ICON_RATIO = 0.20
@@ -49,10 +55,11 @@ BUTTON_ACTIVE_TOUCH_COLOR = (255,255,255)
 #reminder
 REMINDER_FONT_SIZE = 20
 REMINDER_FONT_COLOR = (220, 220, 220)
-REMINDER_BG_COLOR = (204, 204, 204)
+REMINDER_BG_COLOR = (7, 61, 31)
 
 #cheat
 CHEATING_MODE = False
+
 # ====================================NO CHANGE==========================================
 
 def load_poker(path) -> dict:
@@ -72,16 +79,20 @@ PLAYER_ICON = pygame.image.load(f'{imagePath}\\User.jpg')
 CARD_BACK = pygame.image.load(f'{imagePath}\\card_back.png')
 POKER = load_poker(imagePath)
 
-
 #init
 pygame.init()
 pygame.display.set_caption('Card Game')
+clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 # screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.RESIZABLE)
-screen.fill(SCREEN_COLOR)
-clock = pygame.time.Clock()
 
-#button
+# login page
+LOGIN_BOX_RECT = pygame.Rect((SCREEN_WIDTH-LOGIN_BOX_WIDTH)/2,(SCREEN_HEIGHT-LOGIN_BOX_HEIGHT)/2,LOGIN_BOX_WIDTH,LOGIN_BOX_HEIGHT)
+USERNAME_BOX_RECT = pygame.Rect(200,200,140,INPUT_FONT_SIZE*1.5)
+PASSWORD_BOX_RECT = pygame.Rect(200,400,140,INPUT_FONT_SIZE*1.5)
+INPUT_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',INPUT_FONT_SIZE)
+
+# button
 BUTTON_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',BUTTON_FONT_SIZE)
 BETTING_SIZE_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',BETTING_SIZE_FONT_SIZE)
 SETTING_WIDTH_SCALE  = 0.6
@@ -92,7 +103,7 @@ buttonList = [...] #(in button.py)
 REMINDER_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',REMINDER_FONT_SIZE)
 
 #table
-TABLE_RECT  = pygame.Rect((SCREEN_WIDTH-TABLE_WIDTH)/2,(3/14)*(SCREEN_HEIGHT-TABLE_HEIGHT),TABLE_WIDTH,TABLE_HEIGHT)
+TABLE_RECT = pygame.Rect((SCREEN_WIDTH-TABLE_WIDTH)/2,(3/14)*(SCREEN_HEIGHT-TABLE_HEIGHT),TABLE_WIDTH,TABLE_HEIGHT)
 
 # player info
 PLAYER_NAME_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',PLAYER_NAME_FONT_SIZE)
@@ -106,11 +117,15 @@ PLAYER_INFO_BAR_POSITION= [(TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + 100),
 #card
 POKER_INITIAL_POSITION = [(SCREEN_WIDTH/2)-(POKER_WIDTH*POKER_RATIO/2),0]
 POKER_TABLE_START_POSITION = (SCREEN_WIDTH/2 - (POKER_WIDTH*POKER_RATIO/2) + (-(POKER_WIDTH*POKER_TABLE_RATIO - POKER_WIDTH*POKER_RATIO) -GAP -(POKER_WIDTH*POKER_RATIO))*2,
-                              TABLE_RECT.y + 90 +(POKER_HEIGHT*POKER_TABLE_RATIO - POKER_HEIGHT*POKER_RATIO)/2)
+                              ((TABLE_RECT.y) * 96911 + (TABLE_RECT.y + TABLE_HEIGHT)* 19089)/116000) #ac:cb = 19089:96911
 
+# gap = 30 !!!
+# print((POKER_WIDTH*POKER_RATIO) - ((PLAYER_INFO_BAR_POSITION[0][0]+200-((200 - (POKER_WIDTH*POKER_RATIO*2 - 30))/2)-(POKER_WIDTH*POKER_RATIO)) - (PLAYER_INFO_BAR_POSITION[0][0]+((200 - (POKER_WIDTH*POKER_RATIO*2 - 30))/2))))
+# PLAYER_INFO_BAR_POSITION[0][0] + PLAYER_INFO_BAR_WIDTH -
 # 需要改
 HAND_POSITION = [[(PLAYER_INFO_BAR_POSITION[i][0]+((200 - (POKER_WIDTH*POKER_RATIO*2 - 30))/2),PLAYER_INFO_BAR_POSITION[i][1]-130),
                   (PLAYER_INFO_BAR_POSITION[i][0]+200-((200 - (POKER_WIDTH*POKER_RATIO*2 - 30))/2)-(POKER_WIDTH*POKER_RATIO),PLAYER_INFO_BAR_POSITION[i][1]-130)]
                   for i in range(len(PLAYER_INFO_BAR_POSITION))]
 COMMUNITY_CARDS_POSITION = [(POKER_TABLE_START_POSITION[0] + ((POKER_WIDTH*POKER_TABLE_RATIO - POKER_WIDTH*POKER_RATIO) + GAP + (POKER_WIDTH*POKER_RATIO))* i,
                              POKER_TABLE_START_POSITION[1]) for i in range(5)]
+print(((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58)
