@@ -5,10 +5,9 @@ import time
 
 def start_animation():
     start_time = time.time()
-    text = pygame.font.Font(size=96)
     alpha = 0
-    a = text.render("WELCOME to Hold'em",True,(255,255,255))
-    position = ((SCREEN_WIDTH-a.get_width())/2,150)
+    title = pygame.font.Font(size=96).render("WELCOME to Hold'em",True,(255,255,255))
+    final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
     while True:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -17,17 +16,19 @@ def start_animation():
         #check animation time
         progress = min((time.time() - start_time) / 1, 1.0)
         #change pos
-        init_pos = ((SCREEN_WIDTH-a.get_width())/2,(SCREEN_HEIGHT-a.get_height())/2)
-        x = init_pos[0] + (position[0] - init_pos[0]) * progress
-        y = init_pos[1] + (position[1] - init_pos[1]) * progress
-        if alpha < 255:
+        init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
+        x = init_pos[0] + (final_position[0] - init_pos[0]) * progress
+        y = init_pos[1] + (final_position[1] - init_pos[1]) * progress
+        #set alpha channel
+        if alpha < 10:
             alpha += 0.05
-
-        a.set_alpha(alpha)
-        screen.blit(a,(x,y))
+        pygame.draw.rect(screen,(83, 67, 67),USERNAME_BOX_RECT,2)
+        pygame.draw.rect(screen,(83, 67, 67),PASSWORD_BOX_RECT,2)
+        title.set_alpha(alpha)
+        screen.blit(title,(x,y))
         pygame.display.flip()
         #end the animation
-        if progress >= 1.0 and alpha == 255:
+        if progress >= 1.0 and alpha > 10:
             break
 
 def input_box(box:pygame.Rect):
@@ -123,7 +124,7 @@ def draw_community(community:list,gameRound:int,deal_range:range,conditon_num:in
             draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],True)
         draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i])
 
-def deal_animation(position:tuple,duration:int = 0.3):
+def deal_animation(final_position:tuple,duration:int = 0.3):
     '''deal single card animation'''
     frame = screen.copy()
     start_time = time.time()
@@ -135,8 +136,8 @@ def deal_animation(position:tuple,duration:int = 0.3):
         #check animation time
         progress = min((time.time() - start_time) / duration, 1.0)
         #change pos
-        x = POKER_INITIAL_POSITION[0] + (position[0] - POKER_INITIAL_POSITION[0]) * progress
-        y = POKER_INITIAL_POSITION[1] + (position[1] - POKER_INITIAL_POSITION[1]) * progress
+        x = POKER_INITIAL_POSITION[0] + (final_position[0] - POKER_INITIAL_POSITION[0]) * progress
+        y = POKER_INITIAL_POSITION[1] + (final_position[1] - POKER_INITIAL_POSITION[1]) * progress
         screen.blit(frame,(0,0))
         screen.blit(pygame.transform.smoothscale_by(CARD_BACK,POKER_RATIO),(x,y))
         pygame.display.flip()
@@ -159,13 +160,20 @@ def check_button(playerChip:int = -1,least_bet = 0,press = False,invalidList:lis
             # only check
             for button in buttonList:
                 #check betting button
-                if (button.text not in invalidList) and button.check(event):
-                    choice = button.text
-                    #either betting button press
-                    if button.flag == 0:
-                        press = True
-                    if button.flag == -1 and not button.rect.collidepoint(event.pos):
+                try:
+                    if (button.text not in invalidList) and button.check(event):
+                        choice = button.text
+                        #either betting button press
+                        if button.flag == 0:
+                            press = True
+                        if button.flag == -1:
+                            return
+                    elif buttonList == loginPageButtons and not button.rect.collidepoint(event.pos):
+                        print(2)
                         return
+                except AttributeError:
+                    pass
+
         # only draw
         for button in buttonList:
             button.draw(screen,playerChip,invalidList)

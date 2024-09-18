@@ -95,7 +95,5 @@ gamePageButtons = [Button(CHECK    ,pygame.Rect(__betButton_x - (BUTTON_GAP + BU
                    Button(DECREASE ,pygame.Rect(__betButton_x + __raise_pos - BUTTON_WIDTH*SETTING_WIDTH_SCALE - BUTTON_GAP,__betButton_y + (BUTTON_HEIGHT - BUTTON_HEIGHT*SETTING_HEIGHT_SCALE)/2,BUTTON_WIDTH*SETTING_WIDTH_SCALE,BUTTON_HEIGHT*SETTING_HEIGHT_SCALE),flag=1),
                    Button(INCREASE ,pygame.Rect(__betButton_x + __raise_pos + BUTTON_WIDTH                     + BUTTON_GAP,__betButton_y + (BUTTON_HEIGHT - BUTTON_HEIGHT*SETTING_HEIGHT_SCALE)/2,BUTTON_WIDTH*SETTING_WIDTH_SCALE,BUTTON_HEIGHT*SETTING_HEIGHT_SCALE),flag=1)]
 
-loginPageButtons = [
-                    ]
-# loginPageButtons = [Button(SIGN_IN ,flag=-1),
-#                     Button(SIGN_UP ,flag=-1)]
+loginPageButtons = [Button(SIGN_IN ,pygame.Rect(500,500,200,100),flag=-1),]
+                    # Button(SIGN_UP ,,flag=-1)]

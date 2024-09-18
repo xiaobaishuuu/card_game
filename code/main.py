@@ -13,10 +13,10 @@ def login():
     draw_table(0)
     start_animation()
     while True:
-        pass
         for event in pygame.event.get():
             try:
                 if USERNAME_BOX_RECT.collidepoint(event.pos) and event.type == pygame.MOUSEBUTTONDOWN:
+                    print(1)
                     input_box(USERNAME_BOX_RECT)
                 elif PASSWORD_BOX_RECT.collidepoint(event.pos) and event.type == pygame.MOUSEBUTTONDOWN:
                     input_box(PASSWORD_BOX_RECT)
