@@ -3,35 +3,14 @@ from button import *
 from input_box import *
 import time
 
-def start_animation():
-    start_time = time.time()
-    alpha = 0
-    title = pygame.font.Font(size=96).render("WELCOME to Hold'em",True,(255,255,255))
+def introduction():
+    title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
+    init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
-    while True:
-        clock.tick(FPS)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-        #check animation time
-        progress = min((time.time() - start_time) / 1, 1.0)
-        #change pos
-        init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
-        x = init_pos[0] + (final_position[0] - init_pos[0]) * progress
-        y = init_pos[1] + (final_position[1] - init_pos[1]) * progress
-        #set alpha channel
-        if alpha < 10:
-            alpha += 0.05
-        pygame.draw.rect(screen,(83, 67, 67),USERNAME_BOX_RECT,2)
-        pygame.draw.rect(screen,(83, 67, 67),PASSWORD_BOX_RECT,2)
-        title.set_alpha(alpha)
-        screen.blit(title,(x,y))
-        pygame.display.flip()
-        #end the animation
-        if progress >= 1.0 and alpha > 10:
-            break
+    move_animation(title,init_pos,final_position,1,1.5)
 
 def input_box(box:pygame.Rect):
+    user_text = ''
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -48,7 +27,7 @@ def input_box(box:pygame.Rect):
                     user_text += event.unicode
 
         # pygame.draw.rect(screen,LOGIN_BOX_COLOR,LOGIN_BOX_RECT,0,100)
-        pygame.draw.rect(screen,(83, 67, 67),box,2)
+        pygame.draw.rect(screen,(83, 67, 67),box,8,25)
         screen.blit(INPUT_FONT.render(user_text,True,(231, 231, 231)),box)
         pygame.display.flip()
 
@@ -95,7 +74,7 @@ def draw_players(playerName:list,playerChip:list):
 def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:bool = False):
     '''playerId 1-5 == hand, -1 == community cards'''
     if deal:
-        deal_animation(position)
+        move_animation(pygame.transform.smoothscale_by(CARD_BACK,POKER_RATIO),POKER_INITIAL_POSITION,position,0.3)
     #player or community
     if playerId == 2 or playerId == -1 or CHEATING_MODE:
         screen.blit(pygame.transform.smoothscale_by(POKER[card_id],POKER_RATIO),position)
@@ -124,10 +103,11 @@ def draw_community(community:list,gameRound:int,deal_range:range,conditon_num:in
             draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],True)
         draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i])
 
-def deal_animation(final_position:tuple,duration:int = 0.3):
-    '''deal single card animation'''
+def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:int,showUpSpeed:float=255):
+    '''animation'''
     frame = screen.copy()
     start_time = time.time()
+    alpha = 0
     while True:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -136,16 +116,24 @@ def deal_animation(final_position:tuple,duration:int = 0.3):
         #check animation time
         progress = min((time.time() - start_time) / duration, 1.0)
         #change pos
-        x = POKER_INITIAL_POSITION[0] + (final_position[0] - POKER_INITIAL_POSITION[0]) * progress
-        y = POKER_INITIAL_POSITION[1] + (final_position[1] - POKER_INITIAL_POSITION[1]) * progress
+        x = init_pos[0] + (final_pos[0] - init_pos[0]) * progress
+        y = init_pos[1] + (final_pos[1] - init_pos[1]) * progress
+        #set alpha channel
+        if alpha < 255:
+            alpha += showUpSpeed
         screen.blit(frame,(0,0))
-        screen.blit(pygame.transform.smoothscale_by(CARD_BACK,POKER_RATIO),(x,y))
+        screen.blit(obj,(x,y))
         pygame.display.flip()
         #end the animation
-        if progress >= 1.0:
+        if progress >= 1.0 and alpha >= 255:
             break
 
-def check_button(playerChip:int = -1,least_bet = 0,press = False,invalidList:list = [],buttonList:list[Button] = gamePageButtons) -> dict[str,int]:
+def interact(playerChip:int = -1,
+             least_bet = 0,
+             press = False,
+             invalidList:list = [],
+             buttonList:list[Button] = gamePageButtons,
+             inputList:list[Input] = loginPageInputs) -> dict[str,int]:
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
     choice = FOLD
@@ -155,23 +143,18 @@ def check_button(playerChip:int = -1,least_bet = 0,press = False,invalidList:lis
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            # elif event.type == pygame.VIDEORESIZE:
-            #     screen = pygame.display.set_mode(event.size,pygame.RESIZABLE)
             # only check
             for button in buttonList:
                 #check betting button
-                try:
-                    if (button.text not in invalidList) and button.check(event):
-                        choice = button.text
-                        #either betting button press
-                        if button.flag == 0:
-                            press = True
-                        if button.flag == -1:
-                            return
-                    elif buttonList == loginPageButtons and not button.rect.collidepoint(event.pos):
-                        print(2)
+                if (button.text not in invalidList) and button.check(event):
+                    choice = button.text
+                    #either betting button press
+                    if button.flag == 0:
+                        press = True
+                    if button.flag == -1:
                         return
-                except AttributeError:
+            for input_box in inputList:
+                if input_box.check(event):
                     pass
 
         # only draw

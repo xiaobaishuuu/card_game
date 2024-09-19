@@ -11,19 +11,10 @@ game.check_game()
 def login():
     screen.fill(SCREEN_COLOR)
     draw_table(0)
-    start_animation()
-    while True:
-        for event in pygame.event.get():
-            try:
-                if USERNAME_BOX_RECT.collidepoint(event.pos) and event.type == pygame.MOUSEBUTTONDOWN:
-                    print(1)
-                    input_box(USERNAME_BOX_RECT)
-                elif PASSWORD_BOX_RECT.collidepoint(event.pos) and event.type == pygame.MOUSEBUTTONDOWN:
-                    input_box(PASSWORD_BOX_RECT)
-            except AttributeError:
-                pass
-        pygame.display.flip()
-        check_button(buttonList = loginPageButtons)
+    introduction()
+    # while True:
+        # input_box(USERNAME_BOX_RECT)
+    interact(buttonList = loginPageButtons)
 
 def update_game():
     screen.fill(SCREEN_COLOR)
@@ -45,7 +36,7 @@ def update_game():
             draw_community(game.communityCardsList,r,range(3,4),3)
         if r >= 4:
             draw_community(game.communityCardsList,r,range(4,5),4)
-        game.holdem(check_button,draw_players)
+        game.holdem(interact,draw_players)
         game.check_game()
         pygame.display.flip()
 

@@ -27,3 +27,5 @@
 13. ？不想做了，疯狂计算xy轴，还与我复习直线比例公式。 18/7
 
 14. 上次开工 two month ago,距离交sba还有2个月 18/9
+
+15. check_button() -> interact(),deal_animation() -> move_animation()

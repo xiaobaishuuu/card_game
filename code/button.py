@@ -11,8 +11,8 @@ class Button:
     def __init__(self,
                  text:str,
                  rect:pygame.Rect,
-                 color = BUTTON_COLOR,
-                 touch_color = BUTTON_TOUCH_COLOR,
+                 color:tuple = BUTTON_COLOR,
+                 touch_color:tuple = BUTTON_TOUCH_COLOR,
                  flag  = 0):
         """flag is button function,setting == -1 betting == 0,bet setting == 1"""
         self.text  = text

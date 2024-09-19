@@ -11,10 +11,14 @@ SCREEN_COLOR = (242, 225, 231)
 # FPS setting
 FPS = 120
 
+#title
+TITLE_TEXT = "WELCOME to Hold'em"
+TITLE_FONT_SIZE = 72
+TITLE_FONT_COLOR= (255,255,255)
+
 #login page
 INPUT_BOX_WIDTH = 300
 INPUT_FONT_SIZE = 32
-
 
 #draw table
 TABLE_HEIGHT= 580
@@ -86,9 +90,12 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 # screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
+#title
+TITLE_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',TITLE_FONT_SIZE)
+
 # login page
-USERNAME_BOX_RECT = pygame.Rect(200,200,INPUT_BOX_WIDTH,INPUT_FONT_SIZE*1.5)
-PASSWORD_BOX_RECT = pygame.Rect(200,400,INPUT_BOX_WIDTH,INPUT_FONT_SIZE*1.5)
+USERNAME_BOX_RECT = pygame.Rect((SCREEN_WIDTH-INPUT_BOX_WIDTH)/2,300,INPUT_BOX_WIDTH,INPUT_FONT_SIZE*1.5)
+PASSWORD_BOX_RECT = pygame.Rect((SCREEN_WIDTH-INPUT_BOX_WIDTH)/2,400,INPUT_BOX_WIDTH,INPUT_FONT_SIZE*1.5)
 INPUT_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',INPUT_FONT_SIZE)
 
 # button
