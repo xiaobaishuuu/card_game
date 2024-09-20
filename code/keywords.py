@@ -7,6 +7,10 @@ FOLD  = 'fold'
 CALL = 'call'
 INCREASE = '+'
 DECREASE = '-'
+
+USERNAME = 'username'
+PASSWORD = 'password'
+
 SIGN_IN = 'sign in'
 SIGN_UP = 'sign up'
 

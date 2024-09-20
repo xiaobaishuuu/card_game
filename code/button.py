@@ -46,25 +46,21 @@ class Button:
         # reset color in every loop
         self.color = BUTTON_COLOR
         self.touch = BUTTON_TOUCH_COLOR
-        # mouse out of screen will lead to attr errer (null event.pos)
-        try:
-            if self.rect.collidepoint(event.pos):
-                self.touch = BUTTON_ACTIVE_TOUCH_COLOR
-                # press
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.color = BUTTON_ACTIVE_COLOR
-                # release
-                elif event.type == pygame.MOUSEBUTTONUP:
-                    self.color = BUTTON_COLOR
-                    self.touch = BUTTON_TOUCH_COLOR
-                    # inc/dec the bet
-                    if   self.text == INCREASE:
-                        Button.__raising_bet += 100
-                    elif self.text == DECREASE:
-                        Button.__raising_bet -= 100
-                    return True
-        except AttributeError:
-            pass
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.touch = BUTTON_ACTIVE_TOUCH_COLOR
+            # press
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.color = BUTTON_ACTIVE_COLOR
+            # release
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.color = BUTTON_COLOR
+                self.touch = BUTTON_TOUCH_COLOR
+                # inc/dec the bet
+                if   self.text == INCREASE:
+                    Button.__raising_bet += 100
+                elif self.text == DECREASE:
+                    Button.__raising_bet -= 100
+                return True
         return False
 
     def draw(self, screen:pygame.Surface,playerChip:int,invalidList:list = []):

@@ -12,9 +12,8 @@ def login():
     screen.fill(SCREEN_COLOR)
     draw_table(0)
     introduction()
-    # while True:
-        # input_box(USERNAME_BOX_RECT)
-    interact(buttonList = loginPageButtons)
+    if interact(buttonList = loginPageButtons,inputList=loginPageInputs):
+        return
 
 def update_game():
     screen.fill(SCREEN_COLOR)

@@ -9,28 +9,6 @@ def introduction():
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
     move_animation(title,init_pos,final_position,1,1.5)
 
-def input_box(box:pygame.Rect):
-    user_text = ''
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            try:
-                if not box.collidepoint(event.pos) and event.type == pygame.MOUSEBUTTONDOWN:
-                    return
-            except AttributeError:
-                pass
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_BACKSPACE:
-                    user_text = user_text[:-1]
-                else:
-                    user_text += event.unicode
-
-        # pygame.draw.rect(screen,LOGIN_BOX_COLOR,LOGIN_BOX_RECT,0,100)
-        pygame.draw.rect(screen,(83, 67, 67),box,8,25)
-        screen.blit(INPUT_FONT.render(user_text,True,(231, 231, 231)),box)
-        pygame.display.flip()
-
 def draw_table(num=5):
     '''num: number of poker place'''
     pygame.draw.rect(screen,TABLE_COLOR,TABLE_RECT,0,1000)
@@ -133,10 +111,10 @@ def interact(playerChip:int = -1,
              press = False,
              invalidList:list = [],
              buttonList:list[Button] = gamePageButtons,
-             inputList:list[Input] = loginPageInputs) -> dict[str,int]:
+             inputList:list[Input] = []) -> dict[str,int]:
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
-    choice = FOLD
+    choice = ''
     Button.init_raise(least_bet)
     while True:
         clock.tick(FPS)
@@ -154,8 +132,7 @@ def interact(playerChip:int = -1,
                     if button.flag == -1:
                         return
             for input_box in inputList:
-                if input_box.check(event):
-                    pass
+                input_box.check(event)
 
         # only draw
         for button in buttonList:
