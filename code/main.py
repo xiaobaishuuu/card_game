@@ -12,9 +12,9 @@ def login():
     screen.fill(SCREEN_COLOR)
     draw_table(0)
     introduction()
-    if interact(buttonList = loginPageButtons,inputList=loginPageInputs):
-        return
-
+    choice = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
+    if choice == SIGN_IN:
+        pass
 def update_game():
     screen.fill(SCREEN_COLOR)
     while True:

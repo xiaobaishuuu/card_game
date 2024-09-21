@@ -115,6 +115,7 @@ def interact(playerChip:int = -1,
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
     choice = ''
+    a = {}
     Button.init_raise(least_bet)
     while True:
         clock.tick(FPS)
@@ -130,13 +131,15 @@ def interact(playerChip:int = -1,
                     if button.flag == 0:
                         press = True
                     if button.flag == -1:
-                        return
+                        press = True
             for input_box in inputList:
                 input_box.check(event)
-
+                a.update({input_box.text:input_box.content})
         # only draw
         for button in buttonList:
-            button.draw(screen,playerChip,invalidList)
+            button.draw(playerChip,invalidList)
+        for input_box in inputList:
+            input_box.draw()
         if press:
             break
     return {'choice':choice,'bet':button.get_raise() if choice == BET_RAISE else least_bet}

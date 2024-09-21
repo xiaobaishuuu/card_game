@@ -10,7 +10,7 @@ DECREASE = '-'
 
 USERNAME = 'username'
 PASSWORD = 'password'
-
+C_PASSWORD = 'confirm password'
 SIGN_IN = 'sign in'
 SIGN_UP = 'sign up'
 
