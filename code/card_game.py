@@ -10,6 +10,9 @@ def introduction():
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
     move_animation(title,init_pos,final_position,1,1.5)
 
+def invalid_input():
+    REMINDER_FONT.render()
+
 def draw_table(num=5):
     '''num: number of poker place'''
     pygame.draw.rect(screen,TABLE_COLOR,TABLE_RECT,0,1000)
@@ -130,7 +133,6 @@ def interact(playerChip:int = -1,
             for button in buttonList:
                 #check betting button
                 if (button.text not in invalidList) and button.check(event):
-                    choice = button.text
                     #either betting button press
                     if button.flag == 0:
                         press = True

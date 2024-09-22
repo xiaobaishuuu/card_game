@@ -1,6 +1,7 @@
 import json
 import random
 from player import *
+from login import *
 
 class Holdme:
     """ # only calculates"""
@@ -39,7 +40,7 @@ class Holdme:
 
     def init_player(self,username):
         #playerList is ordered by the player seat
-        for player in self.__playersData:
+        for player in load_players(path):
             if player['username'] == username:
                 # insert player to the middle seat
                 self.__playersList.insert(2,(Player(player['username'],player['chip'])))

@@ -3,37 +3,27 @@
         {
             "username": "Peter",
             "password": "832jce83912deddwa",
-            "chip": 1000
+            "chip": -1900
         },
         {
             "username": "Amy",
             "password": "832jce83912deddwa",
-            "chip": 1000
+            "chip": -2200
         },
         {
             "username": "Tom",
             "password": "832jce83912deddwa",
-            "chip": 1000
+            "chip": -1600
         },
         {
             "username": "John",
             "password": "832jce83912deddwa",
-            "chip": 1000
+            "chip": -1600
         },
         {
             "username": "Rex",
             "password": "12345",
-            "chip": 10000
-        },
-        {
-            "username": "Felix",
-            "password": "0000",
-            "chip": 10000000
-        },
-        {
-            "username": "",
-            "password": "",
-            "chip": 1000
+            "chip": 9997400
         }
     ]
 }

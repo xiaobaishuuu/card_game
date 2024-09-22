@@ -17,9 +17,13 @@ def login(username,password):
 
 def sign_up(username,password):
     content = load_players()
+    # username exist
     for user in content:
         if user['username'] == username:
             return False
+    # invalid password
+    if not check_password(password):
+        return False
     content.append({
         "username":username,
         "password":password,
@@ -29,8 +33,16 @@ def sign_up(username,password):
         json.dump({'player_data':content},fp,indent=4)
     return True
 
-def check_password(password):
-    pass
+def check_password(password:str):
+    letter = False
+    digit = False
+    if len(password) >= 8:
+        for char in password:
+            if char.isalpha():
+                letter = True
+            if char.isdigit():
+                digit = True
+    return letter and digit
 
 def save_game(players_info):
     """save the player data to json"""

@@ -28,8 +28,10 @@ class Player():
             invalidList = [CALL]
         # receive ui interect result
         choice,bet = choiceFunc(self.chip,least_bet,self.fold,invalidList).values()
-        if choice == FOLD:
+        print(choice)
+        if choice == FOLD or self.fold:
             self.fold = True
+            bet = 0
         self.chip -= bet
         return (choice,bet)
 
