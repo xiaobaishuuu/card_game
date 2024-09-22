@@ -1,40 +1,39 @@
 {
     "player_data": [
         {
-            "Id": 1,
-            "name": "Peter",
-            "password":"832jce83912",
+            "username": "Peter",
+            "password": "832jce83912deddwa",
             "chip": 1000
         },
         {
-            "Id": 2,
-            "name": "Amy",
-            "password":"832jce83912",
+            "username": "Amy",
+            "password": "832jce83912deddwa",
             "chip": 1000
         },
         {
-            "Id": 3,
-            "name": "Tom",
-            "password":"832jce83912",
+            "username": "Tom",
+            "password": "832jce83912deddwa",
             "chip": 1000
         },
         {
-            "Id": 4,
-            "name": "John",
-            "password":"832jce83912",
+            "username": "John",
+            "password": "832jce83912deddwa",
             "chip": 1000
         },
         {
-            "Id": 1001,
-            "name": "Rex",
-            "password":"12345",
+            "username": "Rex",
+            "password": "12345",
             "chip": 10000
         },
         {
-            "Id": 1002,
-            "name": "Felix",
-            "password":"0000",
+            "username": "Felix",
+            "password": "0000",
             "chip": 10000000
+        },
+        {
+            "username": "",
+            "password": "",
+            "chip": 1000
         }
     ]
 }

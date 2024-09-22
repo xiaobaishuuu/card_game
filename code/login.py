@@ -31,15 +31,8 @@ def sign_up(username,password):
 
 def check_password(password):
     pass
-# def save_players(self,playersList):
-#     """save the player data to json"""
-#     #get all player Id
-#     players_dict = {player.Id: player for player in iter(playersList)}
-#     for ori_player in self.__playersData:  #ori = original
-#         # find and replace player data
-#         if ori_player['Id'] in players_dict:
-#             ori_player['chip'] = players_dict[ori_player['Id']].chip
-#     with open(self.__playersDataPath,mode='w',encoding='utf-8') as fp:
-#         json.dump({'player_data':self.__playersData},fp,indent=4)
 
-# print(sign_up('Felix','00000'))
+def save_game(players_info):
+    """save the player data to json"""
+    with open(path,mode='w',encoding='utf-8') as fp:
+        json.dump({'player_data':players_info},fp,indent=4)

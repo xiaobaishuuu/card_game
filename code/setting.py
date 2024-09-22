@@ -76,6 +76,10 @@ def load_poker(path) -> dict:
         pokerImages[nameList[i]] = pokerImage
     return pokerImages
 
+# quitgame
+class QuitGame(Exception):
+    pass
+
 # load image
 imagePath = os.path.dirname(__file__).replace('code','image')
 fontPath  = os.path.dirname(__file__).replace('code','font')

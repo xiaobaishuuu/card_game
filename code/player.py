@@ -4,20 +4,18 @@ class Player():
 
     community = []
     def __init__(self,
-                 Id,
                  name:str,
                  chip:int,
                  hand:list = [],
                  fold = False) -> None:
-        self.Id = Id
         self.name = name
         self.chip = chip
         self.hand = hand
         self.fold = fold
         self.combo= ['','']
 
-    def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> dict[str,int]:
-        ''' return a dict["choice","bet"]'''
+    def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> tuple:
+        ''' return a tuple(choice,bet)'''
         if self.fold:       # fold
             invalidList = [INCREASE,DECREASE,FOLD,CALL,CHECK,BET_RAISE]
         elif is_ante:       # blind seat
@@ -29,11 +27,11 @@ class Player():
         elif least_bet == 0 and self.hand: #first seat
             invalidList = [CALL]
         # receive ui interect result
-        result:dict[str,int] = choiceFunc(self.chip,least_bet,self.fold,invalidList)
-        if result['choice'] == FOLD:
+        choice,bet = choiceFunc(self.chip,least_bet,self.fold,invalidList).values()
+        if choice == FOLD:
             self.fold = True
-        self.chip -= result['bet']
-        return result
+        self.chip -= bet
+        return (choice,bet)
 
     def combination(self):
         if self.hand:
@@ -119,8 +117,8 @@ class Player():
         return False
 
 class Bot(Player):
-    def __init__(self,Id,name,chip,hand=[],fold = False) -> None:
-        super().__init__(Id,name,chip,hand,fold)
+    def __init__(self,name,chip,hand=[],fold = False) -> None:
+        super().__init__(name,chip,hand,fold)
         choiceList = [BET_RAISE,CHECK,FOLD,CALL]
 
     def monte_carlo(self,n = 100,opponents = 4):
@@ -151,4 +149,4 @@ class Bot(Player):
             choice = CALL
             bet = least_bet
         self.chip -= bet
-        return {'choice':choice,'bet':bet}
+        return (choice,bet)

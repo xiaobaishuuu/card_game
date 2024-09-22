@@ -2,6 +2,7 @@ from setting import *
 from button import *
 from input_box import *
 import time
+from login import *
 
 def introduction():
     title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
@@ -90,7 +91,7 @@ def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:in
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                raise QuitGame
         #check animation time
         progress = min((time.time() - start_time) / duration, 1.0)
         #change pos
@@ -115,14 +116,17 @@ def interact(playerChip:int = -1,
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
     choice = ''
-    a = {}
+    value = {}
     Button.init_raise(least_bet)
     while True:
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                raise QuitGame
             # only check
+            for input_box in inputList:
+                input_box.check(event)
+                value.update({input_box.text:input_box.content})
             for button in buttonList:
                 #check betting button
                 if (button.text not in invalidList) and button.check(event):
@@ -130,11 +134,10 @@ def interact(playerChip:int = -1,
                     #either betting button press
                     if button.flag == 0:
                         press = True
+                        value = button.get_raise() if choice == BET_RAISE else least_bet
                     if button.flag == -1:
                         press = True
-            for input_box in inputList:
-                input_box.check(event)
-                a.update({input_box.text:input_box.content})
+                        [i.content_init() for i in inputList]
         # only draw
         for button in buttonList:
             button.draw(playerChip,invalidList)
@@ -142,4 +145,4 @@ def interact(playerChip:int = -1,
             input_box.draw()
         if press:
             break
-    return {'choice':choice,'bet':button.get_raise() if choice == BET_RAISE else least_bet}
+    return {'choice':choice,'value':value}

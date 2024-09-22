@@ -2,20 +2,26 @@ from card_game import *
 from holdem import *
 from login import *
 
-game = Holdme(os.path.dirname(__file__).replace('code','data') + '\\player.json')
+game = Holdme(load_players(path))
             #   ,handList=[['2_1','2_1'],['4_1','5_1'],['14_1','5_1'],['8_1','9_1'],['10_1','11_1']],
             #   communityCardsList=['8_1','9_1','10_1','5_1','5_1'])
-game.init_player()
 game.check_game()
 
-def login():
+def login_page() -> str:
     screen.fill(SCREEN_COLOR)
     draw_table(0)
     introduction()
-    choice = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
-    if choice == SIGN_IN:
-        pass
-def update_game():
+    while True:
+        # recieve input
+        choice,login_info = interact(buttonList = loginPageButtons,inputList=loginPageInputs).values()
+        # login
+        if choice == SIGN_IN and login(login_info[USERNAME],login_info[PASSWORD]):
+            return login_info[USERNAME]
+        # sign up
+        elif choice == SIGN_UP and login_info[PASSWORD] == login_info[C_PASSWORD]:
+            sign_up(login_info[USERNAME],login_info[PASSWORD])
+
+def game_page():
     screen.fill(SCREEN_COLOR)
     while True:
         clock.tick(FPS)
@@ -40,7 +46,11 @@ def update_game():
         pygame.display.flip()
 
 if __name__ == '__main__':
-
-
-    login()
-    update_game()
+    try:
+        username = login_page()
+        game.init_player(username)
+        game_page()
+    except QuitGame:
+        save_game(game.update_players_info())
+        pygame.quit()
+        quit()

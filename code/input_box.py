@@ -5,6 +5,7 @@ class Input:
 
     def __init__(self,
                  text:str,
+                 limitation:int,
                  rect:pygame.Rect,
                  color:tuple,
                  border_color:tuple,
@@ -12,6 +13,7 @@ class Input:
                  active_border_color:tuple = (0,0,0,0)
                  ) -> None:
         self.text = text
+        self.limitation = limitation
         self.rect = rect
         self.color= color
         self.border_color = border_color
@@ -19,20 +21,24 @@ class Input:
         self.active_border_color = active_border_color
         self.content = ''
 
+    def content_init(self):
+        self.content = ''
+
     def check(self,event:pygame.event):
         # click the input box
+        typing = True
         if self.rect.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
             self.border_color,self.active_border_color = self.active_border_color,self.border_color
             self.color,self.active_color = self.active_color,self.color
-            while True:
+            while typing:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        pygame.quit()
+                        raise QuitGame
                     # quit input box,enter and click again
                     elif event.type == pygame.MOUSEBUTTONDOWN or (event.type == pygame.KEYDOWN and event.key in (pygame.K_RETURN, pygame.K_KP_ENTER)):
                         self.border_color,self.active_border_color = self.active_border_color,self.border_color
                         self.color,self.active_color = self.active_color,self.color
-                        return None
+                        typing = False
                     # typing
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_TAB:
@@ -40,8 +46,8 @@ class Input:
                         elif event.key == pygame.K_BACKSPACE:
                             self.content = self.content[:-1]
                         else:
-                            # text limitation is 20
-                            if len(self.content) < 20:
+                            # check text limitation
+                            if len(self.content) < self.limitation:
                                 self.content += event.unicode
                 self.draw()
 
@@ -59,6 +65,6 @@ class Input:
         screen.blit(box,(self.rect.x,self.rect.y))
         pygame.display.flip()
 
-loginPageInputs = [Input(USERNAME,USERNAME_BOX_RECT,TABLE_COLOR,REMINDER_BG_COLOR,REMINDER_BG_COLOR,(244, 244, 244)),
-                   Input(PASSWORD,PASSWORD_BOX_RECT,REMINDER_BG_COLOR,REMINDER_BG_COLOR,TABLE_COLOR,(244, 244, 244)),
-                   Input(C_PASSWORD,C_PASSWORD_BOX_RECT,REMINDER_BG_COLOR,REMINDER_BG_COLOR,TABLE_COLOR,(244, 244, 244))]
+loginPageInputs = [Input(USERNAME,20,USERNAME_BOX_RECT,TABLE_COLOR,REMINDER_BG_COLOR,REMINDER_BG_COLOR,(244, 244, 244)),
+                   Input(PASSWORD,20,PASSWORD_BOX_RECT,REMINDER_BG_COLOR,REMINDER_BG_COLOR,TABLE_COLOR,(244, 244, 244)),
+                   Input(C_PASSWORD,20,C_PASSWORD_BOX_RECT,REMINDER_BG_COLOR,REMINDER_BG_COLOR,TABLE_COLOR,(244, 244, 244))]

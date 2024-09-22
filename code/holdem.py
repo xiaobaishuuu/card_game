@@ -5,7 +5,7 @@ from player import *
 class Holdme:
     """ # only calculates"""
     def __init__(self,
-                 playersDataPath:str,
+                 playersData:list,
                  ante:int = 100,
                  pot:int = 0,
                  handList:list[list] = [],
@@ -24,35 +24,28 @@ class Holdme:
         self.__big_blind = self.small_blind + 1
         self.__pokerList = [f'{i}_{j}' for i in range(2,15) for j in range(1,5)]
         self.__finish = False
-        self.__playersDataPath = playersDataPath
-        self.__playersData:list[dict] = self.__load_players(self.__playersDataPath)
+        self.__playersData:list[dict] = playersData
         self.__playersList:list[Player] = []
 
-    def __load_players(self,path) -> list:
-        '''return a list include player data [{Id:1,name:...},{...}...]'''
-        with open(path,mode='r',encoding='utf-8') as fp:
-            return json.load(fp)['player_data']
-
-    def save_players(self):
+    def update_players_info(self):
         """save the player data to json"""
         #get all player Id
-        players_dict = {player.Id: player for player in iter(self.__playersList)}
+        players_dict = {player.name: player for player in iter(self.__playersList)}
         for ori_player in self.__playersData:  #ori = original
             # find and replace player data
-            if ori_player['Id'] in players_dict:
-                ori_player['chip'] = players_dict[ori_player['Id']].chip
-        with open(self.__playersDataPath,mode='w',encoding='utf-8') as fp:
-            json.dump({'player_data':self.__playersData},fp,indent=4)
+            if ori_player['username'] in players_dict:
+                ori_player['chip'] = players_dict[ori_player['username']].chip
+        return self.__playersData
 
-    def init_player(self,Id = 1001):
+    def init_player(self,username):
         #playerList is ordered by the player seat
         for player in self.__playersData:
-            if player['Id'] == Id:
+            if player['username'] == username:
                 # insert player to the middle seat
-                self.__playersList.insert(2,(Player(Id,player['name'],player['chip'])))
+                self.__playersList.insert(2,(Player(player['username'],player['chip'])))
                 break
             else:
-                self.__playersList.append(Bot(player['Id'],player['name'],player['chip']))
+                self.__playersList.append(Bot(player['username'],player['chip']))
 
     def get_players_info(self,key:str) -> list:
         '''for draw func\n
@@ -104,21 +97,21 @@ class Holdme:
                 is_ante = self.pot < self.ante + self.ante/2
                 if self.gameRound == 1 and is_ante:
                     if seat == self.small_blind:
-                        least_bet = self.ante/2
+                        least_bet = round(self.ante/2)
                     elif seat == self.__big_blind:
                         least_bet = self.ante
                 # get combination name
                 self.__playersList[seat].combination()
                 # operation
                 result = self.__playersList[seat].decision(is_ante,least_bet,choiceFunc)
-                self.pot += result['bet']
-                least_bet = 0 if (seat == self.__big_blind and is_ante) else result['bet']
+                self.pot += result[1]
+                least_bet = 0 if (seat == self.__big_blind and is_ante) else result[1]
                 # find the next player and update in interface
                 current = (current + 1) % len(self.__playersList)
                 data = self.get_players_info('name'),self.get_players_info('chip')
                 updateFunc(*data)
                 # add one more round if someone raise
-                if result['choice'] == BET_RAISE:
+                if result[0] == BET_RAISE:
                     seat_range = range(current,current + len(self.__playersList) - 1)
                     again += 1
                     break
