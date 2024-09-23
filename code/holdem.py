@@ -1,7 +1,5 @@
-import json
 import random
 from player import *
-from login import *
 
 class Holdme:
     """ # only calculates"""
@@ -40,13 +38,14 @@ class Holdme:
 
     def init_player(self,username):
         #playerList is ordered by the player seat
-        for player in load_players(path):
+        for player in self.__playersData:
             if player['username'] == username:
                 # insert player to the middle seat
                 self.__playersList.insert(2,(Player(player['username'],player['chip'])))
                 break
             else:
                 self.__playersList.append(Bot(player['username'],player['chip']))
+        self.__playersList = self.__playersList[:5]
 
     def get_players_info(self,key:str) -> list:
         '''for draw func\n
@@ -103,16 +102,18 @@ class Holdme:
                         least_bet = self.ante
                 # get combination name
                 self.__playersList[seat].combination()
-                # operation
-                result = self.__playersList[seat].decision(is_ante,least_bet,choiceFunc)
-                self.pot += result[1]
-                least_bet = 0 if (seat == self.__big_blind and is_ante) else result[1]
-                # find the next player and update in interface
+                if not self.__playersList[seat].fold:
+                    # operation
+                    result = self.__playersList[seat].decision(is_ante,least_bet,choiceFunc)
+                    self.pot += result['bet']
+                    least_bet = 0 if (seat == self.__big_blind and is_ante) else result['bet']
+                    # update in interface
+                    data = self.get_players_info('name'),self.get_players_info('chip')
+                    updateFunc(*data)
+                # find the next player
                 current = (current + 1) % len(self.__playersList)
-                data = self.get_players_info('name'),self.get_players_info('chip')
-                updateFunc(*data)
                 # add one more round if someone raise
-                if result[0] == BET_RAISE:
+                if result['choice'] == BET_RAISE:
                     seat_range = range(current,current + len(self.__playersList) - 1)
                     again += 1
                     break

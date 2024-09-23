@@ -13,13 +13,13 @@ def login_page() -> str:
     introduction()
     while True:
         # recieve input
-        choice,login_info = interact(buttonList = loginPageButtons,inputList=loginPageInputs).values()
+        result = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
         # login
-        if choice == SIGN_IN and login(login_info[USERNAME],login_info[PASSWORD]):
-            return login_info[USERNAME]
+        if result['choice'] == SIGN_IN and login(result[USERNAME],result[PASSWORD]):
+            return result[USERNAME]
         # sign up
-        elif choice == SIGN_UP and login_info[PASSWORD] == login_info[C_PASSWORD]:
-            sign_up(login_info[USERNAME],login_info[PASSWORD])
+        elif result['choice'] == SIGN_UP and result[PASSWORD] == result[C_PASSWORD]:
+            sign_up(result[USERNAME],result[PASSWORD])
 
 def game_page():
     screen.fill(SCREEN_COLOR)

@@ -14,7 +14,7 @@ class Player():
         self.fold = fold
         self.combo= ['','']
 
-    def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> tuple:
+    def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> dict:
         ''' return a tuple(choice,bet)'''
         if self.fold:       # fold
             invalidList = [INCREASE,DECREASE,FOLD,CALL,CHECK,BET_RAISE]
@@ -27,13 +27,11 @@ class Player():
         elif least_bet == 0 and self.hand: #first seat
             invalidList = [CALL]
         # receive ui interect result
-        choice,bet = choiceFunc(self.chip,least_bet,self.fold,invalidList).values()
-        print(choice)
-        if choice == FOLD or self.fold:
+        result:dict = choiceFunc(self.chip,least_bet,self.fold,invalidList)
+        if result['choice'] == FOLD:
             self.fold = True
-            bet = 0
-        self.chip -= bet
-        return (choice,bet)
+        self.chip -= result.get('bet',0)
+        return result
 
     def combination(self):
         if self.hand:
@@ -146,9 +144,9 @@ class Bot(Player):
             choice = ANTE
             bet = least_bet
         else:
-            # choice = BET_RAISE
-            # bet = least_bet + 100
-            choice = CALL
-            bet = least_bet
+            choice = BET_RAISE
+            bet = least_bet + 100
+            # choice = CALL
+            # bet = least_bet
         self.chip -= bet
-        return (choice,bet)
+        return {'choice':choice,'bet':bet}

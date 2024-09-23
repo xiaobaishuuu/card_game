@@ -118,10 +118,18 @@ def interact(playerChip:int = -1,
              inputList:list[Input] = []) -> dict[str,int]:
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
-    choice = ''
-    value = {}
-    Button.init_raise(least_bet)
-    while True:
+    def calculate_bet(playerChip,least_bet,raise_bet):
+        # excced max
+        if least_bet + raise_bet > playerChip:
+            raise_bet = playerChip - least_bet
+        # exceed min
+        elif least_bet + raise_bet < least_bet:
+            raise_bet = 0
+        return least_bet + raise_bet
+    result = {}
+    bet = least_bet
+    raising = 0
+    while not press:
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -129,22 +137,24 @@ def interact(playerChip:int = -1,
             # only check
             for input_box in inputList:
                 input_box.check(event)
-                value.update({input_box.text:input_box.content})
+                result.update({input_box.text:input_box.content})
             for button in buttonList:
-                #check betting button
+                #check button
                 if (button.text not in invalidList) and button.check(event):
-                    #either betting button press
-                    if button.flag == 0:
-                        press = True
-                        value = button.get_raise() if choice == BET_RAISE else least_bet
-                    if button.flag == -1:
-                        press = True
+                    #which button
+                    result.update({'choice':button.text})
+                    if button.flag == 1:
+                        raising += button.set_value()
+                        bet = calculate_bet(playerChip,least_bet,raising)
+                        continue
+                    elif button.flag == 0:
+                        result.update({'bet':bet})
+                    elif button.flag == -1:
                         [i.content_init() for i in inputList]
+                    press = True
         # only draw
         for button in buttonList:
-            button.draw(playerChip,invalidList)
+            button.draw(bet,invalidList)
         for input_box in inputList:
             input_box.draw()
-        if press:
-            break
-    return {'choice':choice,'value':value}
+    return result

@@ -5,9 +5,6 @@ class Button:
 
     # 不想改了，只能写这里了
     # bet = raising bet + least bet
-    __least_bet = 0
-    __raising_bet = 0
-
     def __init__(self,
                  text:str,
                  rect:pygame.Rect,
@@ -21,25 +18,12 @@ class Button:
         self.touch = touch_color
         self.flag  = flag
 
-    @classmethod
-    def init_raise(cls,least_bet):
-        cls.__raising_bet = 0
-        cls.__least_bet = least_bet
-
-    @classmethod
-    def get_raise(cls) -> int:
-        '''return the bet after player raise'''
-        return cls.__least_bet + cls.__raising_bet
-
-    @classmethod
-    def __calculate_bet(cls,playerChip) -> int:
-        # excced max
-        if cls.__least_bet + cls.__raising_bet > playerChip:
-            cls.__raising_bet = playerChip - cls.__least_bet
-        # exceed min
-        elif cls.__least_bet + cls.__raising_bet < cls.__least_bet:
-            cls.__raising_bet = 0
-        return round(cls.__least_bet + cls.__raising_bet)
+    def set_value(self):
+        # increase /decrese
+        if   self.text == INCREASE:
+            return 100
+        elif self.text == DECREASE:
+            return -100
 
     def check(self, event:pygame.event):
         """return True when the button release"""
@@ -55,15 +39,10 @@ class Button:
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.color = BUTTON_COLOR
                 self.touch = BUTTON_TOUCH_COLOR
-                # inc/dec the bet
-                if   self.text == INCREASE:
-                    Button.__raising_bet += 100
-                elif self.text == DECREASE:
-                    Button.__raising_bet -= 100
                 return True
         return False
 
-    def draw(self,playerChip:int,invalidList:list = []):
+    def draw(self,c,invalidList:list = []):
         """draw the button"""
         pygame.draw.rect(screen,self.color, self.rect,0,25)
         pygame.draw.rect(screen,self.touch, self.rect,10,25)
@@ -71,7 +50,7 @@ class Button:
         text = BUTTON_FONT.render(self.text,True,BUTTON_FONT_COLOR)
         screen.blit(text,((self.rect.x + self.rect.width/2) - text.get_width()/2,(self.rect.y + self.rect.height/2) - text.get_height()/2))
         if self.text == BET_RAISE:
-            bet = BETTING_SIZE_FONT.render(str(Button.__calculate_bet(playerChip)),True,BUTTON_FONT_COLOR)
+            bet = BETTING_SIZE_FONT.render(str(c),True,BUTTON_FONT_COLOR)
             screen.blit(bet,(self.rect.x + (self.rect.width - bet.get_width())/2,(self.rect.y + self.rect.height/2) - text.get_height() - 5))
         if self.text in invalidList:
             invalid_layer = pygame.Surface((self.rect.width,self.rect.height),pygame.SRCALPHA)
