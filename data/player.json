@@ -1,33 +1,33 @@
 {
     "player_data": [
         {
+            "type": 0,
             "username": "Peter",
             "password": "832jce83912deddwa",
-            "chip": 1000
+            "chip": 950
         },
         {
+            "type": 0,
             "username": "Amy",
             "password": "832jce83912deddwa",
-            "chip": 1000
+            "chip": 900
         },
         {
+            "type": 0,
             "username": "Tom",
             "password": "832jce83912deddwa",
             "chip": 1000
         },
         {
+            "type": 0,
             "username": "John",
             "password": "832jce83912deddwa",
             "chip": 1000
         },
         {
+            "type": 1,
             "username": "Rex",
             "password": "12345",
-            "chip": 1000
-        },
-        {
-            "username": "",
-            "password": "",
             "chip": 1000
         }
     ]

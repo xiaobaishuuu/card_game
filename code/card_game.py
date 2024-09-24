@@ -128,7 +128,6 @@ def interact(playerChip:int = -1,
         return least_bet + raise_bet
     result = {}
     bet = least_bet
-    raising = 0
     while not press:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -137,20 +136,20 @@ def interact(playerChip:int = -1,
             # only check
             for input_box in inputList:
                 input_box.check(event)
-                result.update({input_box.text:input_box.content})
             for button in buttonList:
                 #check button
                 if (button.text not in invalidList) and button.check(event):
                     #which button
                     result.update({'choice':button.text})
                     if button.flag == 1:
-                        raising += button.set_value()
-                        bet = calculate_bet(playerChip,least_bet,raising)
+                        bet = calculate_bet(playerChip,least_bet,button.adjust_value(bet))
                         continue
                     elif button.flag == 0:
                         result.update({'bet':bet})
                     elif button.flag == -1:
-                        [i.content_init() for i in inputList]
+                        for input_box in inputList:
+                            result.update({input_box.text:input_box.content})
+                            input_box.content_init()
                     press = True
         # only draw
         for button in buttonList:

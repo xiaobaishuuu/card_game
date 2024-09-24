@@ -2,12 +2,8 @@ from card_game import *
 from holdem import *
 from login import *
 
-game = Holdme(load_players(path))
-            #   ,handList=[['2_1','2_1'],['4_1','5_1'],['14_1','5_1'],['8_1','9_1'],['10_1','11_1']],
-            #   communityCardsList=['8_1','9_1','10_1','5_1','5_1'])
-game.check_game()
-
 def login_page() -> str:
+    '''after login return real player usename'''
     screen.fill(SCREEN_COLOR)
     draw_table(0)
     introduction()
@@ -19,6 +15,7 @@ def login_page() -> str:
             return result[USERNAME]
         # sign up
         elif result['choice'] == SIGN_UP and result[PASSWORD] == result[C_PASSWORD]:
+            print(result[USERNAME],result[PASSWORD])
             sign_up(result[USERNAME],result[PASSWORD])
 
 def game_page():
@@ -47,7 +44,10 @@ def game_page():
 
 if __name__ == '__main__':
     try:
+        game = Holdme(load_players(path))
         username = login_page()
+            #   ,handList=[['2_1','2_1'],['4_1','5_1'],['14_1','5_1'],['8_1','9_1'],['10_1','11_1']],
+            #   communityCardsList=['8_1','9_1','10_1','5_1','5_1'])
         game.init_player(username)
         game_page()
     except QuitGame:

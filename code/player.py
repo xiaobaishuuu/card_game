@@ -30,6 +30,7 @@ class Player():
         result:dict = choiceFunc(self.chip,least_bet,self.fold,invalidList)
         if result['choice'] == FOLD:
             self.fold = True
+            result['bet'] = 0
         self.chip -= result.get('bet',0)
         return result
 
@@ -144,9 +145,9 @@ class Bot(Player):
             choice = ANTE
             bet = least_bet
         else:
-            choice = BET_RAISE
-            bet = least_bet + 100
-            # choice = CALL
-            # bet = least_bet
+            # choice = BET_RAISE
+            # bet = least_bet + 100
+            choice = CALL
+            bet = least_bet
         self.chip -= bet
         return {'choice':choice,'bet':bet}

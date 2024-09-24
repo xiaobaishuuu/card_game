@@ -25,6 +25,7 @@ def sign_up(username,password):
     if not check_password(password):
         return False
     content.append({
+        "type": 1,
         "username":username,
         "password":password,
         "chip": 1000
@@ -43,6 +44,17 @@ def check_password(password:str):
             if char.isdigit():
                 digit = True
     return letter and digit
+
+def get_player(username):
+    a = []
+    for player in load_players():
+        if player['username'] == username:
+            # insert player to the middle seat
+            playersList.insert(2,'1')
+            break
+        else:
+            self.__playersList.append(Bot(player['username'],player['chip']))
+    self.__playersList = self.__playersList[:5]
 
 def save_game(players_info):
     """save the player data to json"""

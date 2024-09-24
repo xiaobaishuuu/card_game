@@ -25,18 +25,21 @@ class Holdme:
         self.__finish = False
         self.__playersData:list[dict] = playersData
         self.__playersList:list[Player] = []
+        self.check_game()
 
     def update_players_info(self):
-        """save the player data to json"""
+        """return dict include player info """
         #get all player Id
         players_dict = {player.name: player for player in iter(self.__playersList)}
-        for ori_player in self.__playersData:  #ori = original
-            # find and replace player data
+        for ori_player in self.__playersData:  #original
+            # find and update player data
             if ori_player['username'] in players_dict:
                 ori_player['chip'] = players_dict[ori_player['username']].chip
         return self.__playersData
 
     def init_player(self,username):
+        """username: real player username\n
+           loading all player"""
         #playerList is ordered by the player seat
         for player in self.__playersData:
             if player['username'] == username:
@@ -54,7 +57,7 @@ class Holdme:
         return [getattr(player,key) for player in self.__playersList]
 
     def check_game(self):
-        """when someone win the game,change the blind seat"""
+        """check the blind seat or someone win the game,"""
         self.small_blind = 0 if self.small_blind >= len(self.__playersList) else self.small_blind
         self.__big_blind = 1 if self.__big_blind >= len(self.__playersList) else self.__big_blind
         if self.__finish:

@@ -2,7 +2,6 @@ from setting import *
 
 class Input:
     """draw a input box in a Surface"""
-
     def __init__(self,
                  text:str,
                  limitation:int,

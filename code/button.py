@@ -2,9 +2,6 @@ from setting import *
 
 class Button:
     '''draw a button in a Surface'''
-
-    # 不想改了，只能写这里了
-    # bet = raising bet + least bet
     def __init__(self,
                  text:str,
                  rect:pygame.Rect,
@@ -18,12 +15,12 @@ class Button:
         self.touch = touch_color
         self.flag  = flag
 
-    def set_value(self):
+    def adjust_value(self,value):
         # increase /decrese
         if   self.text == INCREASE:
-            return 100
+            return value + 100
         elif self.text == DECREASE:
-            return -100
+            return value - 100
 
     def check(self, event:pygame.event):
         """return True when the button release"""
