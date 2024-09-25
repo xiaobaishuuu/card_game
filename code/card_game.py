@@ -2,7 +2,6 @@ from setting import *
 from button import *
 from input_box import *
 import time
-from login import *
 
 def introduction():
     title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)

@@ -8,21 +8,23 @@ def load_players(path = path) -> list:
     with open(path,mode='r',encoding='utf-8') as fp:
         return json.load(fp)['player_data']
 
-def login(username,password):
-    content = load_players()
-    for user in content:
-        if user['username'] == username and user['password'] == password:
-            return True
+def sign_in(username,password):
+    """return player info after login successful,\n
+       else return False"""
+    for player in load_players():
+        if player['username'] == username and player['password'] == password:
+            del player['password']
+            return player
     return False
 
-def sign_up(username,password):
+def sign_up(username,password,c_password):
     content = load_players()
     # username exist
     for user in content:
         if user['username'] == username:
             return False
     # invalid password
-    if not check_password(password):
+    if not check_password(password) or password != c_password:
         return False
     content.append({
         "type": 1,
@@ -45,18 +47,19 @@ def check_password(password:str):
                 digit = True
     return letter and digit
 
-def get_player(username):
-    a = []
-    for player in load_players():
-        if player['username'] == username:
-            # insert player to the middle seat
-            playersList.insert(2,'1')
-            break
-        else:
-            self.__playersList.append(Bot(player['username'],player['chip']))
-    self.__playersList = self.__playersList[:5]
+def get_bot():
+    botList = []
+    for bot in load_players():
+        del bot['password']
+        if bot['type'] == 0:
+            botList.append(bot)
+    return botList
 
-def save_game(players_info):
-    """save the player data to json"""
-    with open(path,mode='w',encoding='utf-8') as fp:
-        json.dump({'player_data':players_info},fp,indent=4)
+# def save_game(players_info:list[dict]):
+#     """save the player data to json"""
+#     for player in load_players():
+#         player.app
+#     with open(path,mode='w',encoding='utf-8') as fp:
+#         json.dump({'player_data':players_info},fp,indent=4)
+
+# print(get_bot())

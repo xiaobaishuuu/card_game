@@ -58,5 +58,5 @@
 # small_blind = 0 if small_blind >= len(playersList) else small_blind
 # big_blind = 1 if big_blind >= len(playersList) else big_blind
 
-a = {'1':2}
-print(a['2'])
+a = {'':0}
+print(bool(a))

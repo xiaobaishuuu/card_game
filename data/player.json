@@ -4,13 +4,13 @@
             "type": 0,
             "username": "Peter",
             "password": "832jce83912deddwa",
-            "chip": 950
+            "chip": 900
         },
         {
             "type": 0,
             "username": "Amy",
             "password": "832jce83912deddwa",
-            "chip": 900
+            "chip": 800
         },
         {
             "type": 0,
@@ -28,6 +28,12 @@
             "type": 1,
             "username": "Rex",
             "password": "12345",
+            "chip": 1000
+        },
+        {
+            "type": 1,
+            "username": "",
+            "password": "",
             "chip": 1000
         }
     ]

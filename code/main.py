@@ -2,21 +2,21 @@ from card_game import *
 from holdem import *
 from login import *
 
-def login_page() -> str:
-    '''after login return real player usename'''
+def login_page(login = False) -> dict:
+    '''return real player info after login '''
     screen.fill(SCREEN_COLOR)
     draw_table(0)
     introduction()
-    while True:
+    while not login:
         # recieve input
         result = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
-        # login
-        if result['choice'] == SIGN_IN and login(result[USERNAME],result[PASSWORD]):
-            return result[USERNAME]
+        # sign in
+        if result['choice'] == SIGN_IN:
+            login = sign_in(result[USERNAME],result[PASSWORD])
         # sign up
-        elif result['choice'] == SIGN_UP and result[PASSWORD] == result[C_PASSWORD]:
-            print(result[USERNAME],result[PASSWORD])
-            sign_up(result[USERNAME],result[PASSWORD])
+        elif result['choice'] == SIGN_UP:
+            sign_up(result[USERNAME],result[PASSWORD],result[C_PASSWORD])
+    return login
 
 def game_page():
     screen.fill(SCREEN_COLOR)
@@ -44,13 +44,14 @@ def game_page():
 
 if __name__ == '__main__':
     try:
-        game = Holdme(load_players(path))
-        username = login_page()
+        game = Holdme()
+        player_info = login_page()
             #   ,handList=[['2_1','2_1'],['4_1','5_1'],['14_1','5_1'],['8_1','9_1'],['10_1','11_1']],
             #   communityCardsList=['8_1','9_1','10_1','5_1','5_1'])
-        game.init_player(username)
+        game.init_player(get_bot(),player_info)
+        game.check_game()
         game_page()
     except QuitGame:
-        save_game(game.update_players_info())
+        #     save_game(game.update_players_info())
         pygame.quit()
         quit()

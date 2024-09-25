@@ -1,19 +1,17 @@
-import random
-from player import *
+from Base import *
 
-class Holdme:
+class Holdme(BaseGame):
     """ # only calculates"""
+
     def __init__(self,
-                 playersData:list,
                  ante:int = 100,
                  pot:int = 0,
                  handList:list[list] = [],
                  communityCardsList:list = [],
                  gameRound = 0,
-                 small_blind = 1):
+                 small_blind = 0):
         #finish: someone win the game
-        #playersData: original data,only read
-        #playerslist: players information, can change , length of it == player number
+        super().__init__(total_player=5)
         self.ante= ante
         self.pot = pot
         self.handList = handList
@@ -23,43 +21,21 @@ class Holdme:
         self.__big_blind = self.small_blind + 1
         self.__pokerList = [f'{i}_{j}' for i in range(2,15) for j in range(1,5)]
         self.__finish = False
-        self.__playersData:list[dict] = playersData
-        self.__playersList:list[Player] = []
-        self.check_game()
 
-    def update_players_info(self):
-        """return dict include player info """
-        #get all player Id
-        players_dict = {player.name: player for player in iter(self.__playersList)}
-        for ori_player in self.__playersData:  #original
-            # find and update player data
-            if ori_player['username'] in players_dict:
-                ori_player['chip'] = players_dict[ori_player['username']].chip
-        return self.__playersData
-
-    def init_player(self,username):
-        """username: real player username\n
-           loading all player"""
-        #playerList is ordered by the player seat
-        for player in self.__playersData:
-            if player['username'] == username:
-                # insert player to the middle seat
-                self.__playersList.insert(2,(Player(player['username'],player['chip'])))
-                break
-            else:
-                self.__playersList.append(Bot(player['username'],player['chip']))
-        self.__playersList = self.__playersList[:5]
-
-    def get_players_info(self,key:str) -> list:
-        '''for draw func\n
-        return a list include all player info\n
-        find the attr in playerslist by key'''
-        return [getattr(player,key) for player in self.__playersList]
+    # def update_players_info(self):
+    #     """return dict include player info """
+    #     #get all player Id
+    #     players_dict = {player.name: player for player in iter(self.playersList)}
+    #     for ori_player in self.__playersData:  #original
+    #         # find and update player data
+    #         if ori_player['username'] in players_dict:
+    #             ori_player['chip'] = players_dict[ori_player['username']].chip
+    #     return self.__playersData
 
     def check_game(self):
         """check the blind seat or someone win the game,"""
-        self.small_blind = 0 if self.small_blind >= len(self.__playersList) else self.small_blind
-        self.__big_blind = 1 if self.__big_blind >= len(self.__playersList) else self.__big_blind
+        self.small_blind = 0 if self.small_blind >= len(self.playersList) else self.small_blind
+        self.__big_blind = 1 if self.__big_blind >= len(self.playersList) else self.__big_blind
         if self.__finish:
             self.small_blind = self.small_blind + 1 if self.small_blind < 4 else 0
             self.__big_blind   = self.__big_blind + 1 if self.__big_blind < 4 else 0
@@ -88,14 +64,14 @@ class Holdme:
         '''choiceFunc: for real player operate,\n
         updateFunc: draw or print each player's chip after bet'''
         current = self.small_blind
-        seat_range = range(current,current + len(self.__playersList))
+        seat_range = range(current,current + len(self.playersList))
         least_bet = 0
         again = 1
         while again > 0:
             for seat in seat_range:
                 # avoid index error(small blind)
-                if seat >= len(self.__playersList):
-                    seat -= len(self.__playersList)
+                if seat >= len(self.playersList):
+                    seat -= len(self.playersList)
                 # blind bet
                 is_ante = self.pot < self.ante + self.ante/2
                 if self.gameRound == 1 and is_ante:
@@ -104,43 +80,41 @@ class Holdme:
                     elif seat == self.__big_blind:
                         least_bet = self.ante
                 # get combination name
-                self.__playersList[seat].combination()
-                if not self.__playersList[seat].fold:
+                self.playersList[seat].combination()
+                if not self.playersList[seat].fold:
                     # operation
-                    result = self.__playersList[seat].decision(is_ante,least_bet,choiceFunc)
+                    result = self.playersList[seat].decision(is_ante,least_bet,choiceFunc)
                     self.pot += result['bet']
                     least_bet = 0 if (seat == self.__big_blind and is_ante) else result['bet']
                     # update in interface
                     data = self.get_players_info('name'),self.get_players_info('chip')
                     updateFunc(*data)
                 # find the next player
-                current = (current + 1) % len(self.__playersList)
+                current = (current + 1) % len(self.playersList)
                 # add one more round if someone raise
                 if result['choice'] == BET_RAISE:
-                    seat_range = range(current,current + len(self.__playersList) - 1)
+                    seat_range = range(current,current + len(self.playersList) - 1)
                     again += 1
                     break
             again -= 1
 
     def check_winner(self):
-        s = [COMBO_RATING.index(player.combo[0]) for player in self.__playersList]
+        s = [COMBO_RATING.index(player.combo[0]) for player in self.playersList]
         for player in s:
             pass
-
-
 
     def deal_player(self):
         '''deal hand to self.handList'''
         # index 2 == player,else bot
         if len(self.handList) == 5:
             for i in range(len(self.handList)):
-                self.__playersList[i].hand = self.handList[i]
+                self.playersList[i].hand = self.handList[i]
             return None
-        for i in range(len(self.__playersList)):
+        for i in range(len(self.playersList)):
             # get 2 hand
             element = random.sample(self.__pokerList,2)
             self.handList.append(element)
-            self.__playersList[i].hand = element
+            self.playersList[i].hand = element
             for i in range(2):
                 self.__pokerList.remove(element[i])
 
