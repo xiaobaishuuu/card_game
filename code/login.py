@@ -45,6 +45,8 @@ def check_password(password:str):
                 letter = True
             if char.isdigit():
                 digit = True
+            if letter and digit:
+                break
     return letter and digit
 
 def get_bot():
@@ -55,11 +57,11 @@ def get_bot():
             botList.append(bot)
     return botList
 
-# def save_game(players_info:list[dict]):
-#     """save the player data to json"""
-#     for player in load_players():
-#         player.app
-#     with open(path,mode='w',encoding='utf-8') as fp:
-#         json.dump({'player_data':players_info},fp,indent=4)
+def save_game(players_info:list[dict]):
+    """save the player data to json"""
+    for player in load_players():
+        if player['username']
+    with open(path,mode='w',encoding='utf-8') as fp:
+        json.dump({'player_data':players_info},fp,indent=4)
 
 # print(get_bot())

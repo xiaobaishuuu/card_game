@@ -22,22 +22,13 @@ class Holdme(BaseGame):
         self.__pokerList = [f'{i}_{j}' for i in range(2,15) for j in range(1,5)]
         self.__finish = False
 
-    # def update_players_info(self):
-    #     """return dict include player info """
-    #     #get all player Id
-    #     players_dict = {player.name: player for player in iter(self.playersList)}
-    #     for ori_player in self.__playersData:  #original
-    #         # find and update player data
-    #         if ori_player['username'] in players_dict:
-    #             ori_player['chip'] = players_dict[ori_player['username']].chip
-    #     return self.__playersData
-
     def check_game(self):
         """check the blind seat or someone win the game,"""
         self.small_blind = 0 if self.small_blind >= len(self.playersList) else self.small_blind
         self.__big_blind = 1 if self.__big_blind >= len(self.playersList) else self.__big_blind
         if self.__finish:
             self.small_blind = self.small_blind + 1 if self.small_blind < 4 else 0
+            # self.small_blind = (self.small_blind + 1) % 5
             self.__big_blind   = self.__big_blind + 1 if self.__big_blind < 4 else 0
             self.__finish = False
 
