@@ -1,5 +1,6 @@
 #防止可能因大小写或少个字而产生防不胜防且难以根治以及高深莫测的 bug 而写的 keywords,自动补全就是好用
-# buttton keyword
+
+# button
 ANTE  = 'ante'
 CHECK = 'check'
 BET_RAISE = 'bet/raise'
@@ -8,8 +9,14 @@ CALL = 'call'
 INCREASE = '+'
 DECREASE = '-'
 
+# json key,no space
+PLAYER_DATA = 'player_data'
+TYPE = 'type'
 USERNAME = 'username'
 PASSWORD = 'password'
+CHIP = 'chip'
+
+# string
 C_PASSWORD = 'confirm password'
 SIGN_IN = 'sign in'
 SIGN_UP = 'sign up'

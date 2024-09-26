@@ -25,6 +25,18 @@
             "chip": 1000
         },
         {
+            "type": 0,
+            "username": "Alex",
+            "password": "832jce83912deddwa",
+            "chip": 1000
+        },
+        {
+            "type": 0,
+            "username": "Ryan",
+            "password": "832jce83912deddwa",
+            "chip": 1000
+        },
+        {
             "type": 1,
             "username": "Rex",
             "password": "12345",

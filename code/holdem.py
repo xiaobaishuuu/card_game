@@ -70,7 +70,7 @@ class Holdme(BaseGame):
                         least_bet = round(self.ante/2)
                     elif seat == self.__big_blind:
                         least_bet = self.ante
-                # get combination name
+                # get combo
                 self.playersList[seat].combination()
                 if not self.playersList[seat].fold:
                     # operation
@@ -78,19 +78,19 @@ class Holdme(BaseGame):
                     self.pot += result['bet']
                     least_bet = 0 if (seat == self.__big_blind and is_ante) else result['bet']
                     # update in interface
-                    data = self.get_players_info('name'),self.get_players_info('chip')
+                    data = self.get_players_info('username'),self.get_players_info('chip')
                     updateFunc(*data)
                 # find the next player
                 current = (current + 1) % len(self.playersList)
                 # add one more round if someone raise
-                if result['choice'] == BET_RAISE:
+                if result['choice'] == kw.BET_RAISE:
                     seat_range = range(current,current + len(self.playersList) - 1)
                     again += 1
                     break
             again -= 1
 
     def check_winner(self):
-        s = [COMBO_RATING.index(player.combo[0]) for player in self.playersList]
+        s = [kw.COMBO_RATING.index(player.combo[0]) for player in self.playersList]
         for player in s:
             pass
 

@@ -18,7 +18,7 @@ def login_page(login = False) -> dict:
             sign_up(result[USERNAME],result[PASSWORD],result[C_PASSWORD])
     return login
 
-def game_page():
+def holdem_page():
     screen.fill(SCREEN_COLOR)
     while True:
         clock.tick(FPS)
@@ -27,7 +27,7 @@ def game_page():
                 pygame.quit()
         draw_table()
         # draw_blind()
-        draw_players(game.get_players_info('name'),game.get_players_info('chip'))
+        draw_players(game.get_players_info('username'),game.get_players_info('chip'))
         r = game.gameRound
         if r >= 1:
             draw_hand(game.handList,r,game.get_players_info('fold'))
@@ -44,14 +44,12 @@ def game_page():
 
 if __name__ == '__main__':
     try:
-        game = Holdme()
         player_info = login_page()
-            #   ,handList=[['2_1','2_1'],['4_1','5_1'],['14_1','5_1'],['8_1','9_1'],['10_1','11_1']],
-            #   communityCardsList=['8_1','9_1','10_1','5_1','5_1'])
+        game = Holdme()
         game.init_player(get_bot(),player_info)
         game.check_game()
-        game_page()
+        holdem_page()
     except QuitGame:
-        #     save_game(game.update_players_info())
+        save_game(game.save_game())
         pygame.quit()
         quit()

@@ -3,35 +3,19 @@ from player import *
 
 class BaseGame:
     """game framework"""
-    def __init__(self,total_player) -> None:
+    def __init__(self,total_player:int) -> None:
         #playerslist: all player information(username,chip)
         self.__playersList:list[Player] = []
-        self.total_player = total_player
+        self.total_player:int = total_player
 
     @property
     def playersList(self):
         '''for child class'''
         return self.__playersList
 
-    def init_player(self,bot_list:list,real_player:dict = {}):
-        random.shuffle(bot_list)
-        for bot in bot_list:
-            self.__playersList.append(Bot(bot['username'],bot['chip']))
-        if real_player:
-            self.__playersList.insert(2,(Player(real_player['username'],real_player['chip'])))
-        self.__playersList = self.__playersList[:self.total_player]
-
-    def update_players_info(self):
-        """return dict include player info """
-        #get all player Id
-        players_dict = {player.name: player for player in iter(self.playersList)}
-        for ori_player in self.__playersData:  #original
-            # find and update player data
-            if ori_player['username'] in players_dict:
-                ori_player['chip'] = players_dict[ori_player['username']].chip
-        for player in self.__playersList:
-            
-        return self.__playersData
+    def save_game(self) -> list[dict]:
+        '''return latest player info'''
+        return [{kw.USERNAME:player.username,kw.CHIP:player.chip} for player in self.__playersList]
 
     def get_players_info(self,attr:str) -> list:
         '''for draw func\n
@@ -39,5 +23,58 @@ class BaseGame:
         find the attr in class Player'''
         return [getattr(player,attr) for player in self.__playersList]
 
-    def game_loop():
+    def init_player(self,bot_list:list,real_player:dict = {}):
+        random.shuffle(bot_list)
+        for bot in bot_list:
+            self.__playersList.append(Bot(bot[kw.USERNAME],bot[kw.CHIP]))
+        if real_player:
+            self.__playersList.insert(2,(Player(real_player[kw.USERNAME],real_player[kw.CHIP])))
+        self.__playersList = self.__playersList[:self.total_player]
+        # if len(self.__playersList) < self.total_player:
+        #     raise 'init error'
+
+    def game_loop(self):
+        ''''''
         pass
+
+# if __name__ == '__main__':
+#     a = BaseGame(5)
+#     a.init_player([{
+#                 "type": 0,
+#                 "username": "Peter",
+#                 "password": "832jce83912deddwa",
+#                 "chip": 900
+#             },
+#             {
+#                 "type": 0,
+#                 "username": "Amy",
+#                 "password": "832jce83912deddwa",
+#                 "chip": 800
+#             },
+#             {
+#                 "type": 0,
+#                 "username": "Tom",
+#                 "password": "832jce83912deddwa",
+#                 "chip": 1000
+#             },
+#             {
+#                 "type": 0,
+#                 "username": "John",
+#                 "password": "832jce83912deddwa",
+#                 "chip": 1000
+#             },
+#             {
+#                 "type": 0,
+#                 "username": "Alex",
+#                 "password": "832jce83912deddwa",
+#                 "chip": 1000
+#             },
+#             {
+#                 "type": 0,
+#                 "username": "Ryan",
+#                 "password": "832jce83912deddwa",
+#                 "chip": 1000
+#             }])
+#     print(a.playersList)
+#     print(a.save_game())
+#     print(a.get_players_info(kw.USERNAME))

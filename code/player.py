@@ -1,14 +1,14 @@
-from keywords import *
+import keywords as kw
 
 class Player():
 
     community = []
     def __init__(self,
-                 name:str,
+                 username:str,
                  chip:int,
                  hand:list = [],
                  fold = False) -> None:
-        self.name = name
+        self.username = username
         self.chip = chip
         self.hand = hand
         self.fold = fold
@@ -17,18 +17,18 @@ class Player():
     def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> dict:
         ''' return a tuple(choice,bet)'''
         if self.fold:       # fold
-            invalidList = [INCREASE,DECREASE,FOLD,CALL,CHECK,BET_RAISE]
+            invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CALL,kw.CHECK,kw.BET_RAISE]
         elif is_ante:       # blind seat
-            invalidList = [INCREASE,DECREASE,FOLD,CALL,CHECK]
+            invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CALL,kw.CHECK]
         elif not self.hand: #first round
-            invalidList = [FOLD,CALL]
+            invalidList = [kw.FOLD,kw.CALL]
         elif least_bet > 0: # someone bet
-            invalidList = [CHECK]
+            invalidList = [kw.CHECK]
         elif least_bet == 0 and self.hand: #first seat
-            invalidList = [CALL]
+            invalidList = [kw.CALL]
         # receive ui interect result
         result:dict = choiceFunc(self.chip,least_bet,self.fold,invalidList)
-        if result['choice'] == FOLD:
+        if result['choice'] == kw.FOLD:
             self.fold = True
             result['bet'] = 0
         self.chip -= result.get('bet',0)
@@ -50,10 +50,10 @@ class Player():
                 'one pair':self.one_pair,
                 'high card':self.high_card
             }
-            for name,check_func in check_dict.items():
+            for combo,check_func in check_dict.items():
                 result = check_func({'rank':rank,'suit':suit})
                 if result:
-                    self.combo = [name,result]
+                    self.combo = [combo,result]
                     break
 
     def high_card(self,card_list):
@@ -118,9 +118,9 @@ class Player():
         return False
 
 class Bot(Player):
-    def __init__(self,name,chip,hand=[],fold = False) -> None:
-        super().__init__(name,chip,hand,fold)
-        choiceList = [BET_RAISE,CHECK,FOLD,CALL]
+    def __init__(self,username,chip,hand=[],fold = False) -> None:
+        super().__init__(username,chip,hand,fold)
+        choiceList = [kw.BET_RAISE,kw.CHECK,kw.FOLD,kw.CALL]
 
     def monte_carlo(self,n = 100,opponents = 4):
         win_chip_list = []
@@ -139,15 +139,15 @@ class Bot(Player):
 
     def decision(self,is_ante,least_bet,choiceFunc):
         if self.fold:
-            choice = FOLD
+            choice = kw.FOLD
             bet = 0
         elif is_ante:
-            choice = ANTE
+            choice = kw.ANTE
             bet = least_bet
         else:
             # choice = BET_RAISE
             # bet = least_bet + 100
-            choice = CALL
+            choice = kw.CALL
             bet = least_bet
         self.chip -= bet
         return {'choice':choice,'bet':bet}

@@ -260,3 +260,11 @@
 # 5 4
 # 6 5
 # 7 6
+
+        #get all player Id
+        # players_dict = {player.name: player for player in iter(self.playersList)}
+        # for ori_player in ori_players_info:  #original
+        #     # find and update player data
+        #     if ori_player['username'] in players_dict:
+        #         ori_player['chip'] = players_dict[ori_player['username']].chip
+        # return ori_players_info

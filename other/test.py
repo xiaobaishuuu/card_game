@@ -58,5 +58,5 @@
 # small_blind = 0 if small_blind >= len(playersList) else small_blind
 # big_blind = 1 if big_blind >= len(playersList) else big_blind
 
-a = {'':0}
-print(bool(a))
+#   ,handList=[['2_1','2_1'],['4_1','5_1'],['14_1','5_1'],['8_1','9_1'],['10_1','11_1']],
+#   communityCardsList=['8_1','9_1','10_1','5_1','5_1'])
