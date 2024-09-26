@@ -45,7 +45,7 @@ def holdem_page():
 if __name__ == '__main__':
     try:
         player_info = login_page()
-        game = Holdme()
+        game = Holdme(small_blind=4)
         game.init_player(get_bot(),player_info)
         game.check_game()
         holdem_page()

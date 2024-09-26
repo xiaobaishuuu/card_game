@@ -23,12 +23,13 @@ class Holdme(BaseGame):
         self.__finish = False
 
     def check_game(self):
+
+        # bug
         """check the blind seat or someone win the game,"""
         self.small_blind = 0 if self.small_blind >= len(self.playersList) else self.small_blind
         self.__big_blind = 1 if self.__big_blind >= len(self.playersList) else self.__big_blind
         if self.__finish:
             self.small_blind = self.small_blind + 1 if self.small_blind < 4 else 0
-            # self.small_blind = (self.small_blind + 1) % 5
             self.__big_blind   = self.__big_blind + 1 if self.__big_blind < 4 else 0
             self.__finish = False
 
@@ -66,6 +67,7 @@ class Holdme(BaseGame):
                 # blind bet
                 is_ante = self.pot < self.ante + self.ante/2
                 if self.gameRound == 1 and is_ante:
+                    print(seat)
                     if seat == self.small_blind:
                         least_bet = round(self.ante/2)
                     elif seat == self.__big_blind:

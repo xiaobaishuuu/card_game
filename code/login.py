@@ -60,5 +60,12 @@ def get_bot():
 
 def save_game(players_info:list[dict]):
     """save the player data to json"""
+    ori_players_info = load_players()
+    for ori_player in ori_players_info:
+        for player in players_info:
+            if ori_player[kw.USERNAME] == player[kw.USERNAME]:
+                ori_player[kw.CHIP] = player[kw.CHIP]
     with open(path,mode='w',encoding='utf-8') as fp:
-        json.dump({kw.PLAYER_DATA:players_info},fp,indent=4)
+        json.dump({kw.PLAYER_DATA:ori_players_info},fp,indent=4)
+
+# save_game([{kw.USERNAME:'Ryan',kw.CHIP:10000000000000000000000000000000000000}])
