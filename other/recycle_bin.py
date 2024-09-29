@@ -268,3 +268,20 @@
         #     if ori_player['username'] in players_dict:
         #         ori_player['chip'] = players_dict[ori_player['username']].chip
         # return ori_players_info
+# a = b`
+
+# 0 1
+# 1 2
+# 2 3
+# 3 4
+# 4 0
+# 0 1
+# small_blind = 21831937192371923
+# __big_blind = small_blind +1
+
+# small_blind = (small_blind) % 5
+# __big_blind = (small_blind + 1) % 5
+# print(small_blind,__big_blind)
+# small_blind = (small_blind + 1) % 5
+# __big_blind = (small_blind + 1) % 5
+# print(small_blind,__big_blind)

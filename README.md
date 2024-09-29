@@ -14,6 +14,18 @@
   1.holdem 中的玩家座位，即起始顺序，与 pygame 中绘画玩家列表里的索引(index)一致
   2.使用图形视窗(GUI) 或 文本界面(TUI)时，holdem()接收 pygame 或 命令行打印 的相关函数，于 Holdem 模块内进行操作，因为没个玩家下注后将更新并打印数据，否则将全部玩家下注和才打印数据
 
+# 檢驗手牌强度
+  https://suffe.cool/poker/evaluator.html
+  使用 查找表 lookup table (LUT)
+  
+  prime: 2 3 5 7 11 13 17 19 23 29 31 37 41
+  rank : 2 3 4 5 6  7  8  9  10  J Q  K  A
+
+  xxxAKQJT 98765432 CDHSrrrr xxPPPPPP
+  00001000 00000000 01001011 00100101    King of Diamonds
+  00000000 00001000 00010011 00000111    Five of Spades
+  00000010 00000000 10001001 00011101    Jack of Clubs
+
 # taxas 机器人算法
   1.每一真实回合(记 A)，以 Monte Carlo 算法随机(100或以上)局，每一局(记 B)的完整的德州扑克中，(B)的每回合引用(A)的已知牌面，其他按未知牌面随机分发，最终得出(A)的获胜概率
   2.(B) 中机器人的评估方法为手牌组合与最高牌面
