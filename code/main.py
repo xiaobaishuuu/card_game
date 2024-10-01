@@ -38,6 +38,8 @@ def holdem_page():
             draw_community(game.communityCardsList,r,range(3,4),3)
         if r >= 4:
             draw_community(game.communityCardsList,r,range(4,5),4)
+        if r >= 5:
+            draw_winner()
         game.holdem(interact,draw_players)
         game.check_game()
         pygame.display.flip()

@@ -9,7 +9,7 @@ SCREEN_WIDTH = 1280
 SCREEN_COLOR = (242, 225, 231)
 
 # FPS setting
-FPS = 30
+FPS = 120
 
 #title
 TITLE_TEXT = "WELCOME to Hold'em"

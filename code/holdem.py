@@ -24,6 +24,7 @@ class Holdme(BaseGame):
 
     def check_game(self):
         """check the blind seat or someone win the game,"""
+        # ensure blind seat not exceed the range
         self.small_blind = (self.small_blind) % 5
         self.__big_blind = (self.small_blind + 1) % 5
         if self.__finish:
@@ -65,7 +66,6 @@ class Holdme(BaseGame):
                 # blind bet
                 is_ante = self.pot < self.ante + self.ante/2
                 if self.gameRound == 1 and is_ante:
-                    # print(seat)
                     if seat == self.small_blind:
                         least_bet = round(self.ante/2)
                     elif seat == self.__big_blind:
@@ -82,7 +82,7 @@ class Holdme(BaseGame):
                     updateFunc(*data)
                 # find the next player
                 current = (current + 1) % len(self.playersList)
-                # add one more round if someone raise
+                # add one round if someone raise
                 if result['choice'] == kw.BET_RAISE:
                     seat_range = range(current,current + len(self.playersList) - 1)
                     again += 1
@@ -90,17 +90,20 @@ class Holdme(BaseGame):
             again -= 1
 
     def check_winner(self):
-        s = [kw.COMBO_RATING.index(player.combo[0]) for player in self.playersList]
-        for player in s:
-            pass
+        # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
+        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in self.playersList}
+        # maybe play a draw so include all winner
+        winner_list = [player for player,combo in players_combo.items() if combo == max(players_combo.values())]
+        return winner_list
 
     def deal_player(self):
         '''deal hand to self.handList'''
-        # index 2 == player,else bot
+        # already set hand
         if len(self.handList) == 5:
             for i in range(len(self.handList)):
                 self.playersList[i].hand = self.handList[i]
             return None
+        # deal card to Player()
         for i in range(len(self.playersList)):
             # get 2 hand
             element = random.sample(self.__pokerList,2)
@@ -111,9 +114,11 @@ class Holdme(BaseGame):
 
     def deal_community(self,get:int):
         """get == how many card will deal"""
+        # already set community
         if len(self.communityCardsList) == 5:
             Player.community = self.communityCardsList
             return None
+        # deal card to Player()
         for i in range(get):
             element = random.choice(self.__pokerList)
             Player.community.append(element)

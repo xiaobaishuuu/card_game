@@ -7,7 +7,7 @@ def introduction():
     title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
     init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
-    move_animation(title,init_pos,final_position,1,1.5)
+    move_animation(title,init_pos,final_position,1)
 
 def invalid_input():
     REMINDER_FONT.render()
@@ -83,6 +83,9 @@ def draw_community(community:list,gameRound:int,deal_range:range,conditon_num:in
         if gameRound == conditon_num:
             draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],True)
         draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i])
+
+def draw_winner():
+    pass
 
 def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:int,alpha:float=255):
     '''animation'''
