@@ -50,6 +50,7 @@ if __name__ == '__main__':
         game.check_game()
         holdem_page()
     except QuitGame:
-        save_game(game.save_game())
+        if 'game' in locals():
+            save_game(game.save_game())
         pygame.quit()
         quit()

@@ -9,7 +9,7 @@ SCREEN_WIDTH = 1280
 SCREEN_COLOR = (242, 225, 231)
 
 # FPS setting
-FPS = 120
+FPS = 30
 
 #title
 TITLE_TEXT = "WELCOME to Hold'em"
@@ -66,6 +66,10 @@ CHEATING_MODE = False
 
 # ====================================NO CHANGE==========================================
 
+# quitgame
+class QuitGame(Exception):
+    pass
+
 def load_poker(path) -> dict:
     """return a dictionary include {poker_name:poker_image_surface,...}"""
     # nameList = os.listdir(path+'\\PNG-cards-1.3')
@@ -75,10 +79,6 @@ def load_poker(path) -> dict:
         pokerImage = pygame.image.load(f'{path}\\PNG-cards-1.3\\{nameList[i]}.png')
         pokerImages[nameList[i]] = pokerImage
     return pokerImages
-
-# quitgame
-class QuitGame(Exception):
-    pass
 
 # load image
 imagePath = os.path.dirname(__file__).replace('code','image')

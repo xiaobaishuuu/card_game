@@ -84,11 +84,10 @@ def draw_community(community:list,gameRound:int,deal_range:range,conditon_num:in
             draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],True)
         draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i])
 
-def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:int,showUpSpeed:float=255):
+def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:int,alpha:float=255):
     '''animation'''
     frame = screen.copy()
     start_time = time.time()
-    alpha = 0
     while True:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -100,8 +99,9 @@ def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:in
         x = init_pos[0] + (final_pos[0] - init_pos[0]) * progress
         y = init_pos[1] + (final_pos[1] - init_pos[1]) * progress
         #set alpha channel
-        if alpha < 255:
-            alpha += showUpSpeed
+        # if alpha < 255:
+        #     alpha = duration/255
+        # obj.set_alpha(alpha)
         screen.blit(frame,(0,0))
         screen.blit(obj,(x,y))
         pygame.display.flip()
@@ -114,7 +114,7 @@ def interact(playerChip:int = -1,
              press = False,
              invalidList:list = [],
              buttonList:list[Button] = gamePageButtons,
-             inputList:list[Input] = []) -> dict[str,int]:
+             inputList:list[Input] = []) -> dict:
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
     def calculate_bet(playerChip,least_bet,raise_bet):

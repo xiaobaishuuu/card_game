@@ -40,7 +40,7 @@ def sign_up(username,password,c_password):
     if not check_password(password) or password != c_password:
         return False
     content.append({
-        kw.TYPE: 1,
+        kw.TYPE: 1,  #type 1 is real player,0 is bot
         kw.USERNAME:username,
         kw.PASSWORD:password,
         kw.CHIP: 1000
@@ -58,7 +58,7 @@ def get_bot():
             botList.append(bot)
     return botList
 
-def save_game(players_info:list[dict]):
+def save_game(players_info:list[dict] = []):
     """save the player data to json"""
     ori_players_info = load_players()
     for ori_player in ori_players_info:
