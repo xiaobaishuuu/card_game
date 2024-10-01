@@ -12,6 +12,9 @@ def introduction():
 def invalid_input():
     REMINDER_FONT.render()
 
+def choose_game():
+    pass
+
 def draw_table(num=5):
     '''num: number of poker place'''
     pygame.draw.rect(screen,TABLE_COLOR,TABLE_RECT,0,1000)
@@ -84,8 +87,10 @@ def draw_community(community:list,gameRound:int,deal_range:range,conditon_num:in
             draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],True)
         draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i])
 
-def draw_winner():
-    pass
+def draw_winner(winner,c):
+    print('=========================================')
+    print(c)
+    print(winner)
 
 def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:int,alpha:float=255):
     '''animation'''

@@ -20,6 +20,7 @@ def login_page(login = False) -> dict:
 
 def holdem_page():
     screen.fill(SCREEN_COLOR)
+    game.check_game()
     while True:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -39,18 +40,24 @@ def holdem_page():
         if r >= 4:
             draw_community(game.communityCardsList,r,range(4,5),4)
         if r >= 5:
-            draw_winner()
+            draw_winner(game.winnerList,game.communityCardsList)
+            return True
         game.holdem(interact,draw_players)
-        game.check_game()
         pygame.display.flip()
+
+def other_game_page():...
 
 if __name__ == '__main__':
     try:
         player_info = login_page()
-        game = Holdme(small_blind=9)
-        game.init_player(get_bot(),player_info)
-        game.check_game()
-        holdem_page()
+        while True:
+            # game = choose_game()  選擇游戲，基於baseGame，但時間不夠不實現了
+            # game = 'holdem'
+            # if game == 'holdem':
+            game = Holdme()
+            game.init_player(get_bot(),player_info)
+            if holdem_page():
+                save_game(game.save_game())
     except QuitGame:
         if 'game' in locals():
             save_game(game.save_game())

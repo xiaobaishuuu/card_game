@@ -1,7 +1,8 @@
 from Base import *
 
 class Holdme(BaseGame):
-    """ # only calculates"""
+    """ # only calculates\n
+        程序入口為holdem(),調用后運行一回合而不是一整局,因此要運行一整局需配合loop(一局5回合)"""
 
     def __init__(self,
                  ante:int = 100,
@@ -9,7 +10,7 @@ class Holdme(BaseGame):
                  handList:list[list] = [],
                  communityCardsList:list = [],
                  gameRound = 0,
-                 small_blind = 0):
+                 small_blind = random.randint(1,5)):
         #finish: someone win the game
         super().__init__(total_player=5)
         self.ante= ante
@@ -20,17 +21,13 @@ class Holdme(BaseGame):
         self.small_blind = small_blind
         self.__big_blind = self.small_blind + 1
         self.__pokerList = [f'{i}_{j}' for i in range(2,15) for j in range(1,5)]
-        self.__finish = False
+        self.winnerList = []
 
     def check_game(self):
         """check the blind seat or someone win the game,"""
         # ensure blind seat not exceed the range
         self.small_blind = (self.small_blind) % 5
         self.__big_blind = (self.small_blind + 1) % 5
-        if self.__finish:
-            self.small_blind = (self.small_blind + 1) % 5
-            self.__big_blind = (self.small_blind + 1) % 5
-            self.__finish = False
 
     def holdem(self,choiceFunc = None,updateFunc = None):
         '''choiceFunc: real player operator,\n
@@ -47,9 +44,8 @@ class Holdme(BaseGame):
                 self.deal_community(1)
             case 5:
                 self.check_winner()
-                self.__finish = True
+                return
         self.betting_round(choiceFunc,updateFunc)
-        print('=========')
 
     def betting_round(self,choiceFunc = None,updateFunc = None):
         '''choiceFunc: for real player operate,\n
@@ -90,11 +86,21 @@ class Holdme(BaseGame):
             again -= 1
 
     def check_winner(self):
-        # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
-        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in self.playersList}
-        # maybe play a draw so include all winner
-        winner_list = [player for player,combo in players_combo.items() if combo == max(players_combo.values())]
-        return winner_list
+        # players_combo format - {username:[combo_level,combo_high_card,hand],...} e.g. {'tom':[5,[2,3,4,5,6],'5_2','6_2']},combo is straight 2 to 6
+        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1],player.hand] for player in self.playersList}
+        # print(players_combo)
+        # # maybe play a draw so include all winner
+        # print(list(players_combo.values())[:2])
+        # print(max(list(players_combo.values())[:2]))
+        for i in self.playersList:
+            print(i.username,i.combo)
+        print('======================================')
+        print(players_combo)
+        print(max(players_combo.values()[:2]))
+        for player,info in players_combo.items():
+            pass
+
+        self.winnerList = {player:[kw.COMBO_RATING[combo[0]],combo[2]] for player,combo in players_combo.items() if combo == max(list(players_combo.values())[:2])}
 
     def deal_player(self):
         '''deal hand to self.handList'''

@@ -15,7 +15,7 @@ class Player():
         self.combo= ['','']
 
     def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> dict:
-        ''' return a tuple(choice,bet)'''
+        ''' return a dict{choice,bet}'''
         if self.fold:       # fold
             invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CALL,kw.CHECK,kw.BET_RAISE]
         elif is_ante:       # blind seat
@@ -118,7 +118,11 @@ class Player():
         return False
 
 class Bot(Player):
-    def __init__(self,username,chip,hand=[],fold = False) -> None:
+    def __init__(self,
+                 username,
+                 chip,
+                 hand=[],
+                 fold = False) -> None:
         super().__init__(username,chip,hand,fold)
         choiceList = [kw.BET_RAISE,kw.CHECK,kw.FOLD,kw.CALL]
 
