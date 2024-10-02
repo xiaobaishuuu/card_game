@@ -39,7 +39,7 @@ class Button:
                 return True
         return False
 
-    def draw(self,c,invalidList:list = []):
+    def draw(self,number,invalidList:list = []):
         """draw the button"""
         pygame.draw.rect(screen,self.color, self.rect,0,25)
         pygame.draw.rect(screen,self.touch, self.rect,10,25)
@@ -47,7 +47,7 @@ class Button:
         text = BUTTON_FONT.render(self.text,True,BUTTON_FONT_COLOR)
         screen.blit(text,((self.rect.x + self.rect.width/2) - text.get_width()/2,(self.rect.y + self.rect.height/2) - text.get_height()/2))
         if self.text == BET_RAISE:
-            bet = BETTING_SIZE_FONT.render(str(c),True,BUTTON_FONT_COLOR)
+            bet = BETTING_SIZE_FONT.render(str(number),True,BUTTON_FONT_COLOR)
             screen.blit(bet,(self.rect.x + (self.rect.width - bet.get_width())/2,(self.rect.y + self.rect.height/2) - text.get_height() - 5))
         if self.text in invalidList:
             invalid_layer = pygame.Surface((self.rect.width,self.rect.height),pygame.SRCALPHA)

@@ -2,7 +2,7 @@ from Base import *
 
 class Holdme(BaseGame):
     """ # only calculates\n
-        程序入口為holdem(),調用后運行一回合而不是一整局,因此要運行一整局需配合loop(一局5回合)"""
+        程序入口為holdem(),調用后運行一回合而不是一整局,因此要運行一整局需配合循環(一局5回合)"""
 
     def __init__(self,
                  ante:int = 100,
@@ -10,7 +10,7 @@ class Holdme(BaseGame):
                  handList:list[list] = [],
                  communityCardsList:list = [],
                  gameRound = 0,
-                 small_blind = random.randint(1,5)):
+                 small_blind = 0):
         #finish: someone win the game
         super().__init__(total_player=5)
         self.ante= ante
@@ -33,6 +33,7 @@ class Holdme(BaseGame):
         '''choiceFunc: real player operator,\n
         updateFunc: update each player's chip'''
         self.gameRound += 1
+        self.betting_round(choiceFunc,updateFunc)
         match self.gameRound:
             case 1:
                 self.deal_player()
@@ -45,7 +46,11 @@ class Holdme(BaseGame):
             case 5:
                 self.check_winner()
                 return
-        self.betting_round(choiceFunc,updateFunc)
+        # get combo
+        for player in self.playersList:
+            player.combination()
+            player.last_bet = 0
+        print('============================================')
 
     def betting_round(self,choiceFunc = None,updateFunc = None):
         '''choiceFunc: for real player operate,\n
@@ -55,52 +60,52 @@ class Holdme(BaseGame):
         least_bet = 0
         again = 1
         while again > 0:
+            print('----------------------------------------------')
             for seat in seat_range:
+
+                # find the next player index
+                current = (current + 1) % len(self.playersList)
+
                 # avoid index error(small blind)
-                if seat >= len(self.playersList):
+                if  seat >= len(self.playersList):
                     seat -= len(self.playersList)
+
                 # blind bet
                 is_ante = self.pot < self.ante + self.ante/2
                 if self.gameRound == 1 and is_ante:
-                    if seat == self.small_blind:
-                        least_bet = round(self.ante/2)
-                    elif seat == self.__big_blind:
-                        least_bet = self.ante
-                # get combo
-                self.playersList[seat].combination()
+                    if   seat == self.small_blind:  least_bet = round(self.ante/2)
+                    elif seat == self.__big_blind:  least_bet = self.ante
+
                 if not self.playersList[seat].fold:
                     # operation
                     result = self.playersList[seat].decision(is_ante,least_bet,choiceFunc)
+
+                    print(self.playersList[seat].username,result)
+
                     self.pot += result['bet']
-                    least_bet = 0 if (seat == self.__big_blind and is_ante) else result['bet']
+                    if (seat == self.__big_blind and is_ante):  least_bet = 0
+                    elif not self.playersList[seat].fold:       least_bet = result['bet']
+
                     # update in interface
                     data = self.get_players_info('username'),self.get_players_info('chip')
                     updateFunc(*data)
-                # find the next player
-                current = (current + 1) % len(self.playersList)
-                # add one round if someone raise
-                if result['choice'] == kw.BET_RAISE:
-                    seat_range = range(current,current + len(self.playersList) - 1)
-                    again += 1
-                    break
+
+
+                    # add one round if someone raise
+                    if result['choice'] == kw.BET_RAISE:
+                        seat_range = range(current,current + len(self.playersList) - 1)
+                        print('again',self.playersList[seat].username)
+                        again += 1
+                        break
             again -= 1
 
     def check_winner(self):
-        # players_combo format - {username:[combo_level,combo_high_card,hand],...} e.g. {'tom':[5,[2,3,4,5,6],'5_2','6_2']},combo is straight 2 to 6
-        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1],player.hand] for player in self.playersList}
-        # print(players_combo)
-        # # maybe play a draw so include all winner
-        # print(list(players_combo.values())[:2])
-        # print(max(list(players_combo.values())[:2]))
+        # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
+        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in self.playersList}
+        # maybe play a draw so include all winner
         for i in self.playersList:
             print(i.username,i.combo)
-        print('======================================')
-        print(players_combo)
-        print(max(players_combo.values()[:2]))
-        for player,info in players_combo.items():
-            pass
-
-        self.winnerList = {player:[kw.COMBO_RATING[combo[0]],combo[2]] for player,combo in players_combo.items() if combo == max(list(players_combo.values())[:2])}
+        self.winnerList = {player:combo for player,combo in players_combo.items() if combo == max(players_combo.values())}
 
     def deal_player(self):
         '''deal hand to self.handList'''

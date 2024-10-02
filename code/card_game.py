@@ -47,6 +47,9 @@ def draw_reminder(playerCombination:list,bg_ratio = 1.3):
 #     pygame.draw.rect(a,(0,0,0),a.get_rect())
 #     screen.blit(a,(SCREEN_WIDTH/2 - TABLE_WIDTH*(16/29)/2,TABLE_RECT.y + (TABLE_HEIGHT*(16/29)/2)))
 
+def consider_time():
+    pass
+
 def draw_players(playerName:list,playerChip:list):
     for i in range(len(PLAYER_INFO_BAR_LIST)):
         pygame.draw.rect(PLAYER_INFO_BAR_LIST[i],PLAYER_INFO_BAR_COLOR,(0,0,PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),0,20)
@@ -60,7 +63,7 @@ def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:boo
     if deal:
         move_animation(pygame.transform.smoothscale_by(CARD_BACK,POKER_RATIO),POKER_INITIAL_POSITION,position,0.3)
     #player or community
-    if playerId == 2 or playerId == -1 or CHEATING_MODE:
+    if playerId in [-1,2] or CHEATING_MODE:
         screen.blit(pygame.transform.smoothscale_by(POKER[card_id],POKER_RATIO),position)
     #bot
     else:
@@ -88,7 +91,7 @@ def draw_community(community:list,gameRound:int,deal_range:range,conditon_num:in
         draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i])
 
 def draw_winner(winner,c):
-    print('=========================================')
+    print('=============WINNER==================')
     print(c)
     print(winner)
 
@@ -135,6 +138,8 @@ def interact(playerChip:int = -1,
         return least_bet + raise_bet
     result = {}
     bet = least_bet
+    raise_bet = 0
+    a = invalidList
     while not press:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -149,7 +154,8 @@ def interact(playerChip:int = -1,
                     #which button
                     result.update({'choice':button.text})
                     if button.flag == 1:
-                        bet = calculate_bet(playerChip,least_bet,button.adjust_value(bet))
+                        raise_bet = button.adjust_value(raise_bet)
+                        bet = calculate_bet(playerChip,least_bet,raise_bet)
                         continue
                     elif button.flag == 0:
                         result.update({'bet':bet})

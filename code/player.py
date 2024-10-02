@@ -13,6 +13,7 @@ class Player():
         self.hand = hand
         self.fold = fold
         self.combo= ['','']
+        self.last_bet = 0
 
     def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> dict:
         ''' return a dict{choice,bet}'''
@@ -21,16 +22,20 @@ class Player():
         elif is_ante:       # blind seat
             invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CALL,kw.CHECK]
         elif not self.hand: #first round
-            invalidList = [kw.FOLD,kw.CALL]
+            invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CALL,kw.BET_RAISE]
         elif least_bet > 0: # someone bet
             invalidList = [kw.CHECK]
         elif least_bet == 0 and self.hand: #first seat
             invalidList = [kw.CALL]
         # receive ui interect result
+        least_bet = least_bet - self.last_bet
         result:dict = choiceFunc(self.chip,least_bet,self.fold,invalidList)
+        self.last_bet = result['bet']
         if result['choice'] == kw.FOLD:
             self.fold = True
             result['bet'] = 0
+        elif is_ante:
+            result['choice'] = kw.ANTE
         self.chip -= result.get('bet',0)
         return result
 
@@ -126,32 +131,49 @@ class Bot(Player):
         super().__init__(username,chip,hand,fold)
         choiceList = [kw.BET_RAISE,kw.CHECK,kw.FOLD,kw.CALL]
 
-    def monte_carlo(self,n = 100,opponents = 4):
-        win_chip_list = []
-        p = 0
-        def decision():
-            pass
-        for i in range(n):
-            hand_list = []
-            for i in range(opponents):
-                hand_list.append([])
-        # return p,(sum(win_chip  _list)/len(win_chip_list))
+    # def monte_carlo(self,n = 100,opponents = 4):
+    #     win_chip_list = []
+    #     p = 0
+    #     def decision():
+    #         pass
+    #     for i in range(n):
+    #         hand_list = []
+    #         for i in range(opponents):
+    #             hand_list.append([])
+    #     # return p,(sum(win_chip  _list)/len(win_chip_list))
 
-    def linear_regression(self):
-        self.monte_carlo()
-        pass
+    # def linear_regression(self):
+    #     self.monte_carlo()
+    #     pass
 
     def decision(self,is_ante,least_bet,choiceFunc):
-        if self.fold:
-            choice = kw.FOLD
-            bet = 0
-        elif is_ante:
+        least_bet = least_bet - self.last_bet
+        import random
+        if self.fold:       # fold
+            invalidList = [kw.FOLD,kw.CALL,kw.CHECK,kw.BET_RAISE]
+        elif is_ante:       # blind seat
+            invalidList = [kw.FOLD,kw.CALL,kw.CHECK]
+        elif not self.hand: #first round
+            invalidList = [kw.FOLD,kw.CALL,kw.BET_RAISE]
+        elif least_bet > 0: # someone bet
+            invalidList = [kw.CHECK]
+        elif least_bet == 0 and self.hand: #first seat
+            invalidList = [kw.CALL]
+        l = list({kw.FOLD,kw.CALL,kw.CHECK,kw.BET_RAISE} - set(invalidList))
+
+        choice = random.choice(l)
+        bet = 0
+        if is_ante:
             choice = kw.ANTE
             bet = least_bet
-        else:
-            # choice = BET_RAISE
-            # bet = least_bet + 100
-            choice = kw.CALL
+        elif choice == kw.FOLD:
+            self.fold = True
+        elif choice == kw.CHECK:
+            pass
+        elif choice == kw.BET_RAISE:
+            bet = least_bet + 100
+        elif choice == kw.CALL:
             bet = least_bet
         self.chip -= bet
+        self.last_bet = bet
         return {'choice':choice,'bet':bet}

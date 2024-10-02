@@ -33,48 +33,9 @@ class BaseGame:
         # if len(self.__playersList) < self.total_player:
         #     raise 'init error'
 
-    def game_loop(self):
-        ''''''
-        pass
+    # def game_loop(self):
+    #     ''''''
+    #     pass
 
 if __name__ == '__main__':
-    a = BaseGame(5)
-    a.init_player([{
-                "type": 0,
-                "username": "Peter",
-                "password": "832jce83912deddwa",
-                "chip": 900
-            },
-            {
-                "type": 0,
-                "username": "Amy",
-                "password": "832jce83912deddwa",
-                "chip": 800
-            },
-            {
-                "type": 0,
-                "username": "Tom",
-                "password": "832jce83912deddwa",
-                "chip": 1000
-            },
-            {
-                "type": 0,
-                "username": "John",
-                "password": "832jce83912deddwa",
-                "chip": 1000
-            },
-            {
-                "type": 0,
-                "username": "Alex",
-                "password": "832jce83912deddwa",
-                "chip": 1000
-            },
-            {
-                "type": 0,
-                "username": "Ryan",
-                "password": "832jce83912deddwa",
-                "chip": 1000
-            }])
-    a.playersList[0].chip = 1000000000000e10
-    print(a.save_game())
-    print(a.get_players_info(kw.USERNAME))
+    pass
