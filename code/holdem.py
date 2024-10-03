@@ -29,11 +29,9 @@ class Holdme(BaseGame):
         self.small_blind = (self.small_blind) % 5
         self.__big_blind = (self.small_blind + 1) % 5
 
-    def holdem(self,choiceFunc = None,updateFunc = None):
-        '''choiceFunc: real player operator,\n
-        updateFunc: update each player's chip'''
+    def holdem(self,choiceFunc,updateChipFunc = None,updateCardFunc = None):
+        self.betting_round(choiceFunc,updateChipFunc,updateCardFunc)
         self.gameRound += 1
-        self.betting_round(choiceFunc,updateFunc)
         match self.gameRound:
             case 1:
                 self.deal_player()
@@ -52,9 +50,11 @@ class Holdme(BaseGame):
             player.last_bet = 0
         print('============================================')
 
-    def betting_round(self,choiceFunc = None,updateFunc = None):
-        '''choiceFunc: for real player operate,\n
-        updateFunc: draw or print each player's chip after bet'''
+    def betting_round(self,choiceFunc,updateChipFunc = None,updateCardFunc = None):
+        '''choiceFunc: real player operator,\n
+           updateChipFunc: update each player's chip\n
+           updateCardFunc: update card layer if player fold\n
+           ONLY choiceFunc is necessary'''
         current = self.small_blind
         seat_range = range(current,current + len(self.playersList))
         least_bet = 0
@@ -72,7 +72,7 @@ class Holdme(BaseGame):
 
                 # blind bet
                 is_ante = self.pot < self.ante + self.ante/2
-                if self.gameRound == 1 and is_ante:
+                if self.gameRound == 0 and is_ante:
                     if   seat == self.small_blind:  least_bet = round(self.ante/2)
                     elif seat == self.__big_blind:  least_bet = self.ante
 
@@ -87,10 +87,10 @@ class Holdme(BaseGame):
                     elif not self.playersList[seat].fold:       least_bet = result['bet']
 
                     # update in interface
-                    data = self.get_players_info('username'),self.get_players_info('chip')
-                    updateFunc(*data)
-
-
+                    if updateChipFunc and updateCardFunc:
+                        updateChipFunc(seat,self.playersList[seat].username,self.playersList[seat].chip)
+                    if self.gameRound > 0:
+                        updateCardFunc(seat,self.playersList[seat].hand    ,self.playersList[seat].fold)
                     # add one round if someone raise
                     if result['choice'] == kw.BET_RAISE:
                         seat_range = range(current,current + len(self.playersList) - 1)

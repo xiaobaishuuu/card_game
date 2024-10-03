@@ -86,18 +86,34 @@
 # a = int(0b1,2)
 # print(a)
 
-l = 最少下注額
-a 下注 100 l = 100
+# l = 最少下注額
+# a 下注 100 l = 100
 
-b 下注 200 l = 200
+# b 下注 200 l = 200
 
-c 下注 300 l = 300
-==================
-a 跟住 200 l = 300 - 100
+# c 下注 300 l = 300
+# ==================
+# a 跟住 200 l = 300 - 100
 
-b 跟住 100 l = 300 - 200
+# b 跟住 100 l = 300 - 200
 
-check
+# check
+# def calculate_bet(playerChip,least_bet,raise_bet):
+#     # excced max
+#     if least_bet + raise_bet > playerChip:
+#         raise_bet = playerChip - least_bet
+#     # exceed min
+#     elif least_bet + raise_bet < least_bet:
+#         raise_bet = 0
+#     return least_bet + raise_bet
 
+# def adjust_value(a,b):
+#     return a + b
 
+# playerChip = 100
+# least_bet = 100
+# bet = least_bet
+# raise_bet = 0
 
+# raise_bet = adjust_value(raise_bet,int(input()))
+# bet = calculate_bet(playerChip,least_bet,raise_bet)

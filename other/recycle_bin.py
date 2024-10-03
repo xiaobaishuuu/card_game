@@ -431,3 +431,12 @@
 #             Player.community.append(element)
 #             self.communityCardsList.append(element)
 #             self.__pokerList.remove(element)
+
+# if least_bet + raise_bet > playerChip:
+#     raise_bet = playerChip - least_bet
+# # exceed min
+# elif least_bet + raise_bet < least_bet:
+#     raise_bet = 0
+# return least_bet + raise_bet
+# raise_bet = min(raise_bet, playerChip - least_bet) # not excced max
+# return least_bet + max(0, raise_bet)               # not exceed min

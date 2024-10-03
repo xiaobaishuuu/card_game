@@ -41,29 +41,29 @@ def draw_reminder(playerCombination:list,bg_ratio = 1.3):
         elif CHEATING_MODE:
             pass
 
-# def draw_blind(small_blind= 1):
-#     pass
-#     a = pygame.Surface((TABLE_WIDTH*(16/29),TABLE_HEIGHT*(16/29)),pygame.SRCALPHA)
-#     pygame.draw.rect(a,(0,0,0),a.get_rect())
-#     screen.blit(a,(SCREEN_WIDTH/2 - TABLE_WIDTH*(16/29)/2,TABLE_RECT.y + (TABLE_HEIGHT*(16/29)/2)))
+def draw_blind(small_blind= 1):
+    return
+    a = pygame.Surface((TABLE_WIDTH*(16/29),TABLE_HEIGHT*(16/29)),pygame.SRCALPHA)
+    pygame.draw.rect(a,(0,0,0),a.get_rect())
+    screen.blit(a,(SCREEN_WIDTH/2 - TABLE_WIDTH*(16/29)/2,TABLE_RECT.y + (TABLE_HEIGHT*(16/29)/2)))
 
 def consider_time():
     pass
 
-def draw_players(playerName:list,playerChip:list):
-    for i in range(len(PLAYER_INFO_BAR_LIST)):
-        pygame.draw.rect(PLAYER_INFO_BAR_LIST[i],PLAYER_INFO_BAR_COLOR,(0,0,PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),0,20)
-        PLAYER_INFO_BAR_LIST[i].blit(PLAYER_NAME_FONT.render(playerName[i],True,PLAYER_NAME_FONT_COLOR),(70,25))
-        PLAYER_INFO_BAR_LIST[i].blit(PLAYER_NAME_FONT.render(f'$ {round(playerChip[i])}',True,PLAYER_NAME_FONT_COLOR),(70,55))
-        PLAYER_INFO_BAR_LIST[i].blit(pygame.transform.scale_by(PLAYER_ICON,PLAYER_ICON_RATIO),(0,20))
-        screen.blit(PLAYER_INFO_BAR_LIST[i],PLAYER_INFO_BAR_POSITION[i])
+def draw_players(seat:int,playerName:str,playerChip:int):
+    """player seat : 0 - 4"""
+    pygame.draw.rect(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_COLOR,(0,0,PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),0,20)
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(playerName,True,PLAYER_NAME_FONT_COLOR),(70,25))
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(f'$ {round(playerChip)}',True,PLAYER_NAME_FONT_COLOR),(70,55))
+    PLAYER_INFO_BAR_LIST[seat].blit(pygame.transform.scale_by(PLAYER_ICON,PLAYER_ICON_RATIO),(0,20))
+    screen.blit(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_POSITION[seat])
 
 def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:bool = False):
     '''playerId 1-5 == hand, -1 == community cards'''
     if deal:
         move_animation(pygame.transform.smoothscale_by(CARD_BACK,POKER_RATIO),POKER_INITIAL_POSITION,position,0.3)
-    #player or community
-    if playerId in [-1,2] or CHEATING_MODE:
+    #2 player or -1 community
+    if playerId in [-1,2] or CHEATING_MODE or fold:
         screen.blit(pygame.transform.smoothscale_by(POKER[card_id],POKER_RATIO),position)
     #bot
     else:
@@ -74,21 +74,15 @@ def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:boo
         pygame.draw.rect(fold_layer,(0,0,0,128),fold_layer.get_rect(),0,2)
         screen.blit(fold_layer,position)
 
-def draw_hand(handList:list[list],gameRound:int,foldList = False):
+def draw_hand(seat:int,hand:list,fold = False,deal:bool = False):
     '''draw all hand card'''
-    for i in range(len(PLAYER_INFO_BAR_LIST)):
-        for j in range(2):
-            if gameRound == 1:
-                draw_card(i,handList[i][j],HAND_POSITION[i][j],True)
-            draw_card(i,handList[i][j],HAND_POSITION[i][j],False,foldList[i])
+    for i in range(2):
+        draw_card(seat,hand[i],HAND_POSITION[seat][i],deal,fold)
 
-def draw_community(community:list,gameRound:int,deal_range:range,conditon_num:int):
-    '''"deal_range" is the range of dealing card(start with 0)\n
-    "conditon_num" is which round will deal the card in animation'''
+def draw_community(community:list,deal_range:range,deal:bool = False):
+    '''"deal_range" is the range of dealing card(start with 0)\n'''
     for i in deal_range:
-        if gameRound == conditon_num:
-            draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],True)
-        draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i])
+        draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],deal)
 
 def draw_winner(winner,c):
     print('=============WINNER==================')
@@ -128,18 +122,15 @@ def interact(playerChip:int = -1,
              inputList:list[Input] = []) -> dict:
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
-    def calculate_bet(playerChip,least_bet,raise_bet):
-        # excced max
-        if least_bet + raise_bet > playerChip:
-            raise_bet = playerChip - least_bet
-        # exceed min
-        elif least_bet + raise_bet < least_bet:
-            raise_bet = 0
-        return least_bet + raise_bet
-    result = {}
     bet = least_bet
-    raise_bet = 0
-    a = invalidList
+    result = {}
+
+    def calculate_bet(playerChip,least_bet,raise_bet):
+        nonlocal bet
+        bet += raise_bet
+        if   bet > playerChip: bet = playerChip  # excced max
+        elif bet < least_bet : bet = least_bet   # exceed min
+
     while not press:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -154,10 +145,11 @@ def interact(playerChip:int = -1,
                     #which button
                     result.update({'choice':button.text})
                     if button.flag == 1:
-                        raise_bet = button.adjust_value(raise_bet)
-                        bet = calculate_bet(playerChip,least_bet,raise_bet)
+                        calculate_bet(playerChip,least_bet,button.adjust_value())
                         continue
                     elif button.flag == 0:
+                        if   button.text == kw.CALL: bet = least_bet
+                        elif button.text == kw.FOLD or kw.CHECK: bet = 0
                         result.update({'bet':bet})
                     elif button.flag == -1:
                         for input_box in inputList:

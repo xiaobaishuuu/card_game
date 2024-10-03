@@ -33,7 +33,6 @@ class Player():
         self.last_bet = result['bet']
         if result['choice'] == kw.FOLD:
             self.fold = True
-            result['bet'] = 0
         elif is_ante:
             result['choice'] = kw.ANTE
         self.chip -= result.get('bet',0)

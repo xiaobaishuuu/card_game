@@ -10,12 +10,10 @@ def login_page(login = False) -> dict:
     while not login:
         # recieve input
         result = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
-        # sign in
-        if result['choice'] == SIGN_IN:
-            login = sign_in(result[USERNAME],result[PASSWORD])
-        # sign up
-        elif result['choice'] == SIGN_UP:
-            sign_up(result[USERNAME],result[PASSWORD],result[C_PASSWORD])
+        if   result['choice'] == kw.SIGN_IN:        # sign in
+            login = sign_in(result[kw.USERNAME],result[kw.PASSWORD])
+        elif result['choice'] == kw.SIGN_UP:        # sign up
+            sign_up(result[kw.USERNAME],result[kw.PASSWORD],result[kw.C_PASSWORD])
     return login
 
 def holdem_page():
@@ -27,22 +25,23 @@ def holdem_page():
             if event.type == pygame.QUIT:
                 pygame.quit()
         draw_table()
-        # draw_blind()
-        draw_players(game.get_players_info('username'),game.get_players_info('chip'))
+        draw_blind()
+        # draw every player
+        for seat in range(5): draw_players(seat,game.playersList[seat].username,game.playersList[seat].chip)
         r = game.gameRound
         if r >= 1:
-            draw_hand(game.handList,r,game.get_players_info('fold'))
+            for seat in range(5): draw_hand(seat,game.playersList[seat].hand,game.playersList[seat].fold,r == 1)
         draw_reminder(game.get_players_info('combo'))
         if r >= 2:
-            draw_community(game.communityCardsList,r,range(3),2)
+            draw_community(game.communityCardsList,range(0,3),r == 2)
         if r >= 3:
-            draw_community(game.communityCardsList,r,range(3,4),3)
+            draw_community(game.communityCardsList,range(3,4),r == 3)
         if r >= 4:
-            draw_community(game.communityCardsList,r,range(4,5),4)
+            draw_community(game.communityCardsList,range(4,5),r == 4)
         if r >= 5:
             draw_winner(game.winnerList,game.communityCardsList)
             return True
-        game.holdem(interact,draw_players)
+        game.holdem(interact,draw_players,draw_hand)
         pygame.display.flip()
 
 def other_game_page():...

@@ -1,7 +1,7 @@
 import os.path,os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
-from keywords import *
+import keywords as kw
 # ====================================CAN CHANGE==========================================
 # screen setting
 SCREEN_HEIGHT= 720
