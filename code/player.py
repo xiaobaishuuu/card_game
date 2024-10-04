@@ -31,7 +31,7 @@ class Player():
         least_bet = least_bet - self.last_bet
         result:dict = choiceFunc(self.chip,least_bet,self.fold,invalidList)
         self.last_bet = result['bet']
-        if result['choice'] == kw.FOLD:
+        if  result['choice'] == kw.FOLD:
             self.fold = True
         elif is_ante:
             result['choice'] = kw.ANTE
@@ -148,6 +148,7 @@ class Bot(Player):
     def decision(self,is_ante,least_bet,choiceFunc):
         least_bet = least_bet - self.last_bet
         import random
+        invalidList = []
         if self.fold:       # fold
             invalidList = [kw.FOLD,kw.CALL,kw.CHECK,kw.BET_RAISE]
         elif is_ante:       # blind seat

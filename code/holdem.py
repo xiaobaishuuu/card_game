@@ -89,8 +89,9 @@ class Holdme(BaseGame):
                     # update in interface
                     if updateChipFunc and updateCardFunc:
                         updateChipFunc(seat,self.playersList[seat].username,self.playersList[seat].chip)
-                    if self.gameRound > 0:
-                        updateCardFunc(seat,self.playersList[seat].hand    ,self.playersList[seat].fold)
+                        if self.gameRound > 0:
+                            updateCardFunc(seat,self.playersList[seat].hand,self.playersList[seat].fold)
+
                     # add one round if someone raise
                     if result['choice'] == kw.BET_RAISE:
                         seat_range = range(current,current + len(self.playersList) - 1)

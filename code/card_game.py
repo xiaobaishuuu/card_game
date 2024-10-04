@@ -125,7 +125,7 @@ def interact(playerChip:int = -1,
     bet = least_bet
     result = {}
 
-    def calculate_bet(playerChip,least_bet,raise_bet):
+    def calculate_bet(raise_bet):
         nonlocal bet
         bet += raise_bet
         if   bet > playerChip: bet = playerChip  # excced max
@@ -145,7 +145,7 @@ def interact(playerChip:int = -1,
                     #which button
                     result.update({'choice':button.text})
                     if button.flag == 1:
-                        calculate_bet(playerChip,least_bet,button.adjust_value())
+                        calculate_bet(button.adjust_value())
                         continue
                     elif button.flag == 0:
                         if   button.text == kw.CALL: bet = least_bet
