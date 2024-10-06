@@ -13,12 +13,13 @@ def sign_in(username,password):
     """return player info after login successful,\n
        else return False"""
     for player in load_players():
-        if player[kw.USERNAME] == username and player[kw.PASSWORD] == password:
+        # 拒绝机器人登录
+        if player[kw.USERNAME] == username and player[kw.PASSWORD] == password and player[kw.TYPE]:
             del player[kw.PASSWORD]
             return player
     return False
 
-def sign_up(username,password,c_password):
+def sign_up(username,password,c_password,real_player:bool = True):
     def check_password(password:str):
         letter = False
         digit = False
@@ -40,7 +41,7 @@ def sign_up(username,password,c_password):
     if not check_password(password) or password != c_password:
         return False
     content.append({
-        kw.TYPE: 1,  #type 1 is real player,0 is bot
+        kw.TYPE: int(real_player),  #type 1 is real player,0 is bot
         kw.USERNAME:username,
         kw.PASSWORD:password,
         kw.CHIP: 1000
@@ -67,5 +68,3 @@ def save_game(players_info:list[dict] = []):
                 ori_player[kw.CHIP] = player[kw.CHIP]
     with open(path,mode='w',encoding='utf-8') as fp:
         json.dump({kw.PLAYER_DATA:ori_players_info},fp,indent=4)
-
-# save_game([{kw.USERNAME:'Ryan',kw.CHIP:10000000000000000000000000000000000000}])

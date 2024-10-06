@@ -8,9 +8,9 @@ class Holdme(BaseGame):
                  ante:int = 100,
                  pot:int = 0,
                  handList:list[list] = [],
-                 communityCardsList:list = [],
+                 communityCardsList:list[str] = ['']*5,
                  gameRound = 0,
-                 small_blind = 0):
+                 small_blind = 2):
         #finish: someone win the game
         super().__init__(total_player=5)
         self.ante= ante
@@ -29,32 +29,35 @@ class Holdme(BaseGame):
         self.small_blind = (self.small_blind) % 5
         self.__big_blind = (self.small_blind + 1) % 5
 
-    def holdem(self,choiceFunc,updateChipFunc = None,updateCardFunc = None):
-        self.betting_round(choiceFunc,updateChipFunc,updateCardFunc)
+    def holdem(self,choiceFunc,updateChipFunc = None,updateCardFunc = None,ThinkingFunc = None):
+        '''choiceFunc (necessary): real player operator,\n
+           updateChipFunc: update each player's chip\n
+           updateCardFunc: update card layer if player fold\n
+           ThinkingFunc: sleep the programe for fake thinking of bot\n'''
+        self.betting_round(choiceFunc,updateChipFunc,updateCardFunc,ThinkingFunc)
         self.gameRound += 1
         match self.gameRound:
             case 1:
                 self.deal_player()
             case 2:
-                self.deal_community(3)
+                self.deal_community(range(0,3))
             case 3:
-                self.deal_community(1)
+                self.deal_community(range(3,4))
             case 4:
-                self.deal_community(1)
+                self.deal_community(range(4,5))
             case 5:
                 self.check_winner()
                 return
         # get combo
         for player in self.playersList:
-            player.combination()
+            player.combination(list(filter(lambda x:x != "",self.communityCardsList)))
             player.last_bet = 0
         print('============================================')
 
-    def betting_round(self,choiceFunc,updateChipFunc = None,updateCardFunc = None):
-        '''choiceFunc: real player operator,\n
-           updateChipFunc: update each player's chip\n
-           updateCardFunc: update card layer if player fold\n
-           ONLY choiceFunc is necessary'''
+    def betting_round(self,choiceFunc,
+                      updateChipFunc = None,
+                      updateCardFunc = None,
+                      ThinkingFunc   = None):
         current = self.small_blind
         seat_range = range(current,current + len(self.playersList))
         least_bet = 0
@@ -77,6 +80,8 @@ class Holdme(BaseGame):
                     elif seat == self.__big_blind:  least_bet = self.ante
 
                 if not self.playersList[seat].fold:
+                    #bot thinking
+                    if ThinkingFunc and seat != 2: ThinkingFunc(seat,random.randint(1,7))
                     # operation
                     result = self.playersList[seat].decision(is_ante,least_bet,choiceFunc)
 
@@ -84,14 +89,18 @@ class Holdme(BaseGame):
 
                     self.pot += result['bet']
                     if (seat == self.__big_blind and is_ante):  least_bet = 0
-                    elif not self.playersList[seat].fold:       least_bet = result['bet']
-
+                    if result['bet'] > least_bet:
+                        least_bet = result['bet']
+                    print(least_bet)
                     # update in interface
                     if updateChipFunc and updateCardFunc:
                         updateChipFunc(seat,self.playersList[seat].username,self.playersList[seat].chip)
                         if self.gameRound > 0:
                             updateCardFunc(seat,self.playersList[seat].hand,self.playersList[seat].fold)
 
+                    if len([player for player in self.playersList if not player.fold]) == 1:
+                        self.gameRound = 4
+                        return
                     # add one round if someone raise
                     if result['choice'] == kw.BET_RAISE:
                         seat_range = range(current,current + len(self.playersList) - 1)
@@ -101,8 +110,9 @@ class Holdme(BaseGame):
             again -= 1
 
     def check_winner(self):
+        nonFoldList = [player for player in self.playersList if not player.fold]
         # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
-        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in self.playersList}
+        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in nonFoldList}
         # maybe play a draw so include all winner
         for i in self.playersList:
             print(i.username,i.combo)
@@ -116,6 +126,8 @@ class Holdme(BaseGame):
                 self.playersList[i].hand = self.handList[i]
             return None
         # deal card to Player()
+        self.handList = []
+
         for i in range(len(self.playersList)):
             # get 2 hand
             element = random.sample(self.__pokerList,2)
@@ -124,15 +136,9 @@ class Holdme(BaseGame):
             for i in range(2):
                 self.__pokerList.remove(element[i])
 
-    def deal_community(self,get:int):
-        """get == how many card will deal"""
-        # already set community
-        if len(self.communityCardsList) == 5:
-            Player.community = self.communityCardsList
-            return None
-        # deal card to Player()
-        for i in range(get):
+    def deal_community(self,card_range:range):
+        # deal community
+        for i in card_range:
             element = random.choice(self.__pokerList)
-            Player.community.append(element)
-            self.communityCardsList.append(element)
+            self.communityCardsList[i] = element
             self.__pokerList.remove(element)

@@ -5,11 +5,11 @@ import keywords as kw
 # ====================================CAN CHANGE==========================================
 # screen setting
 SCREEN_HEIGHT= 720
-SCREEN_WIDTH = 1280
+SCREEN_WIDTH = 1380
 SCREEN_COLOR = (242, 225, 231)
 
 # FPS setting
-FPS = 120
+FPS = 60
 
 #title
 TITLE_TEXT = "WELCOME to Hold'em"
@@ -41,13 +41,11 @@ PLAYER_ICON_RATIO = 0.20
 PLAYER_NAME_FONT_SIZE = 20
 PLAYER_NAME_FONT_COLOR= (220, 220, 220)
 PLAYER_INFO_BAR_HEIGHT= 100
-PLAYER_INFO_BAR_WIDTH = 180
+PLAYER_INFO_BAR_WIDTH = 220
 PLAYER_INFO_BAR_COLOR = (68, 45, 53)
+PLAYER_INFO_BAR_MARGIN= 5   # distance from screen edge
 
-#button
-BUTTON_GAP   = 2.75
-BUTTON_WIDTH = 105
-BUTTON_HEIGHT= 75
+#button  edit:(in button.py)
 BUTTON_FONT_SIZE = 20
 BETTING_SIZE_FONT_SIZE = 15
 BUTTON_FONT_COLOR= (255,255,255)
@@ -106,8 +104,6 @@ INPUT_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',INPUT_FONT_SIZE)
 # button
 BUTTON_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',BUTTON_FONT_SIZE)
 BETTING_SIZE_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',BETTING_SIZE_FONT_SIZE)
-SETTING_WIDTH_SCALE  = 0.6
-SETTING_HEIGHT_SCALE = 0.7
 buttonList = [...] #(in button.py)
 
 # reminder
@@ -119,11 +115,17 @@ TABLE_RECT = pygame.Rect((SCREEN_WIDTH-TABLE_WIDTH)/2,(3/14)*(SCREEN_HEIGHT-TABL
 # player info
 PLAYER_NAME_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',PLAYER_NAME_FONT_SIZE)
 PLAYER_INFO_BAR_LIST = [pygame.Surface((PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),pygame.SRCALPHA) for i in range(5)]
-PLAYER_INFO_BAR_POSITION= [(TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + 100),
-                           (TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + TABLE_HEIGHT),
+PLAYER_INFO_BAR_POSITION= [(SCREEN_WIDTH - PLAYER_INFO_BAR_MARGIN - PLAYER_INFO_BAR_WIDTH,TABLE_RECT.y + 100),
+                           (SCREEN_WIDTH - PLAYER_INFO_BAR_MARGIN - PLAYER_INFO_BAR_WIDTH,TABLE_RECT.y + TABLE_HEIGHT),
                            (SCREEN_WIDTH/2 - PLAYER_INFO_BAR_WIDTH/2,TABLE_RECT.y + TABLE_HEIGHT),
-                           (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + TABLE_HEIGHT),
-                           (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + 100)]
+                           (PLAYER_INFO_BAR_MARGIN,TABLE_RECT.y + TABLE_HEIGHT),
+                           (PLAYER_INFO_BAR_MARGIN,TABLE_RECT.y + 100)]
+
+# PLAYER_INFO_BAR_POSITION= [(TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + 100),
+#                            (TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + TABLE_HEIGHT),
+#                            (SCREEN_WIDTH/2 - PLAYER_INFO_BAR_WIDTH/2,TABLE_RECT.y + TABLE_HEIGHT),
+#                            (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + TABLE_HEIGHT),
+#                            (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + 100)]
 
 #card
 POKER_INITIAL_POSITION = [(SCREEN_WIDTH/2)-(POKER_WIDTH*POKER_RATIO/2),0]

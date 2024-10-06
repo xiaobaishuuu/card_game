@@ -14,6 +14,7 @@ def login_page(login = False) -> dict:
             login = sign_in(result[kw.USERNAME],result[kw.PASSWORD])
         elif result['choice'] == kw.SIGN_UP:        # sign up
             sign_up(result[kw.USERNAME],result[kw.PASSWORD],result[kw.C_PASSWORD])
+        for input_box in loginPageInputs: input_box.content_init()
     return login
 
 def holdem_page():
@@ -28,6 +29,9 @@ def holdem_page():
         draw_blind()
         # draw every player
         for seat in range(5): draw_players(seat,game.playersList[seat].username,game.playersList[seat].chip)
+        if game.winnerList:
+            draw_winner(game.winnerList,game.communityCardsList)
+            return True
         r = game.gameRound
         if r >= 1:
             for seat in range(5): draw_hand(seat,game.playersList[seat].hand,game.playersList[seat].fold,r == 1)
@@ -38,10 +42,8 @@ def holdem_page():
             draw_community(game.communityCardsList,range(3,4),r == 3)
         if r >= 4:
             draw_community(game.communityCardsList,range(4,5),r == 4)
-        if r >= 5:
-            draw_winner(game.winnerList,game.communityCardsList)
-            return True
-        game.holdem(interact,draw_players,draw_hand)
+
+        game.holdem(interact,draw_players,draw_hand,draw_consideration)
         pygame.display.flip()
 
 def other_game_page():...

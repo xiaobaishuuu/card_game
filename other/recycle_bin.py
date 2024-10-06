@@ -290,8 +290,6 @@
 
 # class Holdme(BaseGame):
 #     """ # only calculates\n
-#         程序入口為holdem(),調用后運行一回合而不是一整局,因此要運行一整局需配合loop(一局5回合)"""
-
 #     def __init__(self,
 #                  ante:int = 100,
 #                  pot:int = 0,
@@ -440,3 +438,69 @@
 # return least_bet + raise_bet
 # raise_bet = min(raise_bet, playerChip - least_bet) # not excced max
 # return least_bet + max(0, raise_bet)               # not exceed min
+
+# def draw_progress_bar(surface, color, rect, radius, progress):
+#     # 绘制空心圆角矩形
+#     pygame.draw.rect(surface, color, (*rect, *rect_size), border_radius=radius, width=2)
+
+#     # 绘制进度条
+#     if progress > 0:
+#         total_length = 2 * (rect_size[0] + rect_size[1] - 4 * radius)  # 计算总长度
+#         progress_length = (progress / 100) * total_length  # 计算进度长度
+
+#         # 顶边
+#         if progress_length <= rect_size[0]:
+#             pygame.draw.rect(surface, progress_color, (rect[0] + radius, rect[1], progress_length, 2))
+#         else:
+#             pygame.draw.rect(surface, progress_color, (rect[0] + radius, rect[1], rect_size[0] - 2 * radius, 2))
+#             progress_length -= (rect_size[0] - 2 * radius)
+
+#             # 右边
+#             if progress_length <= rect_size[1]:
+#                 pygame.draw.rect(surface, progress_color, (rect[0] + rect_size[0] - 2, rect[1] + radius, 2, progress_length))
+#             else:
+#                 pygame.draw.rect(surface, progress_color, (rect[0] + rect_size[0] - 2, rect[1] + radius, 2, rect_size[1] - 2 * radius))
+#                 progress_length -= (rect_size[1] - 2 * radius)
+
+#                 # 底边
+#                 if progress_length <= rect_size[0]:
+#                     pygame.draw.rect(surface, progress_color, (rect[0] + radius, rect[1] + rect_size[1] - 2, progress_length, 2))
+#                 else:
+#                     pygame.draw.rect(surface, progress_color, (rect[0] + radius, rect[1] + rect_size[1] - 2, rect_size[0] - 2 * radius, 2))
+#                     progress_length -= (rect_size[0] - 2 * radius)
+
+#                     # 左边
+#                     pygame.draw.rect(surface, progress_color, (rect[0], rect[1] + radius, 2, progress_length))
+
+# if progress >= total_length:
+#     pygame.draw.arc(surface, progress_color, (rect[0], rect[1], rect_size[0], rect_size[1]),
+#                     0, math.radians(90), 2)  # 右上
+#     pygame.draw.arc(surface, progress_color, (rect[0] + rect_size[0] - 2 * radius, rect[1],
+#                                                 rect_size[0], rect_size[1]),
+#                     math.radians(90), math.radians(180), 2)  # 左上
+#     pygame.draw.arc(surface, progress_color, (rect[0] + rect_size[0] - 2 * radius, rect[1] + rect_size[1] - 2 * radius,
+#                                                 rect_size[0], rect_size[1]),
+#                     math.radians(180), math.radians(270), 2)  # 左下
+#     pygame.draw.arc(surface, progress_color, (rect[0], rect[1] + rect_size[1] - 2 * radius,
+#                                                 rect_size[0], rect_size[1]),
+#                     math.radians(270), math.radians(360), 2)  # 右下
+
+# PLAYER_INFO_BAR_POSITION= [(TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + 100),
+#                            (TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + TABLE_HEIGHT),
+#                            (SCREEN_WIDTH/2 - PLAYER_INFO_BAR_WIDTH/2,TABLE_RECT.y + TABLE_HEIGHT),
+#                            (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + TABLE_HEIGHT),
+#                            (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + 100)]
+
+# __betButton_y = PLAYER_INFO_BAR_POSITION[2][1] + (PLAYER_INFO_BAR_HEIGHT/2) - BUTTON_HEIGHT/2
+# __betButton_x = PLAYER_INFO_BAR_POSITION[2][0] #initial pos
+# __raise_pos   = PLAYER_INFO_BAR_WIDTH + BUTTON_WIDTH + BUTTON_GAP*2
+
+# gamePageButtons = [Button(kw.CHECK    ,pygame.Rect(__betButton_x - (BUTTON_GAP + BUTTON_WIDTH)*1,__betButton_y,BUTTON_WIDTH,BUTTON_HEIGHT)),
+#                    Button(kw.CALL     ,pygame.Rect(__betButton_x - (BUTTON_GAP + BUTTON_WIDTH)*2,__betButton_y,BUTTON_WIDTH,BUTTON_HEIGHT)),
+#                    Button(kw.FOLD     ,pygame.Rect(__betButton_x - (BUTTON_GAP + BUTTON_WIDTH)*3,__betButton_y,BUTTON_WIDTH,BUTTON_HEIGHT)),
+#                    Button(kw.BET_RAISE,pygame.Rect(__betButton_x + __raise_pos ,__betButton_y,BUTTON_WIDTH,BUTTON_HEIGHT)),
+#                    Button(kw.DECREASE ,pygame.Rect(__betButton_x + __raise_pos - BUTTON_WIDTH*SETTING_WIDTH_SCALE - BUTTON_GAP,__betButton_y + (BUTTON_HEIGHT - BUTTON_HEIGHT*SETTING_HEIGHT_SCALE)/2,BUTTON_WIDTH*SETTING_WIDTH_SCALE,BUTTON_HEIGHT*SETTING_HEIGHT_SCALE),flag=1),
+#                    Button(kw.INCREASE ,pygame.Rect(__betButton_x + __raise_pos + BUTTON_WIDTH                     + BUTTON_GAP,__betButton_y + (BUTTON_HEIGHT - BUTTON_HEIGHT*SETTING_HEIGHT_SCALE)/2,BUTTON_WIDTH*SETTING_WIDTH_SCALE,BUTTON_HEIGHT*SETTING_HEIGHT_SCALE),flag=1)]
+
+# loginPageButtons = [Button(kw.SIGN_IN ,pygame.Rect((SCREEN_WIDTH-120)/2 +80,500,120,60),flag=-1),
+#                     Button(kw.SIGN_UP ,pygame.Rect((SCREEN_WIDTH-120)/2 -80,500,120,60),flag=-1)]
