@@ -78,33 +78,32 @@ class Holdme(BaseGame):
                 if self.gameRound == 0 and is_ante:
                     if   seat == self.small_blind:  least_bet = round(self.ante/2)
                     elif seat == self.__big_blind:  least_bet = self.ante
-
                 if not self.playersList[seat].fold:
-                    #bot thinking
+
+                    # bot thinking
                     if ThinkingFunc and seat != 2: ThinkingFunc(seat,random.randint(1,7))
+
                     # operation
                     result = self.playersList[seat].decision(is_ante,least_bet,choiceFunc)
-
-                    print(self.playersList[seat].username,result)
-
                     self.pot += result['bet']
                     if (seat == self.__big_blind and is_ante):  least_bet = 0
                     if result['bet'] > least_bet:
                         least_bet = result['bet']
-                    print(least_bet)
+
                     # update in interface
                     if updateChipFunc and updateCardFunc:
                         updateChipFunc(seat,self.playersList[seat].username,self.playersList[seat].chip)
                         if self.gameRound > 0:
                             updateCardFunc(seat,self.playersList[seat].hand,self.playersList[seat].fold)
 
+                    # only one player
                     if len([player for player in self.playersList if not player.fold]) == 1:
                         self.gameRound = 4
                         return
+
                     # add one round if someone raise
                     if result['choice'] == kw.BET_RAISE:
                         seat_range = range(current,current + len(self.playersList) - 1)
-                        print('again',self.playersList[seat].username)
                         again += 1
                         break
             again -= 1
