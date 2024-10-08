@@ -8,7 +8,7 @@ def introduction():
     title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
     init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
-    move_animation(title,init_pos,final_position,1)
+    move_animation(title,init_pos,final_position,1,0)
 
 def invalid_input():
     REMINDER_FONT.render()
@@ -22,9 +22,9 @@ def draw_table(num=5):
     pygame.draw.rect(screen,TABLE_PADDING_COLOR,TABLE_RECT,50,1000)
     pygame.draw.rect(screen,TABLE_BORDER_COLOR,TABLE_RECT,10,1000)
     for i in range(num):
-        x = TABLE_RECT.x + (TABLE_WIDTH - ((POKER_WIDTH*POKER_TABLE_RATIO)*num + GAP*(num-1)))/2 + ((POKER_WIDTH*POKER_TABLE_RATIO + GAP) * i)
+        x = TABLE_RECT.x + (TABLE_WIDTH - ((POKER_PLACE_WIDTH)*num + GAP*(num-1)))/2 + ((POKER_PLACE_WIDTH + GAP) * i)
         y = ((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58   # ac:cb = 9:49
-        pygame.draw.rect(screen,POKER_PLACE_COLOR,(x,y,POKER_WIDTH*POKER_TABLE_RATIO,POKER_HEIGHT*POKER_TABLE_RATIO),3,5)
+        pygame.draw.rect(screen,POKER_PLACE_COLOR,(x,y,POKER_PLACE_WIDTH,POKER_PLACE_HEIGHT),3,5)
 
 def draw_reminder(playerCombination:list,bg_ratio = 1.3):
     reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() # take the highest letter
@@ -35,11 +35,16 @@ def draw_reminder(playerCombination:list,bg_ratio = 1.3):
             pygame.draw.rect(reminder_bg,REMINDER_BG_COLOR,reminder_bg.get_rect(),0,12)
             reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
             # blit to screen
-            position = ((SCREEN_WIDTH - reminder.get_width()*bg_ratio)/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_HEIGHT*POKER_TABLE_RATIO + GAP)
+            position = ((SCREEN_WIDTH - reminder.get_width()*bg_ratio)/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
             screen.blit(reminder_bg,position)
         # dont want to do this part
         elif CHEATING_MODE:
             pass
+
+def draw_chip():
+    screen.blit(CHIP['black'],(0,0))
+    pygame.display.flip()
+
 
 def draw_blind(small_blind= 1):
     return
@@ -57,7 +62,7 @@ def draw_players(seat:int,playerName:str,playerChip:int):
     pygame.draw.rect(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_COLOR,(0,0,PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),0,20)
     PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(playerName,True,PLAYER_NAME_FONT_COLOR),(70,25))
     PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(f'$ {round(playerChip)}',True,PLAYER_NAME_FONT_COLOR),(70,55))
-    PLAYER_INFO_BAR_LIST[seat].blit(pygame.transform.scale_by(PLAYER_ICON,PLAYER_ICON_RATIO),(0,20))
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_ICON,(0,20))
     screen.blit(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_POSITION[seat])
 
 def draw_hand(seat:int,hand:list,fold = False,deal:bool = False):
@@ -73,23 +78,23 @@ def draw_community(community:list,deal_range:range,deal:bool = False):
 def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:bool = False):
     '''playerId 1-5 == hand, -1 == community cards'''
     if deal:
-        move_animation(pygame.transform.smoothscale_by(CARD_BACK,POKER_RATIO),POKER_INITIAL_POSITION,position,0.5)
+        move_animation(CARD_BACK,POKER_INITIAL_POSITION,position,0.5)
     #2 player or -1 community
     if playerId in [-1,2] or CHEATING_MODE or fold:
-        screen.blit(pygame.transform.smoothscale_by(POKER[card_id],POKER_RATIO),position)
+        screen.blit(POKER[card_id],position)
     #bot
     else:
-        screen.blit(pygame.transform.smoothscale_by(CARD_BACK,POKER_RATIO),position)
+        screen.blit(CARD_BACK,position)
     #fold
     if fold == True:
-        fold_layer = pygame.Surface((POKER_WIDTH*POKER_RATIO,POKER_HEIGHT*POKER_RATIO),pygame.SRCALPHA)
+        fold_layer = pygame.Surface((POKER_WIDTH,POKER_HEIGHT),pygame.SRCALPHA)
         pygame.draw.rect(fold_layer,(0,0,0,128),fold_layer.get_rect(),0,2)
         screen.blit(fold_layer,position)
 
 def draw_consideration(seat:int,pause_time:int = 15):
     """thinking time is limited for 15s"""
     start_time = time.time()
-    max_time = 15
+    max_time = 1
     init_x  = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_WIDTH*0.045
     final_x = PLAYER_INFO_BAR_POSITION[seat][0]+PLAYER_INFO_BAR_LIST[seat].get_width() - PLAYER_INFO_BAR_WIDTH*0.045
     y = PLAYER_INFO_BAR_POSITION[seat][1] + 20/2
@@ -123,9 +128,9 @@ def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:in
         x = init_pos[0] + (final_pos[0] - init_pos[0]) * progress
         y = init_pos[1] + (final_pos[1] - init_pos[1]) * progress
         #set alpha channel
-        # if alpha < 255:
-        #     alpha = duration/255
-        # obj.set_alpha(alpha)
+        if alpha < 255:
+            alpha += 255/(duration*FPS)
+        obj.set_alpha(alpha)
         screen.blit(frame,(0,0))
         screen.blit(obj,(x,y))
         pygame.display.flip()
@@ -164,7 +169,7 @@ def interact(playerChip:int = -1,
                 if (button.text not in invalidList) and button.check(event):
                     result['choice'] = button.text
                     if   button.flag == 1:
-                        calculate_bet(button.adjust_value())  #暂时处理，实际数值于PLayer()中定
+                        calculate_bet(button.adjust_value(5000))  #暂时处理，实际数值于PLayer()中定
                         continue
                     elif button.flag == 0:
                         result['bet'] = bet
@@ -180,3 +185,5 @@ def interact(playerChip:int = -1,
 
         for input_box in inputList: input_box.draw()
     return result
+
+draw_table()

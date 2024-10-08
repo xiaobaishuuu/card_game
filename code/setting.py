@@ -9,7 +9,7 @@ SCREEN_WIDTH = 1380
 SCREEN_COLOR = (242, 225, 231)
 
 # FPS setting
-FPS = 60
+FPS = 120
 
 #title
 TITLE_TEXT = "WELCOME to Hold'em"
@@ -30,20 +30,25 @@ TABLE_BORDER_COLOR = (0, 0, 0)
 
 #draw card
 GAP = 5
-POKER_WIDTH = 500
-POKER_HEIGHT= 726
-POKER_RATIO =  0.175
+POKER_WIDTH = 87.5
+POKER_HEIGHT= 127.05
 POKER_PLACE_COLOR = (204, 204, 204)
-POKER_TABLE_RATIO = 0.19
+POKER_PLACE_WIDTH = 95
+POKER_PLACE_HEIGHT= 137.94
 
 #draw player
-PLAYER_ICON_RATIO = 0.20
+PLAYER_ICON_WIDTH = 60
+PLAYER_ICON_HEIGHT= 60
 PLAYER_NAME_FONT_SIZE = 20
 PLAYER_NAME_FONT_COLOR= (220, 220, 220)
 PLAYER_INFO_BAR_HEIGHT= 100
 PLAYER_INFO_BAR_WIDTH = 220
 PLAYER_INFO_BAR_COLOR = (68, 45, 53)
 PLAYER_INFO_BAR_MARGIN= 5   # distance from screen edge
+
+#draw chip
+CHIP_WIDTH = 40
+CHIP_HEIGHT= 40
 
 #button  edit:(in button.py)
 BUTTON_FONT_SIZE = 20
@@ -68,22 +73,27 @@ CHEATING_MODE = False
 class QuitGame(Exception):
     pass
 
-def load_poker(path) -> dict:
-    """return a dictionary include {poker_name:poker_image_surface,...}"""
+def load_image(path,size = None) -> dict:
+    """return a dictionary include {file_name:image_surface,...}"""
     # nameList = os.listdir(path+'\\PNG-cards-1.3')
-    nameList = [i.replace('.png','') for i in os.listdir(path+'\\PNG-cards-1.3')]
-    pokerImages = {}
-    for i in range(52):
-        pokerImage = pygame.image.load(f'{path}\\PNG-cards-1.3\\{nameList[i]}.png')
-        pokerImages[nameList[i]] = pokerImage
-    return pokerImages
+    nameList = [i.replace('.png','') for i in os.listdir(path)]
+    imageList = {}
+    for i in range(len(nameList)):
+        image = pygame.image.load(f'{path}\\{nameList[i]}.png')
+        if size:
+            image = pygame.transform.smoothscale(image,size)
+        imageList[nameList[i]] = image
+    return imageList
 
-# load image
+# path
 imagePath = os.path.dirname(__file__).replace('code','image')
 fontPath  = os.path.dirname(__file__).replace('code','font')
-PLAYER_ICON = pygame.image.load(f'{imagePath}\\User.jpg')
-CARD_BACK = pygame.image.load(f'{imagePath}\\card_back.png')
-POKER = load_poker(imagePath)
+
+# load image
+PLAYER_ICON = pygame.transform.smoothscale(pygame.image.load(f'{imagePath}\\User.jpg'),(PLAYER_ICON_WIDTH,PLAYER_ICON_HEIGHT))
+CARD_BACK   = pygame.transform.smoothscale(pygame.image.load(f'{imagePath}\\card_back.png'),(POKER_WIDTH,POKER_HEIGHT))
+POKER = load_image(imagePath+'\\cards',(POKER_WIDTH,POKER_HEIGHT))
+CHIP  = load_image(imagePath+'\\chips',(CHIP_WIDTH,CHIP_HEIGHT))
 
 #init
 pygame.init()
@@ -121,23 +131,17 @@ PLAYER_INFO_BAR_POSITION= [(SCREEN_WIDTH - PLAYER_INFO_BAR_MARGIN - PLAYER_INFO_
                            (PLAYER_INFO_BAR_MARGIN,TABLE_RECT.y + TABLE_HEIGHT),
                            (PLAYER_INFO_BAR_MARGIN,TABLE_RECT.y + 100)]
 
-# PLAYER_INFO_BAR_POSITION= [(TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + 100),
-#                            (TABLE_RECT.x + TABLE_WIDTH - 85,TABLE_RECT.y + TABLE_HEIGHT),
-#                            (SCREEN_WIDTH/2 - PLAYER_INFO_BAR_WIDTH/2,TABLE_RECT.y + TABLE_HEIGHT),
-#                            (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + TABLE_HEIGHT),
-#                            (TABLE_RECT.x - PLAYER_INFO_BAR_WIDTH + 85,TABLE_RECT.y + 100)]
-
 #card
-POKER_INITIAL_POSITION = [(SCREEN_WIDTH/2)-(POKER_WIDTH*POKER_RATIO/2),0]
-POKER_TABLE_START_POSITION = (SCREEN_WIDTH/2 - (POKER_WIDTH*POKER_RATIO/2) + (-(POKER_WIDTH*POKER_TABLE_RATIO - POKER_WIDTH*POKER_RATIO) -GAP -(POKER_WIDTH*POKER_RATIO))*2,
+POKER_INITIAL_POSITION = [(SCREEN_WIDTH/2)-(POKER_WIDTH/2),0]
+POKER_TABLE_START_POSITION = (SCREEN_WIDTH/2 - (POKER_WIDTH/2) + (-(POKER_PLACE_WIDTH - POKER_WIDTH) -GAP -(POKER_WIDTH))*2,
                               ((TABLE_RECT.y) * 96911 + (TABLE_RECT.y + TABLE_HEIGHT)* 19089)/116000) #ac:cb = 19089:96911
 
 # gap = 30 !!!
-# print((POKER_WIDTH*POKER_RATIO) - ((PLAYER_INFO_BAR_POSITION[0][0]+200-((200 - (POKER_WIDTH*POKER_RATIO*2 - 30))/2)-(POKER_WIDTH*POKER_RATIO)) - (PLAYER_INFO_BAR_POSITION[0][0]+((200 - (POKER_WIDTH*POKER_RATIO*2 - 30))/2))))
+# print((POKER_WIDTH) - ((PLAYER_INFO_BAR_POSITION[0][0]+200-((200 - (POKER_WIDTH*2 - 30))/2)-(POKER_WIDTH)) - (PLAYER_INFO_BAR_POSITION[0][0]+((200 - (POKER_WIDTH*2 - 30))/2))))
 # PLAYER_INFO_BAR_POSITION[0][0] + PLAYER_INFO_BAR_WIDTH -
 # 需要改
-HAND_POSITION = [[(PLAYER_INFO_BAR_POSITION[i][0]+((200 - (POKER_WIDTH*POKER_RATIO*2 - 30))/2),PLAYER_INFO_BAR_POSITION[i][1]-130),
-                  (PLAYER_INFO_BAR_POSITION[i][0]+200-((200 - (POKER_WIDTH*POKER_RATIO*2 - 30))/2)-(POKER_WIDTH*POKER_RATIO),PLAYER_INFO_BAR_POSITION[i][1]-130)]
+HAND_POSITION = [[(PLAYER_INFO_BAR_POSITION[i][0]+((200 - (POKER_WIDTH*2 - 30))/2),PLAYER_INFO_BAR_POSITION[i][1]-130),
+                  (PLAYER_INFO_BAR_POSITION[i][0]+200-((200 - (POKER_WIDTH*2 - 30))/2)-(POKER_WIDTH),PLAYER_INFO_BAR_POSITION[i][1]-130)]
                   for i in range(len(PLAYER_INFO_BAR_POSITION))]
-COMMUNITY_CARDS_POSITION = [(POKER_TABLE_START_POSITION[0] + ((POKER_WIDTH*POKER_TABLE_RATIO - POKER_WIDTH*POKER_RATIO) + GAP + (POKER_WIDTH*POKER_RATIO))* i,
+COMMUNITY_CARDS_POSITION = [(POKER_TABLE_START_POSITION[0] + ((POKER_PLACE_WIDTH - POKER_WIDTH) + GAP + (POKER_WIDTH))* i,
                              POKER_TABLE_START_POSITION[1]) for i in range(5)]

@@ -86,9 +86,9 @@ class Holdme(BaseGame):
                     # operation
                     result = self.playersList[seat].decision(is_ante,least_bet,choiceFunc)
                     self.pot += result['bet']
+
                     if (seat == self.__big_blind and is_ante):  least_bet = 0
-                    if result['bet'] > least_bet:
-                        least_bet = result['bet']
+                    if result['bet'] > least_bet:               least_bet = result['bet']
 
                     # update in interface
                     if updateChipFunc and updateCardFunc:

@@ -504,3 +504,16 @@
 
 # loginPageButtons = [Button(kw.SIGN_IN ,pygame.Rect((SCREEN_WIDTH-120)/2 +80,500,120,60),flag=-1),
 #                     Button(kw.SIGN_UP ,pygame.Rect((SCREEN_WIDTH-120)/2 -80,500,120,60),flag=-1)]
+
+# def load_poker(path) -> dict:
+#     """return a dictionary include {poker_name:poker_image_surface,...}"""
+#     # nameList = os.listdir(path+'\\PNG-cards-1.3')
+#     nameList = [i.replace('.png','') for i in os.listdir(path+'\\cards')]
+#     pokerImages = {}
+#     for i in range(len(nameList)):
+#         pokerImage = pygame.image.load(f'{path}\\cards\\{nameList[i]}.png')
+#         pokerImages[nameList[i]] = pokerImage
+#     return pokerImages
+
+# POKER_TABLE_RATIO = 0.19
+# POKER_RATIO =  0.175

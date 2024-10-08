@@ -27,6 +27,7 @@ def holdem_page():
                 pygame.quit()
         draw_table()
         draw_blind()
+        draw_chip()
         # draw every player
         for seat in range(5): draw_players(seat,game.playersList[seat].username,game.playersList[seat].chip)
         if game.winnerList:
@@ -55,7 +56,7 @@ if __name__ == '__main__':
             # game = choose_game()  選擇游戲，基於baseGame，但時間不夠不實現了
             # game = 'holdem'
             # if game == 'holdem':
-            game = Holdme()
+            game = Holdme(ante=5000)
             game.init_player(get_bot(),player_info)
             if holdem_page():
                 save_game(game.save_game())

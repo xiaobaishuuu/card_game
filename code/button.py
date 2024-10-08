@@ -15,10 +15,10 @@ class Button:
         self.touch = touch_color
         self.flag  = flag
 
-    def adjust_value(self):
+    def adjust_value(self,value):
         # increase /decrese
-        if   self.text == kw.INCREASE: return  100
-        elif self.text == kw.DECREASE: return -100
+        if   self.text == kw.INCREASE: return  value
+        elif self.text == kw.DECREASE: return -value
 
     def check(self, event:pygame.event):
         """return True when the button release"""
