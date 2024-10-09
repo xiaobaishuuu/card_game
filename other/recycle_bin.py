@@ -517,3 +517,18 @@
 
 # POKER_TABLE_RATIO = 0.19
 # POKER_RATIO =  0.175
+
+# def draw_reminder(playerCombination:list,bg_ratio = 1.3):
+#     reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() # take the highest letter
+#     for player in playerCombination:
+#         reminder = REMINDER_FONT.render(player[0],True,REMINDER_FONT_COLOR)
+#         if player == playerCombination[2]:
+#             reminder_bg = pygame.Surface((reminder.get_width()*bg_ratio,reminder_height*bg_ratio),pygame.SRCALPHA)
+#             pygame.draw.rect(reminder_bg,REMINDER_BG_COLOR,reminder_bg.get_rect(),0,12)
+#             reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
+#             # blit to screen
+#             position = ((SCREEN_WIDTH - reminder.get_width()*bg_ratio)/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
+#             screen.blit(reminder_bg,position)
+#         # dont want to do this part
+#         elif CHEATING_MODE:
+#             pass

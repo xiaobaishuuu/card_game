@@ -117,3 +117,6 @@
 
 # raise_bet = adjust_value(raise_bet,int(input()))
 # bet = calculate_bet(playerChip,least_bet,raise_bet\
+
+a = 'a'
+print(str(a))

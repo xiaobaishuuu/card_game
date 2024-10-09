@@ -93,7 +93,7 @@ class Holdme(BaseGame):
                     # update in interface
                     if updateChipFunc and updateCardFunc:
                         updateChipFunc(seat,self.playersList[seat].username,self.playersList[seat].chip)
-                        if self.gameRound > 0:
+                        if self.playersList[seat].fold:
                             updateCardFunc(seat,self.playersList[seat].hand,self.playersList[seat].fold)
 
                     # only one player

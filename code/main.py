@@ -7,6 +7,7 @@ def login_page(login = False) -> dict:
     screen.fill(SCREEN_COLOR)
     draw_table(0)
     introduction()
+
     while not login:
         # recieve input
         result = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
@@ -26,8 +27,8 @@ def holdem_page():
             if event.type == pygame.QUIT:
                 pygame.quit()
         draw_table()
-        draw_blind()
-        draw_chip()
+        draw_pot(game.pot)
+        # draw_blind()
         # draw every player
         for seat in range(5): draw_players(seat,game.playersList[seat].username,game.playersList[seat].chip)
         if game.winnerList:
@@ -36,7 +37,7 @@ def holdem_page():
         r = game.gameRound
         if r >= 1:
             for seat in range(5): draw_hand(seat,game.playersList[seat].hand,game.playersList[seat].fold,r == 1)
-        draw_reminder(game.get_players_info('combo'))
+        draw_combo(game.get_players_info('combo'))
         if r >= 2:
             draw_community(game.communityCardsList,range(0,3),r == 2)
         if r >= 3:
@@ -54,7 +55,6 @@ if __name__ == '__main__':
         player_info = login_page()
         while True:
             # game = choose_game()  選擇游戲，基於baseGame，但時間不夠不實現了
-            # game = 'holdem'
             # if game == 'holdem':
             game = Holdme(ante=5000)
             game.init_player(get_bot(),player_info)

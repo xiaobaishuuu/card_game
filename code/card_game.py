@@ -26,25 +26,55 @@ def draw_table(num=5):
         y = ((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58   # ac:cb = 9:49
         pygame.draw.rect(screen,POKER_PLACE_COLOR,(x,y,POKER_PLACE_WIDTH,POKER_PLACE_HEIGHT),3,5)
 
-def draw_reminder(playerCombination:list,bg_ratio = 1.3):
+def render_reminder(text:str,bg_color,bg_ratio) -> pygame.Surface:
     reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() # take the highest letter
+    reminder = REMINDER_FONT.render(text,True,REMINDER_FONT_COLOR)
+    reminder_bg = pygame.Surface((reminder.get_width()*bg_ratio,reminder_height*bg_ratio),pygame.SRCALPHA)
+    pygame.draw.rect(reminder_bg,bg_color,reminder_bg.get_rect(),0,12)
+    reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
+    return reminder_bg
+
+def draw_combo(playerCombination:list):
+    '''draw all players combo by using render_reminder()'''
     for player in playerCombination:
-        reminder = REMINDER_FONT.render(player[0],True,REMINDER_FONT_COLOR)
+        reminder = render_reminder(player[0],COMBO_REMINDER_BG_COLOR,COMBO_REMINDER_RATIO)
         if player == playerCombination[2]:
-            reminder_bg = pygame.Surface((reminder.get_width()*bg_ratio,reminder_height*bg_ratio),pygame.SRCALPHA)
-            pygame.draw.rect(reminder_bg,REMINDER_BG_COLOR,reminder_bg.get_rect(),0,12)
-            reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
-            # blit to screen
-            position = ((SCREEN_WIDTH - reminder.get_width()*bg_ratio)/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
-            screen.blit(reminder_bg,position)
+            position = ((SCREEN_WIDTH - reminder.get_width())/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
+            screen.blit(reminder,position)
         # dont want to do this part
         elif CHEATING_MODE:
             pass
 
-def draw_chip():
-    screen.blit(CHIP['black'],(0,0))
-    pygame.display.flip()
+def render_betting_info(bet) -> pygame.Surface:
+    chipList = {'black' :100000, # black : 100000 =< bet
+                'yellow':50000,  # yellow:  50000 =< bet < 100000
+                'red'   :10000,  # red   :  10000 =< bet < 50000
+                'blue'  :5000,   # blue  :   5000 =< bet < 10000
+                'green' :2500,   # green :   2500 =< bet < 5000
+                'white' :0}      # white :      0 =< bet < 2500
+    for color,v in chipList.items():
+        if bet >= v:
+            break
+    reminder = render_reminder(str(bet),BETTING_REMINDER_BG_COLOR,BETTING_REMINDER_RATIO)
+    composition = pygame.Surface((CHIP_WIDTH/1.4 + reminder.get_width(),max(CHIP_HEIGHT,reminder.get_height())),pygame.SRCALPHA)
+    composition.blit(reminder,(CHIP_WIDTH/1.4,(composition.get_height() - reminder.get_height())/2))
+    composition.blit(CHIP[color],(0,(composition.get_height() - CHIP[color].get_height())/2))
+    return composition
 
+def draw_pot(pot:int):
+    if pot:
+        reminder = render_betting_info(pot)
+        POT_AREA.blit(reminder,((POT_AREA.get_width()-reminder.get_width())/2,0))
+        position = ((SCREEN_WIDTH-POT_WIDTH)/2,TABLE_RECT.y + TABLE_HEIGHT/2)
+        screen.blit(POT_AREA,position)
+
+def draw_chip(seat:int = 2,bet:int = 10000,choice:str = 'bet',pot=0):
+    composition = render_betting_info(f'{choice}:{bet}')
+    init_pos = (PLAYER_INFO_BAR_POSITION[seat][0] + abs((PLAYER_INFO_BAR_WIDTH - composition.get_width())/2),
+                PLAYER_INFO_BAR_POSITION[seat][1] + abs((PLAYER_INFO_BAR_HEIGHT- composition.get_height())/2))
+    final_pos = 0
+    move_animation(composition,init_pos,)
+    # pygame.display.flip()
 
 def draw_blind(small_blind= 1):
     return
@@ -185,5 +215,3 @@ def interact(playerChip:int = -1,
 
         for input_box in inputList: input_box.draw()
     return result
-
-draw_table()
