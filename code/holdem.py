@@ -57,7 +57,7 @@ class Holdme(BaseGame):
         # get combo
         for player in self.playersList:
             player.combination(list(filter(lambda x:x != "",self.communityCardsList)))
-            player.last_bet = 0
+            player.total_bet = 0
 
     def betting_round(self,choiceFunc,
                       updateChipFunc = None,
@@ -67,7 +67,6 @@ class Holdme(BaseGame):
         current = self.small_blind
         seat_range = range(current,current + len(self.playersList))
         least_bet = 0
-        temp_bet = 0
         again = 1
         while again > 0:
             for seat in seat_range:
@@ -87,15 +86,12 @@ class Holdme(BaseGame):
                     else: least_bet = 0
 
                 if not self.playersList[seat].fold:
-
                     ### bot thinking
                     if ThinkingFunc and seat != 2: ThinkingFunc(seat,random.randint(1,7))
 
                     # operation
                     result = self.playersList[seat].decision(is_ante,least_bet,self.ante,choiceFunc)
                     self.pot += result['bet']
-
-                    if (seat == self.__big_blind and is_ante):  least_bet = 0
 
                     ### update in interface
                     if updateChipFunc: updateChipFunc(seat,self.playersList[seat].username,self.playersList[seat].chip)
@@ -109,7 +105,7 @@ class Holdme(BaseGame):
 
                     # add one round if someone raise
                     if result['choice'] == kw.BET_RAISE:
-                        least_bet = self.playersList[seat].last_bet
+                        least_bet = self.playersList[seat].total_bet
                         seat_range = range(current,current + len(self.playersList) - 1)
                         again += 1
                         break

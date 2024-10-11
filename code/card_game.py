@@ -26,6 +26,15 @@ def draw_table(num=5):
         y = ((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58   # ac:cb = 9:49
         pygame.draw.rect(screen,POKER_PLACE_COLOR,(x,y,POKER_PLACE_WIDTH,POKER_PLACE_HEIGHT),3,5)
 
+def draw_players(seat:int,playerName:str,playerChip:int):
+    """player seat : 0 - 4"""
+    pygame.draw.rect(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_COLOR,(0,0,PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),0,20)
+    y = PLAYER_INFO_BAR_HEIGHT - PLAYER_ICON.get_height() - 20
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_ICON,(0,y))
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(playerName,True,PLAYER_NAME_FONT_COLOR),(70,y + 5))
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(f'$ {round(playerChip)}',True,PLAYER_NAME_FONT_COLOR),(70,y + 35))
+    screen.blit(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_POSITION[seat])
+
 def render_reminder(text:str,bg_color,padding) -> pygame.Surface:
     # reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() * 1.3 # take the highest letter
     reminder = REMINDER_FONT.render(text,True,REMINDER_FONT_COLOR)
@@ -34,17 +43,6 @@ def render_reminder(text:str,bg_color,padding) -> pygame.Surface:
     pygame.draw.rect(reminder_bg,bg_color,reminder_bg.get_rect(),0,12)
     reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
     return reminder_bg
-
-def draw_combo(playerCombination:list):
-    '''draw all players combo by using render_reminder()'''
-    for player in playerCombination:
-        reminder = render_reminder(player[0],COMBO_REMINDER_BG_COLOR,COMBO_REMINDER_PADDING)
-        if player == playerCombination[2] and player[0]:
-            position = ((SCREEN_WIDTH - reminder.get_width())/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
-            screen.blit(reminder,position)
-        # dont want to do this part
-        elif CHEATING_MODE:
-            pass
 
 def render_betting_info(bet) -> pygame.Surface:
     chipList = {
@@ -64,6 +62,17 @@ def render_betting_info(bet) -> pygame.Surface:
     composition.blit(reminder,(CHIP_WIDTH/1.5,(composition.get_height() - reminder.get_height())/2))
     composition.blit(CHIP[color],(0,(composition.get_height() - CHIP[color].get_height())/2))
     return composition
+
+def draw_combo(playerCombination:list):
+    '''draw all players combo by using render_reminder()'''
+    for player in playerCombination:
+        reminder = render_reminder(player[0],COMBO_REMINDER_BG_COLOR,COMBO_REMINDER_PADDING)
+        if player == playerCombination[2] and player[0]:
+            position = ((SCREEN_WIDTH - reminder.get_width())/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
+            screen.blit(reminder,position)
+        # dont want to do this part
+        elif CHEATING_MODE:
+            pass
 
 def draw_pot(pot):
     pot_reminder = render_betting_info(pot)
@@ -104,15 +113,6 @@ def draw_winner(winner,c):
     while True:
         pass
 
-def draw_players(seat:int,playerName:str,playerChip:int):
-    """player seat : 0 - 4"""
-    pygame.draw.rect(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_COLOR,(0,0,PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),0,20)
-    y = PLAYER_INFO_BAR_HEIGHT - PLAYER_ICON.get_height() - 20
-    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_ICON,(0,y))
-    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(playerName,True,PLAYER_NAME_FONT_COLOR),(70,y + 5))
-    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(f'$ {round(playerChip)}',True,PLAYER_NAME_FONT_COLOR),(70,y + 35))
-    screen.blit(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_POSITION[seat])
-
 def draw_hand(seat:int,hand:list,fold = False,deal:bool = False):
     '''draw all hand card'''
     for i in range(2):
@@ -142,7 +142,7 @@ def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:boo
 def draw_consideration(seat:int,pause_time:int = 15):
     """thinking time is limited for 15s"""
     start_time = time.time()
-    max_time = 1
+    max_time = 30
     init_x  = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_WIDTH*0.045
     final_x = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_LIST[seat].get_width() - PLAYER_INFO_BAR_WIDTH*0.045
     y = PLAYER_INFO_BAR_POSITION[seat][1] + 20/2

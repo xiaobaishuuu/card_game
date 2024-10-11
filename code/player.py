@@ -13,7 +13,7 @@ class Player():
         self.hand = hand
         self.fold = fold
         self.combo= ['','']
-        self.last_bet = 0
+        self.total_bet = 0
 
     def decision(self,is_ante:bool,least_bet:int,least_raise:int,choiceFunc) -> dict:
         ''' return a dict{choice,bet}'''
@@ -29,7 +29,7 @@ class Player():
         elif least_bet == 0 and self.hand: #first seat
             invalidList = [kw.CALL]
         # calculate player's least bet,(not least bet for a round)
-        least_bet = least_bet - self.last_bet
+        least_bet = least_bet - self.total_bet
         # receive data
         result:dict = choiceFunc(self.chip,least_bet,least_raise,self.fold,invalidList)
         # handle data
@@ -39,7 +39,7 @@ class Player():
         elif result['choice'] == kw.CHECK:           bet = 0
         elif result['choice'] == kw.FOLD:            bet,self.fold = 0,True
         # upload data
-        self.last_bet += bet
+        self.total_bet += bet
         self.chip -= bet
         return {'choice':choice,'bet':bet}
 
@@ -160,7 +160,7 @@ class Bot(Player):
         elif least_bet > 0:  # someone bet
             validList = [kw.FOLD,kw.CALL,kw.BET_RAISE]
         # calculate player's least bet,(not least bet for a round)
-        least_bet = least_bet - self.last_bet
+        least_bet = least_bet - self.total_bet
         # make decision
         choice = random.choice(validList)
         if   choice == kw.CALL or is_ante: bet = least_bet
@@ -168,5 +168,5 @@ class Bot(Player):
         elif choice == kw.CHECK:           bet = 0
         elif choice == kw.FOLD:            bet,self.fold = 0,True
         self.chip -= bet
-        self.last_bet += bet
+        self.total_bet += bet
         return {'choice':choice,'bet':bet}
