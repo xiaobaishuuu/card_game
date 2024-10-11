@@ -26,10 +26,11 @@ def draw_table(num=5):
         y = ((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58   # ac:cb = 9:49
         pygame.draw.rect(screen,POKER_PLACE_COLOR,(x,y,POKER_PLACE_WIDTH,POKER_PLACE_HEIGHT),3,5)
 
-def render_reminder(text:str,bg_color,bg_ratio) -> pygame.Surface:
-    reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() # take the highest letter
+def render_reminder(text:str,bg_color,padding) -> pygame.Surface:
+    # reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() * 1.3 # take the highest letter
     reminder = REMINDER_FONT.render(text,True,REMINDER_FONT_COLOR)
-    reminder_bg = pygame.Surface((reminder.get_width()*bg_ratio,reminder_height*bg_ratio),pygame.SRCALPHA)
+    if not padding: padding = 0
+    reminder_bg = pygame.Surface((reminder.get_width() + padding *2,REMINDER_HEIGHT),pygame.SRCALPHA)
     pygame.draw.rect(reminder_bg,bg_color,reminder_bg.get_rect(),0,12)
     reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
     return reminder_bg
@@ -37,8 +38,8 @@ def render_reminder(text:str,bg_color,bg_ratio) -> pygame.Surface:
 def draw_combo(playerCombination:list):
     '''draw all players combo by using render_reminder()'''
     for player in playerCombination:
-        reminder = render_reminder(player[0],COMBO_REMINDER_BG_COLOR,COMBO_REMINDER_RATIO)
-        if player == playerCombination[2]:
+        reminder = render_reminder(player[0],COMBO_REMINDER_BG_COLOR,COMBO_REMINDER_PADDING)
+        if player == playerCombination[2] and player[0]:
             position = ((SCREEN_WIDTH - reminder.get_width())/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
             screen.blit(reminder,position)
         # dont want to do this part
@@ -46,35 +47,46 @@ def draw_combo(playerCombination:list):
             pass
 
 def render_betting_info(bet) -> pygame.Surface:
-    chipList = {'black' :100000, # black : 100000 =< bet
-                'yellow':50000,  # yellow:  50000 =< bet < 100000
-                'red'   :10000,  # red   :  10000 =< bet < 50000
-                'blue'  :5000,   # blue  :   5000 =< bet < 10000
-                'green' :2500,   # green :   2500 =< bet < 5000
-                'white' :0}      # white :      0 =< bet < 2500
+    chipList = {
+        'black' :100000, # black : 100000 =< bet
+        'yellow':50000,  # yellow:  50000 =< bet < 100000
+        'red'   :10000,  # red   :  10000 =< bet < 50000
+        'blue'  :5000,   # blue  :   5000 =< bet < 10000
+        'green' :2500,   # green :   2500 =< bet < 5000
+        'white' :0       # white :      0 =< bet < 2500
+        }
     for color,v in chipList.items():
         if bet >= v:
             break
-    reminder = render_reminder(str(bet),BETTING_REMINDER_BG_COLOR,BETTING_REMINDER_RATIO)
-    composition = pygame.Surface((CHIP_WIDTH/1.4 + reminder.get_width(),max(CHIP_HEIGHT,reminder.get_height())),pygame.SRCALPHA)
-    composition.blit(reminder,(CHIP_WIDTH/1.4,(composition.get_height() - reminder.get_height())/2))
+    reminder = render_reminder(str(bet),BETTING_REMINDER_BG_COLOR,BETTING_REMINDER_PADDING)
+    composition = pygame.Surface((CHIP_WIDTH/1.5 + reminder.get_width(),max(CHIP_HEIGHT,reminder.get_height())),pygame.SRCALPHA)
+    composition.fill(TABLE_COLOR)
+    composition.blit(reminder,(CHIP_WIDTH/1.5,(composition.get_height() - reminder.get_height())/2))
     composition.blit(CHIP[color],(0,(composition.get_height() - CHIP[color].get_height())/2))
     return composition
 
-def draw_pot(pot:int):
-    if pot:
-        reminder = render_betting_info(pot)
-        POT_AREA.blit(reminder,((POT_AREA.get_width()-reminder.get_width())/2,0))
-        position = ((SCREEN_WIDTH-POT_WIDTH)/2,TABLE_RECT.y + TABLE_HEIGHT/2)
-        screen.blit(POT_AREA,position)
+def draw_pot(pot):
+    pot_reminder = render_betting_info(pot)
+    screen.blit(pot_reminder,((SCREEN_WIDTH-pot_reminder.get_width())/2 - (CHIP_WIDTH - CHIP_WIDTH/1.5),TABLE_RECT.y + TABLE_HEIGHT/2))
 
-def draw_chip(seat:int = 2,bet:int = 10000,choice:str = 'bet',pot=0):
-    composition = render_betting_info(f'{choice}:{bet}')
-    init_pos = (PLAYER_INFO_BAR_POSITION[seat][0] + abs((PLAYER_INFO_BAR_WIDTH - composition.get_width())/2),
-                PLAYER_INFO_BAR_POSITION[seat][1] + abs((PLAYER_INFO_BAR_HEIGHT- composition.get_height())/2))
-    final_pos = 0
-    move_animation(composition,init_pos,)
-    # pygame.display.flip()
+def draw_betting(pot:int,seat:int,choice:str,bet:int):
+    draw_pot(pot)
+    PLAYER_BETTEING_INFO_LIST[seat].fill(SCREEN_COLOR)
+    # text
+    text = choice if choice in [kw.FOLD,kw.CHECK] else f'{choice}:{bet}'
+    player_reminder = render_reminder(text,BETTING_REMINDER_BG_COLOR,BETTING_REMINDER_PADDING)
+    PLAYER_BETTEING_INFO_LIST[seat].blit(player_reminder,((PLAYER_BETTEING_INFO_LIST[seat].get_width() - player_reminder.get_width())/2,0))
+    move_animation(PLAYER_BETTEING_INFO_LIST[seat],PLAYER_INFO_BAR_POSITION[seat],
+                  (PLAYER_INFO_BAR_POSITION[seat][0],PLAYER_INFO_BAR_POSITION[seat][1] - player_reminder.get_height()),0.4,0)
+    if bet: # except fold or check
+        bet_reminder = render_reminder(f'+{bet}',BETTING_REMINDER_BG_COLOR,10)
+        bet_x = (SCREEN_WIDTH - bet_reminder.get_width())/2
+        bet_y = TABLE_RECT.y + TABLE_HEIGHT/2
+        bet_frame = screen.copy()
+        move_animation(bet_reminder,(bet_x,bet_y),(bet_x,bet_y + bet_reminder.get_height()),1,-100)
+        screen.blit(bet_frame,(0,0))
+        pygame.display.flip()
+        move_animation(bet_reminder,(bet_x,bet_y + bet_reminder.get_height()),(bet_x,bet_y),1,alpha_end=-100)
 
 def draw_blind(small_blind= 1):
     return
@@ -84,15 +96,21 @@ def draw_blind(small_blind= 1):
 
 def draw_winner(winner,c):
     print('=============WINNER==================')
-    # print(c)
-    print(winner)
+    screen.fill((0,0,0))
+    title = TITLE_FONT.render('Destiny 2 !!!!!!!!!!!!!',True,TITLE_FONT_COLOR)
+    init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
+    final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
+    move_animation(title,init_pos,final_position,1,0)
+    while True:
+        pass
 
 def draw_players(seat:int,playerName:str,playerChip:int):
     """player seat : 0 - 4"""
     pygame.draw.rect(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_COLOR,(0,0,PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),0,20)
-    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(playerName,True,PLAYER_NAME_FONT_COLOR),(70,25))
-    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(f'$ {round(playerChip)}',True,PLAYER_NAME_FONT_COLOR),(70,55))
-    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_ICON,(0,20))
+    y = PLAYER_INFO_BAR_HEIGHT - PLAYER_ICON.get_height() - 20
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_ICON,(0,y))
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(playerName,True,PLAYER_NAME_FONT_COLOR),(70,y + 5))
+    PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(f'$ {round(playerChip)}',True,PLAYER_NAME_FONT_COLOR),(70,y + 35))
     screen.blit(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_POSITION[seat])
 
 def draw_hand(seat:int,hand:list,fold = False,deal:bool = False):
@@ -126,7 +144,7 @@ def draw_consideration(seat:int,pause_time:int = 15):
     start_time = time.time()
     max_time = 1
     init_x  = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_WIDTH*0.045
-    final_x = PLAYER_INFO_BAR_POSITION[seat][0]+PLAYER_INFO_BAR_LIST[seat].get_width() - PLAYER_INFO_BAR_WIDTH*0.045
+    final_x = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_LIST[seat].get_width() - PLAYER_INFO_BAR_WIDTH*0.045
     y = PLAYER_INFO_BAR_POSITION[seat][1] + 20/2
     frame = screen.copy()
     pygame.draw.line(screen, (0,0,0), (init_x,y), (final_x,y),6)
@@ -138,15 +156,18 @@ def draw_consideration(seat:int,pause_time:int = 15):
         progress = (time.time() - start_time) / max_time
         x = init_x + (final_x - init_x) * progress
         pygame.draw.line(screen, (255,255,255), (init_x,y), (x,y),6)
+        # pygame.draw.rect(screen,(255,255,255),pygame.Rect())
         pygame.display.flip()
         if progress >= 1 or (time.time() - start_time)/pause_time >= 1:
             screen.blit(frame,(0,0))
             break
 
-def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:int,alpha:float=255):
+def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:int
+                   ,alpha_start:float=255,alpha_end = 255):
     '''animation'''
     frame = screen.copy()
     start_time = time.time()
+    alpha = alpha_start
     while True:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -158,33 +179,38 @@ def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:in
         x = init_pos[0] + (final_pos[0] - init_pos[0]) * progress
         y = init_pos[1] + (final_pos[1] - init_pos[1]) * progress
         #set alpha channel
-        if alpha < 255:
-            alpha += 255/(duration*FPS)
+        increment = (alpha_end - alpha_start) / (duration * FPS)
+        if   (alpha_start < alpha_end and alpha >= alpha_end) or (alpha_start > alpha_end and alpha <= alpha_end):
+            alpha = alpha_end
+        else:
+            alpha += increment
         obj.set_alpha(alpha)
+        # blit
         screen.blit(frame,(0,0))
         screen.blit(obj,(x,y))
         pygame.display.flip()
         #end the animation
-        if progress >= 1 and alpha >= 255:
+        if progress >= 1 and alpha == alpha_end:
+            # print('an fis')
             break
 
 def interact(playerChip:int = -1,
-             least_bet = 0,
+             least_bet  =0,
+             least_raise=0,
              press = False,
              invalidList:list = [],
              buttonList:list[Button] = gamePageButtons,
              inputList:list[Input] = []) -> dict:
     '''press: True will pass,return button name\n
        invalidList: receive keyword to ban button'''
-    bet = least_bet + 100
-    call = least_bet
+    bet = least_raise + least_bet
     result = {}
 
     def calculate_bet(raise_bet):
         nonlocal bet
         bet += raise_bet
-        if   bet > playerChip: bet = playerChip  # excced max
-        elif bet < least_bet +100: bet = least_bet +100   # exceed min
+        if   bet > playerChip:  bet = playerChip  # excced max
+        elif bet < least_raise + least_bet: bet = least_bet + least_raise   # exceed min
 
     while not press:
         clock.tick(FPS)
@@ -199,7 +225,7 @@ def interact(playerChip:int = -1,
                 if (button.text not in invalidList) and button.check(event):
                     result['choice'] = button.text
                     if   button.flag == 1:
-                        calculate_bet(button.adjust_value(5000))  #暂时处理，实际数值于PLayer()中定
+                        calculate_bet(button.adjust_value(least_raise))  #暂时处理，实际数值于PLayer()中定
                         continue
                     elif button.flag == 0:
                         result['bet'] = bet
@@ -209,7 +235,7 @@ def interact(playerChip:int = -1,
         # only draw
         for button in buttonList:
             value = None
-            if button.text == kw.CALL:        value = call
+            if   button.text == kw.CALL:      value = least_bet
             elif button.text == kw.BET_RAISE: value = bet
             button.draw(button.text in invalidList,value)
 

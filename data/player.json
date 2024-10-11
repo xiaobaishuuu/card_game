@@ -4,37 +4,37 @@
             "type": 0,
             "username": "Peter",
             "password": "832jce83912deddwa",
-            "chip": 500000
+            "chip": 492000
         },
         {
             "type": 0,
             "username": "Amy",
             "password": "832jce83912deddwa",
-            "chip": 499700
+            "chip": 498000
         },
         {
             "type": 0,
             "username": "Tom",
             "password": "832jce83912deddwa",
-            "chip": 499600
+            "chip": 496000
         },
         {
             "type": 0,
             "username": "John",
             "password": "832jce83912deddwa",
-            "chip": 489600
+            "chip": 500000
         },
         {
             "type": 0,
             "username": "Alex",
             "password": "832jce83912deddwa",
-            "chip": 500000
+            "chip": 493000
         },
         {
             "type": 0,
             "username": "Ryan",
             "password": "832jce83912deddwa",
-            "chip": 499900
+            "chip": 500000
         },
         {
             "type": 1,
@@ -46,7 +46,7 @@
             "type": 1,
             "username": "1",
             "password": "",
-            "chip": 494600
+            "chip": 499500
         }
     ]
 }

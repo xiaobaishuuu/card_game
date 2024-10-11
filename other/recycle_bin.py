@@ -440,10 +440,9 @@
 # return least_bet + max(0, raise_bet)               # not exceed min
 
 # def draw_progress_bar(surface, color, rect, radius, progress):
-#     # 绘制空心圆角矩形
+
 #     pygame.draw.rect(surface, color, (*rect, *rect_size), border_radius=radius, width=2)
 
-#     # 绘制进度条
 #     if progress > 0:
 #         total_length = 2 * (rect_size[0] + rect_size[1] - 4 * radius)  # 计算总长度
 #         progress_length = (progress / 100) * total_length  # 计算进度长度
@@ -532,3 +531,38 @@
 #         # dont want to do this part
 #         elif CHEATING_MODE:
 #             pass
+
+    # position = ((SCREEN_WIDTH-POT_WIDTH)/2,TABLE_RECT.y + TABLE_HEIGHT/2)
+
+
+
+# def draw_chip(seat:int = 1,bet:int = 10000,choice:str = 'bet',pot=0):
+    
+#     move_animation(composition,init_pos,final_pos,5)
+
+    
+#     screen.blit(reminder,((SCREEN_WIDTH-reminder.get_width())/2,TABLE_RECT.y + TABLE_HEIGHT/2))
+#     # pygame.display.flip()
+
+        # PLAYER_INFO_BAR_LIST[seat].blit(a)
+        # move_animation(player_reminder,(player_x,player_y + player_reminder.get_height()),(player_x,player_y),0.3,0)
+        # screen.blit(player_reminder,(player_x,player_y))
+        # position = ((PLAYER_INFO_BAR_WIDTH - player_reminder.get_width())/2,0)
+        # player_x = PLAYER_INFO_BAR_POSITION[seat][0] + (PLAYER_INFO_BAR_WIDTH - player_reminder.get_width())/2
+        # player_y = PLAYER_INFO_BAR_POSITION[seat][1]
+
+# def interact(playerChip:int = -1,
+#              least_bet  =0,
+#              least_raise=0,
+#              press = False,
+#              invalidList:list = [],
+#              buttonList:list[Button] = gamePageButtons,
+#              inputList:list[Input] = []) -> dict:
+#     '''press: True will pass,return button name\n
+#        invalidList: receive keyword to ban button'''
+#     plus = least_raise
+#     bet = plus
+#     call = least_bet
+#     result = {}
+                    # if result['bet'] > least_bet: temp_bet = result['bet']
+                    # elif result['bet'] > least_bet:             least_bet = result['bet']

@@ -118,5 +118,13 @@
 # raise_bet = adjust_value(raise_bet,int(input()))
 # bet = calculate_bet(playerChip,least_bet,raise_bet\
 
-a = 'a'
-print(str(a))
+# A = [i for i in range(5)]
+# print(A)
+
+1.
+
+# A 1000 2000 2000 2000 1000 8
+# B 1000 2000 3000 2000      8
+# C 1000 2000 3000 2000      8
+# D 1000 3000 3000 1000      8
+# E 2000 2000 3000 1000      8

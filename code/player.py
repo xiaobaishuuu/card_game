@@ -15,7 +15,7 @@ class Player():
         self.combo= ['','']
         self.last_bet = 0
 
-    def decision(self,is_ante:bool,least_bet:int,choiceFunc) -> dict:
+    def decision(self,is_ante:bool,least_bet:int,least_raise:int,choiceFunc) -> dict:
         ''' return a dict{choice,bet}'''
         #used in gui
         if self.fold:                      # fold
@@ -31,7 +31,7 @@ class Player():
         # calculate player's least bet,(not least bet for a round)
         least_bet = least_bet - self.last_bet
         # receive data
-        result:dict = choiceFunc(self.chip,least_bet,self.fold,invalidList)
+        result:dict = choiceFunc(self.chip,least_bet,least_raise,self.fold,invalidList)
         # handle data
         choice = result['choice']
         if   result['choice'] == kw.CALL or is_ante: bet = least_bet
@@ -39,7 +39,7 @@ class Player():
         elif result['choice'] == kw.CHECK:           bet = 0
         elif result['choice'] == kw.FOLD:            bet,self.fold = 0,True
         # upload data
-        self.last_bet = bet
+        self.last_bet += bet
         self.chip -= bet
         return {'choice':choice,'bet':bet}
 
@@ -149,7 +149,7 @@ class Bot(Player):
     #     self.monte_carlo()
     #     pass
 
-    def decision(self,is_ante,least_bet,choiceFunc):
+    def decision(self,is_ante:bool,least_bet:int,least_raise:int,choiceFunc):
         # filter invalid ones
         if is_ante:          # ante
             validList = [kw.CALL]
@@ -160,14 +160,13 @@ class Bot(Player):
         elif least_bet > 0:  # someone bet
             validList = [kw.FOLD,kw.CALL,kw.BET_RAISE]
         # calculate player's least bet,(not least bet for a round)
-        # print(self.username,least_bet,self.last_bet)
         least_bet = least_bet - self.last_bet
         # make decision
         choice = random.choice(validList)
         if   choice == kw.CALL or is_ante: bet = least_bet
-        elif choice == kw.BET_RAISE:       bet = least_bet + 100
+        elif choice == kw.BET_RAISE:       bet = least_bet + least_raise
         elif choice == kw.CHECK:           bet = 0
         elif choice == kw.FOLD:            bet,self.fold = 0,True
         self.chip -= bet
-        self.last_bet = bet
+        self.last_bet += bet
         return {'choice':choice,'bet':bet}

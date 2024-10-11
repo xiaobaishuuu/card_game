@@ -44,7 +44,7 @@ def sign_up(username,password,c_password,real_player:bool = True):
         kw.TYPE: int(real_player),  #type 1 is real player,0 is bot
         kw.USERNAME:username,
         kw.PASSWORD:password,
-        kw.CHIP: 1000
+        kw.CHIP: 500000
     })
     with open(path,mode='w',encoding='utf-8') as fp:
         json.dump({kw.PLAYER_DATA:content},fp,indent=4)

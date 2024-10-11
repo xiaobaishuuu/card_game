@@ -7,7 +7,6 @@ def login_page(login = False) -> dict:
     screen.fill(SCREEN_COLOR)
     draw_table(0)
     introduction()
-
     while not login:
         # recieve input
         result = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
@@ -45,7 +44,11 @@ def holdem_page():
         if r >= 4:
             draw_community(game.communityCardsList,range(4,5),r == 4)
 
-        game.holdem(interact,draw_players,draw_hand,draw_consideration)
+        game.holdem(interact,
+                    draw_players,
+                    draw_hand,
+                    draw_betting,
+                    draw_consideration)
         pygame.display.flip()
 
 def other_game_page():...
@@ -53,10 +56,14 @@ def other_game_page():...
 if __name__ == '__main__':
     try:
         player_info = login_page()
+        for k,v in kw.CASINO_LEVEL.items():
+            if player_info['chip'] > v:
+                ante = round(v * 0.01)
+                break
         while True:
             # game = choose_game()  選擇游戲，基於baseGame，但時間不夠不實現了
             # if game == 'holdem':
-            game = Holdme(ante=5000)
+            game = Holdme(ante=ante)
             game.init_player(get_bot(),player_info)
             if holdem_page():
                 save_game(game.save_game())
