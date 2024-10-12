@@ -566,3 +566,13 @@
 #     result = {}
                     # if result['bet'] > least_bet: temp_bet = result['bet']
                     # elif result['bet'] > least_bet:             least_bet = result['bet']
+
+    # init_x  = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_WIDTH*0.045
+    # final_x = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_LIST[seat].get_width() - PLAYER_INFO_BAR_WIDTH*0.045
+    # y1 = PLAYER_INFO_BAR_POSITION[seat][1] + 20/2
+    # pygame.draw.line(screen, (0,0,0), (init_x,y), (final_x,y),6)
+        # print(progress)
+        # if progress < 0.05:
+        #     continue
+        # print(consider_bar_w)
+        # # pygame.draw.rect(screen,(255,255,255),pygame.Rect())

@@ -105,13 +105,13 @@ def draw_blind(small_blind= 1):
 
 def draw_winner(winner,c):
     print('=============WINNER==================')
-    screen.fill((0,0,0))
-    title = TITLE_FONT.render('Destiny 2 !!!!!!!!!!!!!',True,TITLE_FONT_COLOR)
-    init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
-    final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
-    move_animation(title,init_pos,final_position,1,0)
-    while True:
-        pass
+    # screen.fill((0,0,0))
+    # title = TITLE_FONT.render('Destiny 2 !!!!!!!!!!!!!',True,TITLE_FONT_COLOR)
+    # init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
+    # final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
+    # move_animation(title,init_pos,final_position,1,0)
+    # while True:
+    #     pass
 
 def draw_hand(seat:int,hand:list,fold = False,deal:bool = False):
     '''draw all hand card'''
@@ -142,21 +142,22 @@ def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:boo
 def draw_consideration(seat:int,pause_time:int = 15):
     """thinking time is limited for 15s"""
     start_time = time.time()
-    max_time = 30
-    init_x  = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_WIDTH*0.045
-    final_x = PLAYER_INFO_BAR_POSITION[seat][0] + PLAYER_INFO_BAR_LIST[seat].get_width() - PLAYER_INFO_BAR_WIDTH*0.045
-    y = PLAYER_INFO_BAR_POSITION[seat][1] + 20/2
+    max_time = 15
+    consider_bar_w = PLAYER_INFO_BAR_WIDTH * 0.8
+    consider_bar_h = 8
+    x = PLAYER_INFO_BAR_POSITION[seat][0] + (PLAYER_INFO_BAR_WIDTH - consider_bar_w)/2
+    y = PLAYER_INFO_BAR_POSITION[seat][1] + (20 - consider_bar_h)/2
     frame = screen.copy()
-    pygame.draw.line(screen, (0,0,0), (init_x,y), (final_x,y),6)
+    r = pygame.Rect(x,y,consider_bar_w,consider_bar_h)
+    pygame.draw.rect(screen,(0,0,0),r,0,6)
     while True:
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 raise QuitGame
-        progress = (time.time() - start_time) / max_time
-        x = init_x + (final_x - init_x) * progress
-        pygame.draw.line(screen, (255,255,255), (init_x,y), (x,y),6)
-        # pygame.draw.rect(screen,(255,255,255),pygame.Rect())
+        progress = (time.time() - start_time) / max_time + 0.05
+        w = (consider_bar_w) * progress
+        pygame.draw.rect(screen,(255,255,255), (x,y,w,consider_bar_h),0,6)
         pygame.display.flip()
         if progress >= 1 or (time.time() - start_time)/pause_time >= 1:
             screen.blit(frame,(0,0))
