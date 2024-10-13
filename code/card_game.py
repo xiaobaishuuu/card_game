@@ -13,8 +13,7 @@ def introduction():
 def invalid_input():
     REMINDER_FONT.render()
 
-def choose_game():
-    pass
+def choose_game():...
 
 def draw_table(num=5):
     '''num: number of poker place'''
@@ -25,6 +24,8 @@ def draw_table(num=5):
         x = TABLE_RECT.x + (TABLE_WIDTH - ((POKER_PLACE_WIDTH)*num + GAP*(num-1)))/2 + ((POKER_PLACE_WIDTH + GAP) * i)
         y = ((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58   # ac:cb = 9:49
         pygame.draw.rect(screen,POKER_PLACE_COLOR,(x,y,POKER_PLACE_WIDTH,POKER_PLACE_HEIGHT),3,5)
+    pygame.display.flip()
+
 
 def draw_players(seat:int,playerName:str,playerChip:int):
     """player seat : 0 - 4"""
@@ -34,6 +35,7 @@ def draw_players(seat:int,playerName:str,playerChip:int):
     PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(playerName,True,PLAYER_NAME_FONT_COLOR),(70,y + 5))
     PLAYER_INFO_BAR_LIST[seat].blit(PLAYER_NAME_FONT.render(f'$ {round(playerChip)}',True,PLAYER_NAME_FONT_COLOR),(70,y + 35))
     screen.blit(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_POSITION[seat])
+    pygame.display.flip()
 
 def render_reminder(text:str,bg_color,padding) -> pygame.Surface:
     # reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() * 1.3 # take the highest letter
@@ -97,11 +99,11 @@ def draw_betting(pot:int,seat:int,choice:str,bet:int):
         pygame.display.flip()
         move_animation(bet_reminder,(bet_x,bet_y + bet_reminder.get_height()),(bet_x,bet_y),1,alpha_end=-100)
 
-def draw_blind(small_blind= 1):
-    return
-    a = pygame.Surface((TABLE_WIDTH*(16/29),TABLE_HEIGHT*(16/29)),pygame.SRCALPHA)
-    pygame.draw.rect(a,(0,0,0),a.get_rect())
-    screen.blit(a,(SCREEN_WIDTH/2 - TABLE_WIDTH*(16/29)/2,TABLE_RECT.y + (TABLE_HEIGHT*(16/29)/2)))
+def draw_blind(small_blind= 1):...
+    # return
+    # a = pygame.Surface((TABLE_WIDTH*(16/29),TABLE_HEIGHT*(16/29)),pygame.SRCALPHA)
+    # pygame.draw.rect(a,(0,0,0),a.get_rect())
+    # screen.blit(a,(SCREEN_WIDTH/2 - TABLE_WIDTH*(16/29)/2,TABLE_RECT.y + (TABLE_HEIGHT*(16/29)/2)))
 
 def draw_winner(winner,c):
     print('=============WINNER==================')
@@ -113,22 +115,23 @@ def draw_winner(winner,c):
     # while True:
     #     pass
 
-def draw_hand(seat:int,hand:list,fold = False,deal:bool = False):
+def draw_hand(seat:int,hand:list,fold = False,deal:bool = False,show:bool = False):
     '''draw all hand card'''
     for i in range(2):
-        draw_card(seat,hand[i],HAND_POSITION[seat][i],deal,fold)
+        draw_card(seat,hand[i],HAND_POSITION[seat][i],deal,fold,show)
 
 def draw_community(community:list,deal_range:range,deal:bool = False):
     '''"deal_range" is the range of dealing card(start with 0)\n'''
     for i in deal_range:
         draw_card(-1,community[i],COMMUNITY_CARDS_POSITION[i],deal)
 
-def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:bool = False):
+def draw_card(seat:int,card_id:str,position:tuple,deal:bool = False,fold:bool = False,show:bool = False):
     '''playerId 1-5 == hand, -1 == community cards'''
     if deal:
         move_animation(CARD_BACK,POKER_INITIAL_POSITION,position,0.5)
     #2 player or -1 community
-    if playerId in [-1,2] or CHEATING_MODE or fold:
+    print(bool(show))
+    if seat in [-1,2] or CHEATING_MODE or show:
         screen.blit(POKER[card_id],position)
     #bot
     else:
@@ -138,11 +141,12 @@ def draw_card(playerId:int,card_id:str,position:tuple,deal:bool = False,fold:boo
         fold_layer = pygame.Surface((POKER_WIDTH,POKER_HEIGHT),pygame.SRCALPHA)
         pygame.draw.rect(fold_layer,(0,0,0,128),fold_layer.get_rect(),0,2)
         screen.blit(fold_layer,position)
+    pygame.display.flip()
 
-def draw_consideration(seat:int,pause_time:int = 15):
+def draw_consideration(seat:int,pause_time:int = 1):
     """thinking time is limited for 15s"""
     start_time = time.time()
-    max_time = 15
+    max_time = 1
     consider_bar_w = PLAYER_INFO_BAR_WIDTH * 0.8
     consider_bar_h = 8
     x = PLAYER_INFO_BAR_POSITION[seat][0] + (PLAYER_INFO_BAR_WIDTH - consider_bar_w)/2

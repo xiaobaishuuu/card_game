@@ -576,3 +576,7 @@
         #     continue
         # print(consider_bar_w)
         # # pygame.draw.rect(screen,(255,255,255),pygame.Rect())
+
+a = [True,False,False]
+import time
+print(any(a))
