@@ -118,28 +118,28 @@ class Holdme(BaseGame):
             again -= 1
 
     def check_winner(self):
-        players_combo = {}
-        nonFoldList = [player for player in self.playersList if not player.fold]
-        for player in self.playersList:
-            if not player.fold:
-                players_combo[player.username] = [kw.COMBO_RATING.index(player.combo[0]),player.combo[1]]
-
-        for username,combo in players_combo.items():
-            if combo[0] == max(players_combo.values()[0]):
-                self.winnerList[username] = combo
-
-        for player in nonFoldList:
-            if player.username in self.winnerList.keys():
-                player.chip += round(self.pot/len(self.winnerList))
-
+        # players_combo = {}
         # nonFoldList = [player for player in self.playersList if not player.fold]
-        # # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
-        # players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in nonFoldList}
-        # # maybe play a draw so include all winner
-        # # for i in self.playersList:
-        # #     print(i.username,i.combo)
-        # self.winnerList = {player:combo for player,combo in players_combo.items() if combo == max(players_combo.values())}
-        # prize = self.pot/round(len(self.winnerList))
+        # for player in self.playersList:
+        #     if not player.fold:
+        #         players_combo[player.username] = [kw.COMBO_RATING.index(player.combo[0]),player.combo[1]]
+
+        # for username,combo in players_combo.items():
+        #     if combo[0] == max(players_combo.values()[0]):
+        #         self.winnerList[username] = combo
+
+        # for player in nonFoldList:
+        #     if player.username in self.winnerList.keys():
+        #         player.chip += round(self.pot/len(self.winnerList))
+
+        nonFoldList = [player for player in self.playersList if not player.fold]
+        # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
+        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in nonFoldList}
+        # maybe play a draw so include all winner
+        for i in self.playersList:
+            print(i.username,i.combo)
+        self.winnerList = {player:combo for player,combo in players_combo.items() if combo == max(players_combo.values())}
+        prize = self.pot/round(len(self.winnerList))
         # for i in pla
 
     def deal_player(self):

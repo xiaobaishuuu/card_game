@@ -64,7 +64,7 @@ if __name__ == '__main__':
         while True:
             # game = choose_game()  選擇游戲，基於baseGame，但時間不夠不實現了
             # if game == 'holdem':
-            game = Holdme(ante=ante)
+            game = Holdme(ante=ante,communityCardsList=['2_1','3_1','4_1','5_1','6_1'])
             game.init_player(get_bot(),player_info)
             if holdem_page():
                 save_game(game.save_game())

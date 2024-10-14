@@ -105,13 +105,14 @@ def draw_blind(small_blind= 1):...
     # pygame.draw.rect(a,(0,0,0),a.get_rect())
     # screen.blit(a,(SCREEN_WIDTH/2 - TABLE_WIDTH*(16/29)/2,TABLE_RECT.y + (TABLE_HEIGHT*(16/29)/2)))
 
+
 def draw_winner(winner,c):
     print('=============WINNER==================')
     # screen.fill((0,0,0))
-    # title = TITLE_FONT.render('Destiny 2 !!!!!!!!!!!!!',True,TITLE_FONT_COLOR)
-    # init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
-    # final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
-    # move_animation(title,init_pos,final_position,1,0)
+    title = TITLE_FONT.render('fxxxxx',True,TITLE_FONT_COLOR)
+    init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
+    final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
+    move_animation(title,init_pos,final_position,1,0)
     # while True:
     #     pass
 
