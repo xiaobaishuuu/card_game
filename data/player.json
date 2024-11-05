@@ -4,55 +4,37 @@
             "type": 0,
             "username": "Peter",
             "password": "832jce83912deddwa",
-            "chip": 439890
+            "chip": 500000
         },
         {
             "type": 0,
             "username": "Amy",
             "password": "832jce83912deddwa",
-            "chip": 444880
+            "chip": 500000
         },
         {
             "type": 0,
             "username": "Tom",
             "password": "832jce83912deddwa",
-            "chip": 447910
+            "chip": 500000
         },
         {
             "type": 0,
             "username": "John",
             "password": "832jce83912deddwa",
-            "chip": 490880
+            "chip": 500000
         },
         {
             "type": 0,
             "username": "Alex",
             "password": "832jce83912deddwa",
-            "chip": 446900
-        },
-        {
-            "type": 0,
-            "username": "Ryan",
-            "password": "832jce83912deddwa",
-            "chip": 472890
-        },
-        {
-            "type": 1,
-            "username": "Rex",
-            "password": "123",
             "chip": 500000
         },
         {
-            "type": 1,
-            "username": "1",
-            "password": "",
-            "chip": 100
-        },
-        {
-            "type": 1,
-            "username": "angelma",
-            "password": "ab123456",
-            "chip": 499500
+            "type": 0,
+            "username": "Sam",
+            "password": "832jce83912deddwa",
+            "chip": 500000
         }
     ]
 }
