@@ -1,9 +1,10 @@
 
 # 安装依赖
-  pip install pygame
+  1. python 3.10.11
+  2. 命令行内: pip install pygame / python -m pip install pygame(未添加至环境变量)
 
 # 运行
-  main.py
+  .\card_game\code\main.py
 
 # 结构？？？
 
