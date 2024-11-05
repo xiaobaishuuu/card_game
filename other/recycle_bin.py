@@ -590,3 +590,7 @@
 
 # if __name__ == "__main__":
 #     fp.run(EchoBot(), allow_without_key=True)
+
+
+        # if self.fold:           # fold
+        #     invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CALL,kw.CHECK,kw.BET_RAISE]

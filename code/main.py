@@ -2,6 +2,12 @@ from card_game import *
 from holdem import *
 from login import *
 
+# 有些功能没有实现
+# 切勿将 注释的函数解封
+# 不然
+# 程序爆炸
+# 且有些微bug
+
 def login_page(login = False) -> dict:
     '''return real player info after login '''
     screen.fill(SCREEN_COLOR)
@@ -12,6 +18,11 @@ def login_page(login = False) -> dict:
         result = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
         if   result['choice'] == kw.SIGN_IN:        # sign in
             login = sign_in(result[kw.USERNAME],result[kw.PASSWORD])
+            if not login:
+                pass
+            # bankrupt
+            if login and login['chip'] < kw.CASINO_LEVEL['bankrupt'] : #short circuit
+                login = False
         elif result['choice'] == kw.SIGN_UP:        # sign up
             sign_up(result[kw.USERNAME],result[kw.PASSWORD],result[kw.C_PASSWORD])
         for input_box in loginPageInputs: input_box.content_init()
@@ -45,7 +56,7 @@ def holdem_page():
             draw_community(game.communityCardsList,range(3,4),r == 3)
         if r >= 4:
             draw_community(game.communityCardsList,range(4,5),r == 4)
-        game.holdem(interact,
+        game.game_loop(interact,
                     draw_players,
                     draw_hand,
                     draw_betting,
@@ -58,13 +69,13 @@ if __name__ == '__main__':
     try:
         player_info = login_page()
         for k,v in kw.CASINO_LEVEL.items():
-            if player_info['chip'] > v:
-                ante = round(v * 0.01)
+            if player_info['chip'] >= v:
+                ante = round(v * 0.1)
                 break
         while True:
             # game = choose_game()  選擇游戲，基於baseGame，但時間不夠不實現了
             # if game == 'holdem':
-            game = Holdme(ante=ante,communityCardsList=['2_1','3_1','4_1','5_1','6_1'])
+            game = Holdme(ante=ante)
             game.init_player(get_bot(),player_info)
             if holdem_page():
                 save_game(game.save_game())

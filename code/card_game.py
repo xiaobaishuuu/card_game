@@ -109,12 +109,10 @@ def draw_blind(small_blind= 1):...
 def draw_winner(winner,c):
     print('=============WINNER==================')
     # screen.fill((0,0,0))
-    title = TITLE_FONT.render('fxxxxx',True,TITLE_FONT_COLOR)
+    title = TITLE_FONT.render((str(winner),'win!'),True,TITLE_FONT_COLOR)
     init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
     move_animation(title,init_pos,final_position,1,0)
-    # while True:
-    #     pass
 
 def draw_hand(seat:int,hand:list,fold = False,deal:bool = False,show:bool = False):
     '''draw all hand card'''
@@ -131,7 +129,6 @@ def draw_card(seat:int,card_id:str,position:tuple,deal:bool = False,fold:bool = 
     if deal:
         move_animation(CARD_BACK,POKER_INITIAL_POSITION,position,0.5)
     #2 player or -1 community
-    print(bool(show))
     if seat in [-1,2] or CHEATING_MODE or show:
         screen.blit(POKER[card_id],position)
     #bot
@@ -215,7 +212,7 @@ def interact(playerChip:int = -1,
     def calculate_bet(raise_bet):
         nonlocal bet
         bet += raise_bet
-        if   bet > playerChip:  bet = playerChip  # excced max
+        if   bet >= playerChip:  bet = playerChip  # excced max
         elif bet < least_raise + least_bet: bet = least_bet + least_raise   # exceed min
 
     while not press:
@@ -241,7 +238,7 @@ def interact(playerChip:int = -1,
         # only draw
         for button in buttonList:
             value = None
-            if   button.text == kw.CALL:      value = least_bet
+            if   button.text == kw.CALL: value = playerChip if least_bet > playerChip else least_bet
             elif button.text == kw.BET_RAISE: value = bet
             button.draw(button.text in invalidList,value)
 

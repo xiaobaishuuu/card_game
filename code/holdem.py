@@ -23,6 +23,7 @@ class Holdme(BaseGame):
         self.__foldList  = [False] *5
         self.__pokerList = [f'{i}_{j}' for i in range(2,15) for j in range(1,5)]
         self.winnerList = {}
+        self.__sidePot = []
 
     def check_game(self):
         """check the blind seat or someone win the game,"""
@@ -30,7 +31,7 @@ class Holdme(BaseGame):
         self.small_blind = (self.small_blind) % 5
         self.__big_blind = (self.small_blind + 1) % 5
 
-    def holdem(self,choiceFunc,
+    def game_loop(self,choiceFunc,
                updateChipFunc = None,
                updateCardFunc = None,
                updatePotFunc  = None,
@@ -89,8 +90,8 @@ class Holdme(BaseGame):
                     if    seat == self.small_blind:  least_bet = round(self.ante/2)
                     elif  seat == self.__big_blind:  least_bet = self.ante
                     else: least_bet = 0
-
-                if not self.playersList[seat].fold:
+                # print(self.playersList[seat].fold,self.playersList[seat].allin)
+                if not self.playersList[seat].fold : #and not self.playersList[seat].allin:
                     ### bot thinking
                     if ThinkingFunc and seat != 2: ThinkingFunc(seat,random.randint(1,7))
 
@@ -176,36 +177,39 @@ class Holdme(BaseGame):
                 element = random.choice(self.__pokerList)
                 self.communityCardsList[i] = element
                 self.__pokerList.remove(element)
-# print([['',''],*5])
-# a = Holdme()
-# a.init_player([{
-#             "type": 0,
-#             "username": "Peter",
-#             "password": "832jce83912deddwa",
-#             "chip": 492000
-#         },
-#         {
-#             "type": 0,
-#             "username": "Amy",
-#             "password": "832jce83912deddwa",
-#             "chip": 498000
-#         },
-#         {
-#             "type": 0,
-#             "username": "Tom",
-#             "password": "832jce83912deddwa",
-#             "chip": 496000
-#         },
-#         {
-#             "type": 0,
-#             "username": "John",
-#             "password": "832jce83912deddwa",
-#             "chip": 500000
-#         }],{
-#             "type": 1,
-#             "username": "Rex",
-#             "password": "123",
-#             "chip": 500000
-#         })
-# a.deal_player()
-# print(a.handList)
+
+if __name__ == '__main__':
+    print([['',''],*5])
+    a = Holdme()
+    a.init_player([{
+                "type": 0,
+                "username": "Peter",
+                "password": "832jce83912deddwa",
+                "chip": 492000
+            },
+            {
+                "type": 0,
+                "username": "Amy",
+                "password": "832jce83912deddwa",
+                "chip": 498000
+            },
+            {
+                "type": 0,
+                "username": "Tom",
+                "password": "832jce83912deddwa",
+                "chip": 496000
+            },
+            {
+                "type": 0,
+                "username": "John",
+                "password": "832jce83912deddwa",
+                "chip": 500000
+            }],{
+                "type": 1,
+                "username": "Rex",
+                "password": "123",
+                "chip": 500000
+            })
+    a.deal_player()
+    print(a.handList)
+    # a.holdem()

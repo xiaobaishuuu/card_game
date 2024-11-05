@@ -33,9 +33,7 @@ class BaseGame:
         # if len(self.__playersList) < self.total_player:
         #     raise 'init error'
 
-    # def game_loop(self):
-    #     ''''''
-    #     pass
+    def game_loop(self):...
 
 if __name__ == '__main__':
     pass

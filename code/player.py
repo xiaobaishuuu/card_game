@@ -12,24 +12,26 @@ class Player():
         self.chip = chip
         self.hand = hand
         self.fold = fold
+        # self.allin= False
         self.combo= ['','']
         self.total_bet = 0
 
     def decision(self,is_ante:bool,least_bet:int,least_raise:int,choiceFunc) -> dict:
         ''' return a dict{choice,bet}'''
-        #used in gui
-        if self.fold:                      # fold
-            invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CALL,kw.CHECK,kw.BET_RAISE]
-        elif is_ante:                      # blind seat
-            invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CHECK,kw.BET_RAISE]
-        elif not self.hand:                #first round
-            invalidList = [kw.INCREASE,kw.DECREASE,kw.FOLD,kw.CALL,kw.BET_RAISE]
-        elif least_bet > 0:                # someone bet
-            invalidList = [kw.CHECK]
-        elif least_bet == 0 and self.hand: #first seat
-            invalidList = [kw.CALL]
         # calculate player's least bet,(not least bet for a round)
-        least_bet = least_bet - self.total_bet
+        least_bet -= self.total_bet
+        #used in gui
+        # print(self.chip,least_bet)
+        if is_ante:                       # blind seat or allin
+            invalidList = [kw.INCREASE,kw.DECREASE,kw.BET_RAISE,kw.FOLD,kw.CHECK]
+        elif not self.hand:               # first round
+            invalidList = [kw.INCREASE,kw.DECREASE,kw.BET_RAISE,kw.FOLD,kw.CALL]
+        # elif self.chip <= least_bet + least_raise:  # allin
+        #     invalidList = [kw.INCREASE,kw.DECREASE,kw.BET_RAISE,kw.CHECK]
+        elif least_bet > 0:               # someone bet
+            invalidList = [kw.CHECK]
+        elif least_bet == 0 and self.hand:# first seat or allin
+            invalidList = [kw.CALL]
         # receive data
         result:dict = choiceFunc(self.chip,least_bet,least_raise,self.fold,invalidList)
         # handle data
@@ -38,6 +40,8 @@ class Player():
         elif result['choice'] == kw.BET_RAISE:       bet = result['bet']
         elif result['choice'] == kw.CHECK:           bet = 0
         elif result['choice'] == kw.FOLD:            bet,self.fold = 0,True
+        # elif result['choice'] == kw.CALL and self.chip <= least_bet:
+        #                                              bet,self.allin = self.chip,True
         # upload data
         self.total_bet += bet
         self.chip -= bet

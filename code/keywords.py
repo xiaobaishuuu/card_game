@@ -24,8 +24,8 @@ SIGN_UP = 'sign up'
 COMBO_RATING = ['high card', 'one pair', 'two pair', 'three of a kind', 'straight', 'flush', 'full house', 'four of a kind', 'straight flush']
 
 CASINO_LEVEL = {
-    'president':1000000,
-    'rich'     :100000,
+    'president':100000000,
+    'rich'     :1000000,
     'poor'     :10000,
-    'bankrupt' :1000,
+    'bankrupt' :100,
 }
