@@ -1,11 +1,12 @@
-from card_game import *
+from rendering import *
 from holdem import *
 from login import *
 
 # 有些功能没有实现
 # 切勿将 注释的函数解封
 # 不然
-# 程序爆炸
+# 程序
+# 可能爆炸
 # 且有些微bug
 
 def login_page(login = False) -> dict:

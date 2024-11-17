@@ -1,12 +1,10 @@
 
-# 安装依赖
-  1. python 3.10.11
-  2. 命令行内: pip install pygame / python -m pip install pygame(未添加至环境变量)
-
 # 运行
-  .\card_game\code\main.py
+  1. 解释器(interpreter)版本至少为 python 3.10
+  2. 安装依赖 cmd内: pip install pygame（已添加至环境变量） 或 python -m pip install pygame(未添加至环境变量)
+  3. 运行 main.py (.\card_game\code\main.py)
 
-# 结构？？？
+# 结构？？？ (不是最新)
 
                   player.json       keyword.py
     setting.py          |               |
@@ -25,7 +23,7 @@
 
 # 檢驗手牌强度(废弃)
   https://suffe.cool/poker/evaluator.html
-  使用 查找表 lookup table (LUT)
+  use lookup table (LUT)
 
   prime: 2 3 5 7 11 13 17 19 23 29 31 37 41
   rank : 2 3 4 5 6  7  8  9  10  J Q  K  A

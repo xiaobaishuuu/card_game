@@ -2,7 +2,9 @@ from Base import *
 
 class Holdme(BaseGame):
     """ # only calculates\n
-        程序入口為holdem(),調用后運行一回合而不是一整局,因此要運行一整局需配合循環(一局5回合)"""
+        程序入口為holdem(),調用后運行一回合而不是一整局,因此要運行一整局需配合循環(一局5回合)
+        
+        Side pot 算法尚未完成，即玩家可以出現負錢情況"""
 
     def __init__(self,
                  ante:int = 100,
@@ -119,6 +121,7 @@ class Holdme(BaseGame):
             again -= 1
 
     def check_winner(self):
+        """get winner list,需要優化"""
         # players_combo = {}
         # nonFoldList = [player for player in self.playersList if not player.fold]
         # for player in self.playersList:

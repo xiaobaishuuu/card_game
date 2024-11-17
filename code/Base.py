@@ -36,4 +36,5 @@ class BaseGame:
     def game_loop(self):...
 
 if __name__ == '__main__':
-    pass
+    import os
+    print(os.path)

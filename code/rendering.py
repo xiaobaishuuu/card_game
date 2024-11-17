@@ -194,7 +194,7 @@ def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:in
         pygame.display.flip()
         #end the animation
         if progress >= 1 and alpha == alpha_end:
-            # print('an fis')
+            # console.log(123)
             break
 
 def interact(playerChip:int = -1,

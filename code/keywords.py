@@ -1,7 +1,7 @@
 #防止可能因大小写或少个字而产生防不胜防且难以根治以及高深莫测的 bug 而写的 keywords,自动补全就是好用
 
 # button
-# ANTE  = 'ante'
+# ANTE  = 'ante'  #廢棄
 CHECK = 'check'
 BET_RAISE = 'raise'
 FOLD  = 'fold'
