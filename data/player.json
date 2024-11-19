@@ -35,6 +35,12 @@
             "username": "Sam",
             "password": "832jce83912deddwa",
             "chip": 499000
+        },
+        {
+            "type": 1,
+            "username": "rex",
+            "password": "1234abcd",
+            "chip": 500000
         }
     ]
 }

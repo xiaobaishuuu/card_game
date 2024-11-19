@@ -4,11 +4,13 @@ from input_box import *
 import keywords as kw
 import time
 
-def introduction():
+def introduction(isAnimation = True):
     title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
     init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
-    move_animation(title,init_pos,final_position,1,0)
+    if isAnimation:
+        move_animation(title,init_pos,final_position,1,0)
+    screen.blit(title,final_position)
 
 def invalid_input():
     REMINDER_FONT.render()
@@ -26,7 +28,6 @@ def draw_table(num=5):
         pygame.draw.rect(screen,POKER_PLACE_COLOR,(x,y,POKER_PLACE_WIDTH,POKER_PLACE_HEIGHT),3,5)
     pygame.display.flip()
 
-
 def draw_players(seat:int,playerName:str,playerChip:int):
     """player seat : 0 - 4"""
     pygame.draw.rect(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_COLOR,(0,0,PLAYER_INFO_BAR_WIDTH,PLAYER_INFO_BAR_HEIGHT),0,20)
@@ -37,7 +38,7 @@ def draw_players(seat:int,playerName:str,playerChip:int):
     screen.blit(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_POSITION[seat])
     pygame.display.flip()
 
-def render_reminder(text:str,bg_color,padding) -> pygame.Surface:
+def render_reminder(text:str,bg_color:tuple[int,int,int],padding:int) -> pygame.Surface:
     # reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() * 1.3 # take the highest letter
     reminder = REMINDER_FONT.render(text,True,REMINDER_FONT_COLOR)
     if not padding: padding = 0
@@ -46,7 +47,7 @@ def render_reminder(text:str,bg_color,padding) -> pygame.Surface:
     reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
     return reminder_bg
 
-def render_betting_info(bet) -> pygame.Surface:
+def render_betting_info(bet:int) -> pygame.Surface:
     chipList = {
         'black' :100000, # black : 100000 =< bet
         'yellow':50000,  # yellow:  50000 =< bet < 100000
@@ -76,7 +77,7 @@ def draw_combo(playerCombination:list):
         elif CHEATING_MODE:
             pass
 
-def draw_pot(pot):
+def draw_pot(pot:int):
     pot_reminder = render_betting_info(pot)
     screen.blit(pot_reminder,((SCREEN_WIDTH-pot_reminder.get_width())/2 - (CHIP_WIDTH - CHIP_WIDTH/1.5),TABLE_RECT.y + TABLE_HEIGHT/2))
 
@@ -222,7 +223,8 @@ def interact(playerChip:int = -1,
                 raise QuitGame
             # only check
             for input_box in inputList:
-                input_box.check(event)
+                if input_box.text not in invalidList:
+                    input_box.check(event)
             for button in buttonList:
                 #check button
                 if (button.text not in invalidList) and button.check(event):
@@ -242,5 +244,6 @@ def interact(playerChip:int = -1,
             elif button.text == kw.BET_RAISE: value = bet
             button.draw(button.text in invalidList,value)
 
-        for input_box in inputList: input_box.draw()
+        for input_box in inputList:
+            if input_box.text not in invalidList: input_box.draw()
     return result

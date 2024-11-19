@@ -11,20 +11,25 @@ from login import *
 
 def login_page(login = False) -> dict:
     '''return real player info after login '''
-    screen.fill(SCREEN_COLOR)
-    draw_table(0)
-    introduction()
+    invalid = kw.C_PASSWORD
+    attempts = 0
     while not login:
+        attempts += 1
+        screen.fill(SCREEN_COLOR)
+        draw_table(0)
+        introduction(attempts == 1)
         # recieve input
-        result = interact(buttonList = loginPageButtons,inputList=loginPageInputs)
-        if   result['choice'] == kw.SIGN_IN:        # sign in
+        result = interact(buttonList = loginPageButtons,inputList=loginPageInputs,invalidList=[invalid])
+        if   result['choice'] == kw.SIGN_IN:# sign in
+            if invalid == '': #避免在Sign up 接口内登录
+                invalid = kw.C_PASSWORD
+                continue # 直接跳去登录
             login = sign_in(result[kw.USERNAME],result[kw.PASSWORD])
-            if not login:
-                pass
             # bankrupt
             if login and login['chip'] < kw.CASINO_LEVEL['bankrupt'] : #short circuit
                 login = False
-        elif result['choice'] == kw.SIGN_UP:        # sign up
+        elif result['choice'] == kw.SIGN_UP:# sign up
+            invalid = ''
             sign_up(result[kw.USERNAME],result[kw.PASSWORD],result[kw.C_PASSWORD])
         for input_box in loginPageInputs: input_box.content_init()
     return login

@@ -42,7 +42,7 @@ class Input:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_TAB:
                             pass
-                        elif event.key == pygame.K_BACKSPACE:
+                        elif event.key in [pygame.K_BACKSPACE,pygame.K_DELETE]:
                             self.content = self.content[:-1]
                         else:
                             # check text limitation
