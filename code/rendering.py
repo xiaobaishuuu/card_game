@@ -4,6 +4,9 @@ from input_box import *
 import keywords as kw
 import time
 
+def ranking(playData:list[dict]):
+    pass
+
 def introduction(isAnimation:bool = True):
     title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
     init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
@@ -110,10 +113,8 @@ def draw_blind(small_blind= 1):...
 
 
 def draw_winner(winner,c):
-    print('=============WINNER==================')
     print(winner)
     print(c)
-    # screen.fill((0,0,0))
     # title = TITLE_FONT.render((str(winner),'win!'),True,TITLE_FONT_COLOR)
     # init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     # final_position = ((SCREEN_WIDTH-title.get_width())/2,150)

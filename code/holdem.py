@@ -181,37 +181,4 @@ class Holdme(BaseGame):
                 self.__pokerList.remove(element)
 
 if __name__ == '__main__':
-    print([['',''],*5])
-    a = Holdme()
-    a.init_player([{
-                "type": 0,
-                "username": "Peter",
-                "password": "832jce83912deddwa",
-                "chip": 492000
-            },
-            {
-                "type": 0,
-                "username": "Amy",
-                "password": "832jce83912deddwa",
-                "chip": 498000
-            },
-            {
-                "type": 0,
-                "username": "Tom",
-                "password": "832jce83912deddwa",
-                "chip": 496000
-            },
-            {
-                "type": 0,
-                "username": "John",
-                "password": "832jce83912deddwa",
-                "chip": 500000
-            }],{
-                "type": 1,
-                "username": "Rex",
-                "password": "123",
-                "chip": 500000
-            })
-    a.deal_player()
-    print(a.handList)
-    # a.holdem()
+    pass
