@@ -20,6 +20,7 @@ TITLE_FONT_COLOR= (255,255,255)
 INPUT_BOX_WIDTH = 320
 INPUT_FONT_SIZE = 22
 INPUT_FONT_COLOR= (231, 231, 231)
+LOGIN_REMINDER_BG_COLOR = (5, 36, 19)
 
 # table
 TABLE_WIDTH = 1000
@@ -54,17 +55,13 @@ PLAYER_BETTEING_INFO_HEIGHT= 70
 CHIP_WIDTH = 40
 CHIP_HEIGHT= 40
 
-# pot            # more flexible
-# POT_WIDTH = 333  # = TABLE_WIDTH/3
-# POT_HEIGHT= 160  # = TABLE_HEIGHT/2 - POKER_HEIGHT
-
 # button  edit:(in button.py)
 BUTTON_FONT_SIZE = 20
 BETTING_SIZE_FONT_SIZE = 15
 BUTTON_FONT_COLOR = (255,255,255)
 BUTTON_COLOR = (0,0,0)
-BUTTON_ACTIVE_COLOR = (68, 45, 53)
 BUTTON_TOUCH_COLOR  = (68, 45, 53)
+BUTTON_ACTIVE_COLOR = (68, 45, 53)
 BUTTON_ACTIVE_TOUCH_COLOR = (255,255,255)
 
 # reminder
@@ -112,7 +109,6 @@ pygame.init()
 pygame.display.set_caption('Card Game')
 clock  = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
-# screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT),pygame.RESIZABLE)
 
 # title
 TITLE_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',TITLE_FONT_SIZE)
@@ -133,9 +129,6 @@ REMINDER_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',REMINDER_FONT_S
 
 # table
 TABLE_RECT = pygame.Rect((SCREEN_WIDTH-TABLE_WIDTH)/2,(3/14)*(SCREEN_HEIGHT-TABLE_HEIGHT),TABLE_WIDTH,TABLE_HEIGHT)
-
-# pot
-# POT_AREA = pygame.Surface((TABLE_WIDTH/3,TABLE_HEIGHT/2 - POKER_HEIGHT),pygame.SRCALPHA)
 
 # player info
 PLAYER_NAME_FONT = pygame.font.Font(f'{fontPath}\\FreeSansBold.ttf',PLAYER_NAME_FONT_SIZE)

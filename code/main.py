@@ -2,35 +2,41 @@ from rendering import *
 from holdem import *
 from login import *
 
-# 有些功能没有实现
-# 切勿将 注释的函数解封
-# 不然
-# 程序
-# 可能爆炸
-# 且有些微bug
-
 def login_page(login = False) -> dict:
     '''return real player info after login '''
     invalid = kw.C_PASSWORD
     attempts = 0
+    temp_text = ''
+    reminder_text = kw.SIGN_IN_INFO
     while not login:
         attempts += 1
         screen.fill(SCREEN_COLOR)
         draw_table(0)
         introduction(attempts == 1)
+        reminder = render_reminder(reminder_text,LOGIN_REMINDER_BG_COLOR,20)
+        screen.blit(reminder,((SCREEN_WIDTH-reminder.get_width())/2,SCREEN_HEIGHT*250/SCREEN_HEIGHT))
         # recieve input
         result = interact(buttonList = loginPageButtons,inputList=loginPageInputs,invalidList=[invalid])
-        if   result['choice'] == kw.SIGN_IN:# sign in
-            if invalid == '': #避免在Sign up 接口内登录
+        # sign in
+        if result['choice'] == kw.SIGN_IN:  # sign in
+            reminder_text = kw.SIGN_IN_INFO
+            if invalid == '':               # no sign in when Sign up
                 invalid = kw.C_PASSWORD
-                continue # 直接跳去登录
+                continue                    # skip to login
             login = sign_in(result[kw.USERNAME],result[kw.PASSWORD])
+            temp_text = kw.SIGN_IN_SUCCESSE if login else kw.SIGN_IN_FAIL
+            if invalid:
+                temp_reminder(temp_text,[SCREEN_WIDTH/2,(SCREEN_HEIGHT*350/SCREEN_HEIGHT)])
             # bankrupt
             if login and login['chip'] < kw.CASINO_LEVEL['bankrupt'] : #short circuit
                 login = False
-        elif result['choice'] == kw.SIGN_UP:# sign up
+        # sign up
+        elif result['choice'] == kw.SIGN_UP:# sign u
+            reminder_text = kw.SIGN_UP_INFO
+            temp_text = kw.SIGN_UP_SUCCESSE if sign_up(result[kw.USERNAME],result[kw.PASSWORD],result[kw.C_PASSWORD]) else kw.SIGN_UP_FAIL
+            if not invalid:
+                temp_reminder(temp_text,[SCREEN_WIDTH/2,(SCREEN_HEIGHT*350/SCREEN_HEIGHT)])
             invalid = ''
-            sign_up(result[kw.USERNAME],result[kw.PASSWORD],result[kw.C_PASSWORD])
         for input_box in loginPageInputs: input_box.content_init()
     return login
 
@@ -84,6 +90,7 @@ if __name__ == '__main__':
             game = Holdme(ante=ante)
             game.init_player(get_bot(),player_info)
             if holdem_page():
+                player_info = game.save_game()[2]
                 save_game(game.save_game())
     except QuitGame:
         if 'game' in locals():

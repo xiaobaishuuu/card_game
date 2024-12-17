@@ -10,7 +10,7 @@ class BaseGame:
 
     @property
     def playersList(self):
-        '''for child class, cheat mode door'''
+        '''for child class, cheat mode'''
         return self.__playersList
 
     def save_game(self) -> list[dict]:

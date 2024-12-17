@@ -4,7 +4,7 @@ from input_box import *
 import keywords as kw
 import time
 
-def introduction(isAnimation = True):
+def introduction(isAnimation:bool = True):
     title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
     init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
@@ -12,12 +12,14 @@ def introduction(isAnimation = True):
         move_animation(title,init_pos,final_position,1,0)
     screen.blit(title,final_position)
 
-def invalid_input():
-    REMINDER_FONT.render()
+def temp_reminder(text:str,pos:list[int,int],bg_color:tuple = LOGIN_REMINDER_BG_COLOR,posDeviation:int = 35,time:int = 1):
+    reminder = render_reminder(text,bg_color,20)
+    pos[0] -= reminder.get_width()/2
+    move_animation(reminder,pos,(pos[0],pos[1] - posDeviation),time,alpha_end = 0)
 
 def choose_game():...
 
-def draw_table(num=5):
+def draw_table(num:int = 5):
     '''num: number of poker place'''
     pygame.draw.rect(screen,TABLE_COLOR,TABLE_RECT,0,1000)
     pygame.draw.rect(screen,TABLE_PADDING_COLOR,TABLE_RECT,50,1000)
@@ -109,11 +111,13 @@ def draw_blind(small_blind= 1):...
 
 def draw_winner(winner,c):
     print('=============WINNER==================')
+    print(winner)
+    print(c)
     # screen.fill((0,0,0))
-    title = TITLE_FONT.render((str(winner),'win!'),True,TITLE_FONT_COLOR)
-    init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
-    final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
-    move_animation(title,init_pos,final_position,1,0)
+    # title = TITLE_FONT.render((str(winner),'win!'),True,TITLE_FONT_COLOR)
+    # init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
+    # final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
+    # move_animation(title,init_pos,final_position,1,0)
 
 def draw_hand(seat:int,hand:list,fold = False,deal:bool = False,show:bool = False):
     '''draw all hand card'''
@@ -199,9 +203,9 @@ def move_animation(obj:pygame.Surface,init_pos:tuple,final_pos:tuple,duration:in
             break
 
 def interact(playerChip:int = -1,
-             least_bet  =0,
-             least_raise=0,
-             press = False,
+             least_bet:int  = 0,
+             least_raise:int= 0,
+             press:bool = False,
              invalidList:list = [],
              buttonList:list[Button] = gamePageButtons,
              inputList:list[Input] = []) -> dict:
@@ -210,7 +214,7 @@ def interact(playerChip:int = -1,
     bet = least_raise + least_bet
     result = {}
 
-    def calculate_bet(raise_bet):
+    def calculate_bet(raise_bet:int):
         nonlocal bet
         bet += raise_bet
         if   bet >= playerChip:  bet = playerChip  # excced max

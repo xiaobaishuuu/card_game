@@ -3,7 +3,6 @@ from Base import *
 class Holdme(BaseGame):
     """ # only calculates\n
         程序入口為holdem(),調用后運行一回合而不是一整局,因此要運行一整局需配合循環(一局5回合)
-        
         Side pot 算法尚未完成，即玩家可以出現負錢情況"""
 
     def __init__(self,
@@ -97,7 +96,7 @@ class Holdme(BaseGame):
                     ### bot thinking
                     if ThinkingFunc and seat != 2: ThinkingFunc(seat,random.randint(1,7))
 
-                    # operation
+                    # player operation
                     result = self.playersList[seat].decision(is_ante,least_bet,self.ante,choiceFunc)
                     self.pot += result['bet']
                     if result['choice'] == kw.FOLD: self.__foldList[seat] = self.playersList[seat].fold

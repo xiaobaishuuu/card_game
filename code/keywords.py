@@ -21,6 +21,14 @@ C_PASSWORD = 'confirm password'
 SIGN_IN = 'sign in'
 SIGN_UP = 'sign up'
 
+#login info
+SIGN_IN_INFO = 'Please login'
+SIGN_IN_SUCCESSE = 'sign in successe'
+SIGN_IN_FAIL = 'User or password invalid'
+SIGN_UP_INFO = "sign up (Password must be 8 characters long with numbers and letters)"
+SIGN_UP_SUCCESSE = 'sign up successe'
+SIGN_UP_FAIL = 'User exist or password invalid'
+
 COMBO_RATING = ['high card', 'one pair', 'two pair', 'three of a kind', 'straight', 'flush', 'full house', 'four of a kind', 'straight flush']
 
 CASINO_LEVEL = {
