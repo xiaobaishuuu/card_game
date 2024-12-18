@@ -19,7 +19,7 @@ def sign_in(username,password):
             return player
     return False
 
-def sign_up(username,password,c_password,real_player:bool = True):
+def sign_up(username,password,c_password,real_player:bool = True) -> bool:
     def check_password(password:str):
         letter = False
         digit = False
@@ -50,7 +50,7 @@ def sign_up(username,password,c_password,real_player:bool = True):
         json.dump({kw.PLAYER_DATA:content},fp,indent=4)
     return True
 
-def get_bot():
+def get_bot() -> list[dict]:
     '''all bot info but without password'''
     botList = []
     for bot in load_players():
@@ -69,42 +69,18 @@ def save_game(players_info:list[dict] = []):
     with open(path,mode='w',encoding='utf-8') as fp:
         json.dump({kw.PLAYER_DATA:ori_players_info},fp,indent=4)
 
-if __name__ == '__main__':
-    print(load_players())
-
-    # 原始列表
-    data = [
-        {'type': 0, 'username': 'Peter', 'password': '832jce83912deddwa', 'chip': 600000},
-        {'type': 0, 'username': 'Amy', 'password': '832jce83912deddwa', 'chip': 300000},
-        {'type': 0, 'username': 'Tom', 'password': '832jce83912deddwa', 'chip': 500000},
-        {'type': 0, 'username': 'John', 'password': '832jce83912deddwa', 'chip': 500000},
-        {'type': 0, 'username': 'Alex', 'password': '832jce83912deddwa', 'chip': 500000},
-        {'type': 0, 'username': 'Sam', 'password': '832jce83912deddwa', 'chip': 500000},
-        {'type': 1, 'username': 'rex', 'password': '1234abcd', 'chip': 500000}
-    ]
-
-    # 按 chip 降序排列
-    sorted_data = sorted(data, key=lambda x: x['chip'], reverse=True)
-
-
-
-    # 添加名次（允許名次共享，後續名次連續）
+def calculate_ranking(ori_data:dict) -> list[list]:
+    sorted_data = sorted(ori_data, key=lambda x: x[kw.CHIP], reverse=True)
     ranked_data = []
-    current_rank = 1
+    current_rank = 0
     previous_chip = None
-    shared_rank_count = 0  # 記錄共享排名的用戶數量
-
     for item in sorted_data:
         # 如果籌碼不同，更新名次
-        if previous_chip is None or item['chip'] != previous_chip:
-            current_rank += shared_rank_count  # 更新名次為當前名次加上共享排名的數量
-            shared_rank_count = 1  # 重置共享排名計數
-        else:
-            shared_rank_count += 1  # 如果籌碼相同，增加共享排名的用戶數量
+        if previous_chip is None or item[kw.CHIP] != previous_chip:
+            current_rank += 1
+        ranked_data.append([current_rank,item[kw.USERNAME], item[kw.CHIP]])
+        previous_chip = item[kw.CHIP]
+    return ranked_data
 
-        # 添加到結果
-        ranked_data.append([current_rank, item['username'], item['chip']])
-        previous_chip = item['chip']  # 記錄當前籌碼
-
-    # 打印結果
-    print(ranked_data)
+if __name__ == '__main__':
+    pass

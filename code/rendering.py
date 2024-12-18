@@ -4,10 +4,18 @@ from input_box import *
 import keywords as kw
 import time
 
-def ranking(playData:list[dict]):
-    pass
+def draw_ranking(ranked_data:list[list]):
+    # temp code
+    h = 0
+    for item in ranked_data:
+        a = render_reminder(f'{item[0]}.{item[1]}',(0,0,0),width = 120)
+        b = render_reminder(f'${item[2]}',(0,0,0),width=100)
+        h += a.get_height()
+        screen.blit(a,(0,h))
+        screen.blit(b,(100,h))
+        pygame.display.flip()
 
-def introduction(isAnimation:bool = True):
+def draw_introduction(isAnimation:bool = True):
     title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
     init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
@@ -43,11 +51,12 @@ def draw_players(seat:int,playerName:str,playerChip:int):
     screen.blit(PLAYER_INFO_BAR_LIST[seat],PLAYER_INFO_BAR_POSITION[seat])
     pygame.display.flip()
 
-def render_reminder(text:str,bg_color:tuple[int,int,int],padding:int) -> pygame.Surface:
+def render_reminder(text:str,bg_color:tuple[int,int,int],padding:int = 10,width:int = None) -> pygame.Surface:
     # reminder_height = REMINDER_FONT.render('p',True,REMINDER_FONT_COLOR).get_height() * 1.3 # take the highest letter
     reminder = REMINDER_FONT.render(text,True,REMINDER_FONT_COLOR)
     if not padding: padding = 0
-    reminder_bg = pygame.Surface((reminder.get_width() + padding *2,REMINDER_HEIGHT),pygame.SRCALPHA)
+    if not width: width = reminder.get_width() + padding *2
+    reminder_bg = pygame.Surface((width,REMINDER_HEIGHT),pygame.SRCALPHA)
     pygame.draw.rect(reminder_bg,bg_color,reminder_bg.get_rect(),0,12)
     reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
     return reminder_bg
@@ -105,12 +114,7 @@ def draw_betting(pot:int,seat:int,choice:str,bet:int):
         pygame.display.flip()
         move_animation(bet_reminder,(bet_x,bet_y + bet_reminder.get_height()),(bet_x,bet_y),1,alpha_end=-100)
 
-def draw_blind(small_blind= 1):...
-    # return
-    # a = pygame.Surface((TABLE_WIDTH*(16/29),TABLE_HEIGHT*(16/29)),pygame.SRCALPHA)
-    # pygame.draw.rect(a,(0,0,0),a.get_rect())
-    # screen.blit(a,(SCREEN_WIDTH/2 - TABLE_WIDTH*(16/29)/2,TABLE_RECT.y + (TABLE_HEIGHT*(16/29)/2)))
-
+def draw_blind(small_blind = 1):...
 
 def draw_winner(winner,c):
     print(winner)

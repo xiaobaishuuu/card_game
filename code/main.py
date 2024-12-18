@@ -11,8 +11,9 @@ def login_page(login = False) -> dict:
     while not login:
         attempts += 1
         screen.fill(SCREEN_COLOR)
+        draw_ranking(calculate_ranking(load_players()))
         draw_table(0)
-        introduction(attempts == 1)
+        draw_introduction(attempts == 1)
         reminder = render_reminder(reminder_text,LOGIN_REMINDER_BG_COLOR,20)
         screen.blit(reminder,((SCREEN_WIDTH-reminder.get_width())/2,SCREEN_HEIGHT*250/SCREEN_HEIGHT))
         # recieve input
