@@ -80,4 +80,3 @@ gamePageButtons = [Button(kw.CHECK    ,pygame.Rect(__betButton_x - (__gap + __be
 # login button
 loginPageButtons = [Button(kw.SIGN_IN ,pygame.Rect((SCREEN_WIDTH-120)/2 +80,500,120,60),BUTTON_COLOR,BUTTON_TOUCH_COLOR,BUTTON_ACTIVE_COLOR,BUTTON_ACTIVE_TOUCH_COLOR,flag=-1),
                     Button(kw.SIGN_UP ,pygame.Rect((SCREEN_WIDTH-120)/2 -80,500,120,60),BUTTON_COLOR,BUTTON_TOUCH_COLOR,BUTTON_ACTIVE_COLOR,BUTTON_ACTIVE_TOUCH_COLOR,flag=-1),]
-                    # Button(kw.SIGN_UP ,pygame.Rect((SCREEN_WIDTH-120)/2 -80,500,120,60),flag=-1)]
