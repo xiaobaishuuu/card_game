@@ -50,6 +50,14 @@ def sign_up(username,password,c_password,real_player:bool = True) -> bool:
         json.dump({kw.PLAYER_DATA:content},fp,indent=4)
     return True
 
+def test_login():
+    '''testing user data(non save)'''
+    return {
+        kw.TYPE: 1,  #type 1 is real player,0 is bot
+        kw.USERNAME:'test',
+        kw.CHIP: 1000000
+    }
+
 def get_bot() -> list[dict]:
     '''all bot info but without password'''
     botList = []

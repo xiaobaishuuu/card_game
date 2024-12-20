@@ -10,7 +10,7 @@
             "type": 0,
             "username": "Amy",
             "password": "832jce83912deddwa",
-            "chip": 49000
+            "chip": 500000
         },
         {
             "type": 0,
@@ -22,7 +22,7 @@
             "type": 0,
             "username": "John",
             "password": "832jce83912deddwa",
-            "chip": 499000
+            "chip": 500000
         },
         {
             "type": 0,
@@ -34,13 +34,13 @@
             "type": 0,
             "username": "Sam",
             "password": "832jce83912deddwa",
-            "chip": 499000
+            "chip": 500000
         },
         {
             "type": 1,
             "username": "rex",
             "password": "1234abcd",
-            "chip": 499500
+            "chip": 500000
         }
     ]
 }

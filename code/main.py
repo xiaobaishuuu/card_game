@@ -4,6 +4,7 @@ from login import *
 
 def login_page(login = False) -> dict:
     '''return real player info after login '''
+    if login: return test_login()
     invalid = kw.C_PASSWORD
     attempts = 0
     temp_text = ''
@@ -80,7 +81,7 @@ def other_game_page():...
 
 if __name__ == '__main__':
     try:
-        player_info = login_page()
+        player_info = login_page(login=True)  # login = false:skip to gameloop
         for k,v in kw.CASINO_LEVEL.items():
             if player_info['chip'] >= v:
                 ante = round(v * 0.1)
