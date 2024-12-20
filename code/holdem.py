@@ -154,7 +154,6 @@ class Holdme(BaseGame):
             return None
         # deal card to Player()
         self.handList = []
-
         for i in range(len(self.playersList)):
             # get 2 hand
             element = random.sample(self.__pokerList,2)
@@ -162,15 +161,6 @@ class Holdme(BaseGame):
             self.playersList[i].hand = element
             for i in range(2):
                 self.__pokerList.remove(element[i])
-
-        # for i in range(len(self.playersList)):
-        # # for hand in self.handList:
-        #     print(self.handList)
-        #     while len(self.handList[i]) <= 2:
-        #         element = random.choice(self.__pokerList)
-        #         self.__pokerList.remove(element)
-        #         self.handList[i].append(element)
-        #         self.playersList[i].hand = self.handList[i]
 
     def deal_community(self,card_range:range):
         # deal community

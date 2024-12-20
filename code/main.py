@@ -4,7 +4,9 @@ from login import *
 
 def login_page(login = False) -> dict:
     '''return real player info after login '''
-    if login: return test_login()
+    # non login
+    if login: return get_testing_data()
+    # login
     invalid = kw.C_PASSWORD
     attempts = 0
     temp_text = ''
@@ -30,10 +32,10 @@ def login_page(login = False) -> dict:
             if invalid:
                 temp_reminder(temp_text,[SCREEN_WIDTH/2,(SCREEN_HEIGHT*350/SCREEN_HEIGHT)])
             # bankrupt
-            if login and login['chip'] < kw.CASINO_LEVEL['bankrupt'] : #short circuit
+            if login and login[kw.CHIP] < kw.CASINO_LEVEL['bankrupst'] : #short circuit
                 login = False
         # sign up
-        elif result['choice'] == kw.SIGN_UP:# sign u
+        elif result['choice'] == kw.SIGN_UP:# sign up
             reminder_text = kw.SIGN_UP_INFO
             temp_text = kw.SIGN_UP_SUCCESSE if sign_up(result[kw.USERNAME],result[kw.PASSWORD],result[kw.C_PASSWORD]) else kw.SIGN_UP_FAIL
             if not invalid:

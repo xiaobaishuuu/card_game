@@ -11,6 +11,7 @@ class Input:
                  active_color:tuple = (0,0,0,0),
                  active_border_color:tuple = (0,0,0,0)
                  ) -> None:
+        """limitation: the longest length of input content"""
         self.text = text
         self.limitation = limitation
         self.rect = rect

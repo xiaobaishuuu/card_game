@@ -9,8 +9,8 @@ class Button:
                  touch_color:tuple,
                  active_color:tuple,
                  active_touch_color:tuple,
-                 flag  = 0):
-        """flag is button function,setting == -1 betting == 0,bet setting == 1"""
+                 flag:int = 0):
+        """flag: function type of button,setting == -1 betting == 0,bet setting == 1"""
         self.text  = text
         self.rect  = rect
         self.color = color
