@@ -115,7 +115,7 @@ class Holdme(BaseGame):
 
                     # only one player
                     if self.__foldList.count(False) == 1:
-                        self.check_winner()
+                        self.check_winner(updatePotFunc)
                         return
 
                     # add one round if someone raise
@@ -126,8 +126,8 @@ class Holdme(BaseGame):
                         break
             again -= 1
 
-    def check_winner(self):
-        """get winner list,需要優化"""
+    def check_winner(self,updatePotFunc = None):
+        """需要優化"""
         nonFoldList = [player for player in self.playersList if not player.fold]
         # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
         players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in nonFoldList}
@@ -136,6 +136,12 @@ class Holdme(BaseGame):
         for player in self.playersList:
             for winner in self.winnerList.keys():
                 if player.username == winner: player.chip += self.pot//len(self.winnerList)
+        # ======================================================================== ***temp
+        if updatePotFunc:
+            for winner in self.winnerList.keys():
+                for seat in range(len(self.playersList)):
+                    if self.playersList[seat].username == winner:updatePotFunc(self.pot,seat,'winner',self.pot//len(self.winnerList))
+        # ========================================================================
 
     def deal_player(self):
         '''deal hand to self.handList'''

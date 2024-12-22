@@ -60,16 +60,15 @@ def holdem_page():
                 draw_hand(seat,game.playersList[seat].hand,game.playersList[seat].fold,(r == 1 and not game.winnerList),game.winnerList)
         draw_combo(game.get_players_info('combo'))
         # end game
+        if r >= 2:
+            draw_community(game.communityCardsList,range(0,3),r == 2 and not game.winnerList)
+        if r >= 3:
+            draw_community(game.communityCardsList,range(3,4),r == 3 and not game.winnerList)
+        if r >= 4:
+            draw_community(game.communityCardsList,range(4,5),r == 4 and not game.winnerList)
         if game.winnerList:
-            draw_community(game.communityCardsList,range(0,5))
             draw_winner(game.winnerList)
             return True
-        if r >= 2:
-            draw_community(game.communityCardsList,range(0,3),r == 2)
-        if r >= 3:
-            draw_community(game.communityCardsList,range(3,4),r == 3)
-        if r >= 4:
-            draw_community(game.communityCardsList,range(4,5),r == 4)
         game.game_loop(interact,
                     draw_players,
                     draw_hand,

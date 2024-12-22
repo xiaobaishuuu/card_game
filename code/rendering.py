@@ -116,7 +116,7 @@ def draw_blind(small_blind = 1):...
 
 def draw_winner(winnerList:dict,waiting_time:int = 20):
     #暫時寫的垃圾
-    y = SCREEN_HEIGHT*0.55
+    y = SCREEN_HEIGHT*0.49
     winner_text = render_reminder('winner:',(0,0,0))
     screen.blit(winner_text,((SCREEN_WIDTH-winner_text.get_width())/2,y))
     for winner in winnerList.items():
