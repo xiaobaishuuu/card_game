@@ -140,7 +140,7 @@ class Holdme(BaseGame):
         for player in self.playersList:
             for winner in self.winnerList.keys():
                 if player.username == winner: player.chip += self.pot//len(self.winnerList)
-        print(f'nonFoldlist: {nonFoldList}\nplayers_combo: {players_combo}\nwinnerList: {self.winnerList}')
+        print(f'players_combo: {players_combo}\nwinnerList: {self.winnerList}')
         # ======================================================================== ***temp
         if updatePotFunc:
             for winner in self.winnerList.keys():

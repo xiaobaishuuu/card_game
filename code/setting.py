@@ -1,5 +1,6 @@
 import os.path,os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+os.environ['SDL_VIDEODRIVER'] = "window"
 import pygame
 import keywords as kw
 # ====================================CAN CHANGE==========================================
