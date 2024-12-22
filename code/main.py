@@ -31,9 +31,6 @@ def login_page(login = False) -> dict:
             temp_text = kw.SIGN_IN_SUCCESSE if login else kw.SIGN_IN_FAIL
             if invalid:
                 temp_reminder(temp_text,[SCREEN_WIDTH/2,(SCREEN_HEIGHT*350/SCREEN_HEIGHT)])
-            # bankrupt
-            if login and login[kw.CHIP] < kw.CASINO_LEVEL['bankrupst'] : #short circuit
-                login = False
         # sign up
         elif result['choice'] == kw.SIGN_UP:# sign up
             reminder_text = kw.SIGN_UP_INFO
@@ -64,7 +61,8 @@ def holdem_page():
         draw_combo(game.get_players_info('combo'))
         # end game
         if game.winnerList:
-            draw_winner(game.winnerList,game.communityCardsList)
+            draw_community(game.communityCardsList,range(0,5))
+            draw_winner(game.winnerList)
             return True
         if r >= 2:
             draw_community(game.communityCardsList,range(0,3),r == 2)
@@ -77,21 +75,16 @@ def holdem_page():
                     draw_hand,
                     draw_betting,
                     draw_consideration)
-        pygame.display.flip()
 
 def other_game_page():...
 
 if __name__ == '__main__':
     try:
-        player_info = login_page(login=True)  # login = false:skip to gameloop
-        for k,v in kw.CASINO_LEVEL.items():
-            if player_info['chip'] >= v:
-                ante = round(v * 0.1)
-                break
+        player_info = login_page(login=False)  # login = true: non login
         while True:
-            # game = choose_game()  選擇游戲，基於baseGame，但時間不夠不實現了
+            # game = choose_game()
             # if game == 'holdem':
-            game = Holdme(ante=ante)
+            game = Holdme()
             game.init_player(get_bot(),player_info)
             if holdem_page():
                 player_info = game.save_game()[2]

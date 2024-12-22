@@ -5,7 +5,7 @@ import keywords as kw
 import time
 
 def draw_ranking(ranked_data:list[list]):
-    # temp code
+    #暫時寫的垃圾
     h = 0
     for item in ranked_data:
         a = render_reminder(f'{item[0]}.{item[1]}',(0,0,0),width = 120)
@@ -87,9 +87,7 @@ def draw_combo(playerCombination:list):
         if player == playerCombination[2] and player[0]:
             position = ((SCREEN_WIDTH - reminder.get_width())/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
             screen.blit(reminder,position)
-        # dont want to do this part
-        elif CHEATING_MODE:
-            pass
+        elif CHEATING_MODE:...
 
 def draw_pot(pot:int):
     pot_reminder = render_betting_info(pot)
@@ -116,13 +114,25 @@ def draw_betting(pot:int,seat:int,choice:str,bet:int):
 
 def draw_blind(small_blind = 1):...
 
-def draw_winner(winner,c):
-    print(winner)
-    print(c)
-    # title = TITLE_FONT.render((str(winner),'win!'),True,TITLE_FONT_COLOR)
-    # init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
-    # final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
-    # move_animation(title,init_pos,final_position,1,0)
+def draw_winner(winnerList:dict,waiting_time:int = 20):
+    #暫時寫的垃圾
+    y = SCREEN_HEIGHT*0.55
+    winner_text = render_reminder('winner:',(0,0,0))
+    screen.blit(winner_text,((SCREEN_WIDTH-winner_text.get_width())/2,y))
+    for winner in winnerList.items():
+        player_info_text = render_reminder(f'{str(winner[0])} ({str(winner[1])})', (77, 159, 249))
+        y += player_info_text.get_height()
+        screen.blit(player_info_text,((SCREEN_WIDTH-player_info_text.get_width())/2,y))
+    pygame.display.flip()
+    start_time = time.time()
+    while True:
+        clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                raise QuitGame
+        progress = min((time.time() - start_time) / waiting_time,1)
+        if progress >= 1:
+            break
 
 def draw_hand(seat:int,hand:list,fold = False,deal:bool = False,show:bool = False):
     '''draw all hand card'''

@@ -83,7 +83,6 @@ def calculate_ranking(ori_data:dict) -> list[list]:
     current_rank = 0
     previous_chip = None
     for item in sorted_data:
-        # 如果籌碼不同，更新名次
         if previous_chip is None or item[kw.CHIP] != previous_chip:
             current_rank += 1
         ranked_data.append([current_rank,item[kw.USERNAME], item[kw.CHIP]])

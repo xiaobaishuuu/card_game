@@ -20,7 +20,7 @@ class BaseGame:
     def get_players_info(self,attr:str) -> list:
         '''for draw func\n
         return a list include all player info\n
-        find the attr in class Player'''
+        find the attr in Player class'''
         return [getattr(player,attr) for player in self.__playersList]
 
     def init_player(self,bot_list:list,real_player:dict = {}):

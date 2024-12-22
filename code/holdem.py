@@ -3,7 +3,7 @@ from Base import *
 class Holdme(BaseGame):
     """ # only calculates\n
         程序入口為holdem(),調用后運行一回合而不是一整局,因此要運行一整局需配合循環(一局5回合)
-        Side pot 算法尚未完成，即玩家可以出現負錢情況"""
+    """
 
     def __init__(self,
                  ante:int = 100,
@@ -25,9 +25,14 @@ class Holdme(BaseGame):
         self.__pokerList = [f'{i}_{j}' for i in range(2,15) for j in range(1,5)]
         self.winnerList = {}
         self.__sidePot = []
+        self.total_bet = 0
 
     def check_game(self):
         """check the blind seat or someone win the game,"""
+        for k,v in kw.CASINO_LEVEL.items():
+            if self.playersList[2].chip >= v:
+                self.ante = round(v * 0.1)
+                break
         # ensure blind seat not exceed the range
         self.small_blind = (self.small_blind) % 5
         self.__big_blind = (self.small_blind + 1) % 5
@@ -77,7 +82,6 @@ class Holdme(BaseGame):
         again = 1
         while again > 0:
             for seat in seat_range:
-
                 # find the next player index
                 current = (current + 1) % len(self.playersList)
 
@@ -86,18 +90,21 @@ class Holdme(BaseGame):
                     seat -= len(self.playersList)
 
                 # blind bet
-                is_ante = self.pot < self.ante + self.ante/2
+                # is_ante = self.pot < self.ante + self.ante/2
+                is_ante = self.total_bet < 2
+
                 if self.gameRound == 0:
                     if    seat == self.small_blind:  least_bet = round(self.ante/2)
                     elif  seat == self.__big_blind:  least_bet = self.ante
                     else: least_bet = 0
                 # print(self.playersList[seat].fold,self.playersList[seat].allin)
-                if not self.playersList[seat].fold : #and not self.playersList[seat].allin:
+                if not self.playersList[seat].fold and not self.playersList[seat].allin:
                     ### bot thinking
                     if ThinkingFunc and seat != 2: ThinkingFunc(seat,random.randint(1,7))
 
                     # player operation
                     result = self.playersList[seat].decision(is_ante,least_bet,self.ante,choiceFunc)
+                    self.total_bet += 1
                     self.pot += result['bet']
                     if result['choice'] == kw.FOLD: self.__foldList[seat] = self.playersList[seat].fold
 
@@ -121,29 +128,14 @@ class Holdme(BaseGame):
 
     def check_winner(self):
         """get winner list,需要優化"""
-        # players_combo = {}
-        # nonFoldList = [player for player in self.playersList if not player.fold]
-        # for player in self.playersList:
-        #     if not player.fold:
-        #         players_combo[player.username] = [kw.COMBO_RATING.index(player.combo[0]),player.combo[1]]
-
-        # for username,combo in players_combo.items():
-        #     if combo[0] == max(players_combo.values()[0]):
-        #         self.winnerList[username] = combo
-
-        # for player in nonFoldList:
-        #     if player.username in self.winnerList.keys():
-        #         player.chip += round(self.pot/len(self.winnerList))
-
         nonFoldList = [player for player in self.playersList if not player.fold]
         # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
         players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in nonFoldList}
         # maybe play a draw so include all winner
-        for i in self.playersList:
-            print(i.username,i.combo)
-        self.winnerList = {player:combo for player,combo in players_combo.items() if combo == max(players_combo.values())}
-        prize = self.pot/round(len(self.winnerList))
-        # for i in pla
+        self.winnerList = {player:kw.COMBO_RATING[combo[0]] for player,combo in players_combo.items() if combo == max(players_combo.values())}# kw.COMBO_RATING[combo[0]] / combo
+        for player in self.playersList:
+            for winner in self.winnerList.keys():
+                if player.username == winner: player.chip += self.pot//len(self.winnerList)
 
     def deal_player(self):
         '''deal hand to self.handList'''

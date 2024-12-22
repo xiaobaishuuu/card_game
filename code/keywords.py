@@ -2,6 +2,7 @@
 
 # button
 # ANTE  = 'ante'  #廢棄
+ALL_IN = 'all in'
 CHECK = 'check'
 BET_RAISE = 'raise'
 FOLD  = 'fold'
