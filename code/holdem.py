@@ -54,6 +54,7 @@ class Holdme(BaseGame):
             return
         # new round
         self.gameRound += 1
+
         match self.gameRound:
             case 1:
                 self.deal_player()
@@ -66,6 +67,7 @@ class Holdme(BaseGame):
             case 5:
                 self.check_winner()
                 return
+        print(f'=======round {self.gameRound} ===========\n{self.communityCardsList}\n{self.handList}')
         # get combo
         for player in self.playersList:
             player.combination(list(filter(lambda x:x != "",self.communityCardsList)))
@@ -104,6 +106,7 @@ class Holdme(BaseGame):
 
                     # player operation
                     result = self.playersList[seat].decision(is_ante,least_bet,self.ante,choiceFunc)
+                    print(f'{self.playersList[seat].username}: {result}')
                     self.total_bet += 1
                     self.pot += result['bet']
                     if result['choice'] == kw.FOLD: self.__foldList[seat] = self.playersList[seat].fold
@@ -128,6 +131,7 @@ class Holdme(BaseGame):
 
     def check_winner(self,updatePotFunc = None):
         """需要優化"""
+        print('============check winner')
         nonFoldList = [player for player in self.playersList if not player.fold]
         # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
         players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in nonFoldList}
@@ -136,6 +140,7 @@ class Holdme(BaseGame):
         for player in self.playersList:
             for winner in self.winnerList.keys():
                 if player.username == winner: player.chip += self.pot//len(self.winnerList)
+        print(f'nonFoldlist: {nonFoldList}\nplayers_combo: {players_combo}\nwinnerList: {self.winnerList}')
         # ======================================================================== ***temp
         if updatePotFunc:
             for winner in self.winnerList.keys():
