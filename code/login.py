@@ -54,7 +54,7 @@ def get_testing_data() -> dict:
     '''testing user data(non save)'''
     return {
         kw.TYPE: 1,  #type 1 is real player,0 is bot
-        kw.USERNAME:'test',
+        kw.USERNAME:'test_username',
         kw.CHIP: 1000000
     }
 

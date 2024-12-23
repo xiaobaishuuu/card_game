@@ -77,19 +77,24 @@ def holdem_page():
 
 def other_game_page():...
 
+
 if __name__ == '__main__':
-    try:
-        player_info = login_page(login=False)  # login = true: non login
-        while True:
-            # game = choose_game()
-            # if game == 'holdem':
-            game = Holdme()
-            game.init_player(get_bot(),player_info)
-            if holdem_page():
-                player_info = game.save_game()[2]
+    from pycallgraph import PyCallGraph
+    from pycallgraph.output import GraphvizOutput
+    with PyCallGraph(output=GraphvizOutput()):
+
+        try:
+            player_info = login_page(login=False)  # login = true: non login
+            while True:
+                # game = choose_game()
+                # if game == 'holdem':
+                game = Holdme()
+                game.init_player(get_bot(),player_info)
+                if holdem_page():
+                    player_info = game.save_game()[2]
+                    save_game(game.save_game())
+        except QuitGame:
+            if 'game' in locals():
                 save_game(game.save_game())
-    except QuitGame:
-        if 'game' in locals():
-            save_game(game.save_game())
-        pygame.quit()
-        quit()
+            pygame.quit()
+            quit()

@@ -1,4 +1,4 @@
-from Base import *
+from base import *
 
 class Holdme(BaseGame):
     """ # only calculates\n

@@ -16,7 +16,7 @@ def draw_ranking(ranked_data:list[list]):
         pygame.display.flip()
 
 def draw_introduction(isAnimation:bool = True):
-    title = TITLE_FONT.render(TITLE_TEXT,True,TITLE_FONT_COLOR)
+    title = TITLE_FONT.render(kw.TITLE_TEXT,True,TITLE_FONT_COLOR)
     init_pos = ((SCREEN_WIDTH-title.get_width())/2,(SCREEN_HEIGHT-title.get_height())/2)
     final_position = ((SCREEN_WIDTH-title.get_width())/2,150)
     if isAnimation:
