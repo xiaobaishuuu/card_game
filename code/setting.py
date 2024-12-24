@@ -1,5 +1,4 @@
-import os.path,os
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import os.path
 import pygame
 import keywords as kw
 # ====================================CAN CHANGE==========================================
