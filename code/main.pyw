@@ -30,18 +30,18 @@ def login_page(login = False) -> dict:
             login = sign_in(result[kw.USERNAME],result[kw.PASSWORD])
             temp_text = kw.SIGN_IN_SUCCESSE if login else kw.SIGN_IN_FAIL
             if invalid:
-                temp_reminder(temp_text,[SCREEN_WIDTH/2,(SCREEN_HEIGHT*350/SCREEN_HEIGHT)])
+                draw_temp_reminder(temp_text,[SCREEN_WIDTH/2,(SCREEN_HEIGHT*350/SCREEN_HEIGHT)])
         # sign up
         elif result['choice'] == kw.SIGN_UP:# sign up
             reminder_text = kw.SIGN_UP_INFO
             temp_text = kw.SIGN_UP_SUCCESSE if sign_up(result[kw.USERNAME],result[kw.PASSWORD],result[kw.C_PASSWORD]) else kw.SIGN_UP_FAIL
             if not invalid:
-                temp_reminder(temp_text,[SCREEN_WIDTH/2,(SCREEN_HEIGHT*350/SCREEN_HEIGHT)])
+                draw_temp_reminder(temp_text,[SCREEN_WIDTH/2,(SCREEN_HEIGHT*350/SCREEN_HEIGHT)])
             invalid = ''
         for input_box in loginPageInputs: input_box.content_init()
     return login
 
-def holdem_page():
+def holdem_page(game:Holdme):
     screen.fill(SCREEN_COLOR)
     game.check_game()
     while True:
@@ -77,24 +77,27 @@ def holdem_page():
 
 def other_game_page():...
 
+def main():
+    try:
+        player_info = login_page(login=False)  # login = true: non login
+        samll_blind = 0
+        while True:
+            # game = choose_game()
+            # if game == 'holdem':
+            game = Holdme(small_blind=samll_blind)
+            game.init_player(get_bot(),player_info)
+            if holdem_page(game):
+                player_info = game.save_game()[2]
+                save_game(game.save_game())
+            samll_blind += 1
+    except QuitGame:
+        if 'game' in locals():
+            save_game(game.save_game())
+        pygame.quit()
+        quit()
 
 if __name__ == '__main__':
-    from pycallgraph import PyCallGraph
-    from pycallgraph.output import GraphvizOutput
-    with PyCallGraph(output=GraphvizOutput()):
-
-        try:
-            player_info = login_page(login=False)  # login = true: non login
-            while True:
-                # game = choose_game()
-                # if game == 'holdem':
-                game = Holdme()
-                game.init_player(get_bot(),player_info)
-                if holdem_page():
-                    player_info = game.save_game()[2]
-                    save_game(game.save_game())
-        except QuitGame:
-            if 'game' in locals():
-                save_game(game.save_game())
-            pygame.quit()
-            quit()
+    # from pycallgraph import PyCallGraph
+    # from pycallgraph.output import GraphvizOutput
+    # with PyCallGraph(output=GraphvizOutput()):
+    main()

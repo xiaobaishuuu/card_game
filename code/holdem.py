@@ -1,4 +1,5 @@
 from base import *
+from queue import PriorityQueue
 
 class Holdme(BaseGame):
     """ # only calculates\n
@@ -11,7 +12,7 @@ class Holdme(BaseGame):
                  handList:list[list] = [],
                  communityCardsList:list[str] = [""] * 5,
                  gameRound = 0,
-                 small_blind = 2):
+                 small_blind = 0):
         #finish: someone win the game
         super().__init__(total_player=5)
         self.ante= ante
@@ -23,7 +24,7 @@ class Holdme(BaseGame):
         self.__big_blind = self.small_blind + 1
         self.__foldList  = [False] *5
         self.__pokerList = [f'{i}_{j}' for i in range(2,15) for j in range(1,5)]
-        self.winnerList = {}
+        self.winnerList = []
         self.__sidePot = []
         self.total_bet = 0
 
@@ -67,7 +68,6 @@ class Holdme(BaseGame):
             case 5:
                 self.check_winner()
                 return
-        print(f'=======round {self.gameRound} ===========\n{self.communityCardsList}\n{self.handList}')
         # get combo
         for player in self.playersList:
             player.combination(list(filter(lambda x:x != "",self.communityCardsList)))
@@ -92,21 +92,19 @@ class Holdme(BaseGame):
                     seat -= len(self.playersList)
 
                 # blind bet
-                # is_ante = self.pot < self.ante + self.ante/2
                 is_ante = self.total_bet < 2
 
                 if self.gameRound == 0:
                     if    seat == self.small_blind:  least_bet = round(self.ante/2)
                     elif  seat == self.__big_blind:  least_bet = self.ante
                     else: least_bet = 0
-                # print(self.playersList[seat].fold,self.playersList[seat].allin)
+
                 if not self.playersList[seat].fold and not self.playersList[seat].allin:
                     ### bot thinking
                     if ThinkingFunc and seat != 2: ThinkingFunc(seat,random.randint(1,7))
 
                     # player operation
                     result = self.playersList[seat].decision(is_ante,least_bet,self.ante,choiceFunc)
-                    print(f'{self.playersList[seat].username}: {result}')
                     self.total_bet += 1
                     self.pot += result['bet']
                     if result['choice'] == kw.FOLD: self.__foldList[seat] = self.playersList[seat].fold
@@ -118,7 +116,7 @@ class Holdme(BaseGame):
 
                     # only one player
                     if self.__foldList.count(False) == 1:
-                        self.check_winner(updatePotFunc)
+                        self.check_winner()
                         return
 
                     # add one round if someone raise
@@ -129,24 +127,21 @@ class Holdme(BaseGame):
                         break
             again -= 1
 
-    def check_winner(self,updatePotFunc = None):
-        """需要優化"""
-        print('============check winner')
-        nonFoldList = [player for player in self.playersList if not player.fold]
-        # players_combo format - {username:[combo_level,combo_high_card],...} e.g. {'tom':[5,[2,3,4,5,6]]},combo is straight 2 to 6
-        players_combo = {player.username:[kw.COMBO_RATING.index(player.combo[0]),player.combo[1]] for player in nonFoldList}
-        # maybe play a draw so include all winner
-        self.winnerList = {player:kw.COMBO_RATING[combo[0]] for player,combo in players_combo.items() if combo == max(players_combo.values())}# kw.COMBO_RATING[combo[0]] / combo
+    def check_winner(self):
+        nonFoldList = PriorityQueue()
+        # 獲得未棄牌的玩家信息
         for player in self.playersList:
-            for winner in self.winnerList.keys():
-                if player.username == winner: player.chip += self.pot//len(self.winnerList)
-        print(f'players_combo: {players_combo}\nwinnerList: {self.winnerList}')
-        # ======================================================================== ***temp
-        if updatePotFunc:
-            for winner in self.winnerList.keys():
-                for seat in range(len(self.playersList)):
-                    if self.playersList[seat].username == winner:updatePotFunc(self.pot,seat,'winner',self.pot//len(self.winnerList))
-        # ========================================================================
+            if not player.fold: nonFoldList.put((player.combo[0],player,player.combo[1]))
+        # 獲勝玩家
+        self.winnerList.append(nonFoldList.get())
+        while not nonFoldList.empty():
+            player = nonFoldList.get()
+            if player[0] != self.winnerList[-1][0]:
+                break
+            else:
+                self.winnerList.append(player)
+        for player in self.winnerList:
+            player[1].chip += self.pot//len(self.winnerList)
 
     def deal_player(self):
         '''deal hand to self.handList'''

@@ -30,8 +30,8 @@ class BaseGame:
         if real_player:
             self.__playersList.insert(2,(Player(real_player[kw.USERNAME],real_player[kw.CHIP])))
         self.__playersList = self.__playersList[:self.total_player]
-        # if len(self.__playersList) < self.total_player:
-        #     raise 'init error'
+        if len(self.__playersList) < self.total_player:
+            raise 'init error'
 
     def game_loop(self):...
 

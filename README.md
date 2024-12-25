@@ -21,8 +21,9 @@
   1.holdem 中的玩家座位，即起始顺序，与 pygame 中绘画玩家列表里的索引(index)一致
   2.使用图形视窗 或 文本界面(未实现)时，holdem()接收 pygame 或 命令行打印 的相关函数，于 Holdem 模块内进行操作，可以打印数据
 
-# 檢驗手牌强度(废弃)
+# 檢驗手牌强度
   https://suffe.cool/poker/evaluator.html
+  https://github.com/ihendley/treys
   use lookup table (LUT)
 
   prime: 2 3 5 7 11 13 17 19 23 29 31 37 41

@@ -91,3 +91,4 @@ def calculate_ranking(ori_data:dict) -> list[list]:
 
 if __name__ == '__main__':
     pass
+

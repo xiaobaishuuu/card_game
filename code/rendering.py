@@ -23,7 +23,7 @@ def draw_introduction(isAnimation:bool = True):
         move_animation(title,init_pos,final_position,1,0)
     screen.blit(title,final_position)
 
-def temp_reminder(text:str,pos:list[int,int],bg_color:tuple = LOGIN_REMINDER_BG_COLOR,posDeviation:int = 35,time:int = 1):
+def draw_temp_reminder(text:str,pos:list[int,int],bg_color:tuple = LOGIN_REMINDER_BG_COLOR,posDeviation:int = 35,time:int = 1):
     reminder = render_reminder(text,bg_color,20)
     pos[0] -= reminder.get_width()/2
     move_animation(reminder,pos,(pos[0],pos[1] - posDeviation),time,alpha_end = 0)
@@ -61,7 +61,7 @@ def render_reminder(text:str,bg_color:tuple[int,int,int],padding:int = 10,width:
     reminder_bg.blit(reminder,((reminder_bg.get_width()-reminder.get_width())/2,(reminder_bg.get_height()-reminder.get_height())/2))
     return reminder_bg
 
-def render_betting_info(bet:int) -> pygame.Surface:
+def render_pot_info(bet:int) -> pygame.Surface:
     chipList = {
         'black' :100000, # black : 100000 =< bet
         'yellow':50000,  # yellow:  50000 =< bet < 100000
@@ -83,14 +83,14 @@ def render_betting_info(bet:int) -> pygame.Surface:
 def draw_combo(playerCombination:list):
     '''draw all players combo by using render_reminder()'''
     for player in playerCombination:
-        reminder = render_reminder(player[0],COMBO_REMINDER_BG_COLOR,COMBO_REMINDER_PADDING)
-        if player == playerCombination[2] and player[0]:
+        reminder = render_reminder(player[1],COMBO_REMINDER_BG_COLOR,COMBO_REMINDER_PADDING)
+        if player == playerCombination[2] and player[1]:
             position = ((SCREEN_WIDTH - reminder.get_width())/2,((9*(TABLE_RECT.y+TABLE_HEIGHT))+(49*TABLE_RECT.y))/58 + POKER_PLACE_HEIGHT + GAP)
             screen.blit(reminder,position)
         elif CHEATING_MODE:...
 
 def draw_pot(pot:int):
-    pot_reminder = render_betting_info(pot)
+    pot_reminder = render_pot_info(pot)
     screen.blit(pot_reminder,((SCREEN_WIDTH-pot_reminder.get_width())/2 - (CHIP_WIDTH - CHIP_WIDTH/1.5),TABLE_RECT.y + TABLE_HEIGHT/2))
 
 def draw_betting(pot:int,seat:int,choice:str,bet:int):
@@ -114,13 +114,13 @@ def draw_betting(pot:int,seat:int,choice:str,bet:int):
 
 def draw_blind(small_blind = 1):...
 
-def draw_winner(winnerList:dict,waiting_time:int = 20):
+def draw_winner(winnerList:list,waiting_time:int = 20):
     #暫時寫的垃圾
     y = SCREEN_HEIGHT*0.49
     winner_text = render_reminder('winner:',(0,0,0))
     screen.blit(winner_text,((SCREEN_WIDTH-winner_text.get_width())/2,y))
-    for winner in winnerList.items():
-        player_info_text = render_reminder(f'{str(winner[0])} ({str(winner[1])})', (77, 159, 249))
+    for winner in winnerList:
+        player_info_text = render_reminder(f'{str(winner[1].username)} ({str(winner[2])})', (77, 159, 249))
         y += player_info_text.get_height()
         screen.blit(player_info_text,((SCREEN_WIDTH-player_info_text.get_width())/2,y))
     pygame.display.flip()
