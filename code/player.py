@@ -1,6 +1,6 @@
 import keywords as kw
 import random
-from evalutor import Card,Evaluator
+from evalutor import Card,Evaluator,evaluator
 
 class Player():
 
@@ -57,7 +57,6 @@ class Player():
         return {'choice':choice,'bet':bet}
 
     def combination(self,community:list):
-        evaluator = Evaluator()
         community = list(filter(lambda x: x,community))
         rank_int = evaluator.evaluate([Card.new(card) for card in self.hand],[Card.new(card) for card in community])
         combo = evaluator.get_rank_string(rank_int)

@@ -151,8 +151,11 @@ class LookupTable:
         # create the lookup table in piecewise fashion
         # this will call straights and high cards method,
         # we reuse some of the bit sequences
+        # import time
+        # a = time.time()
         self.flushes()
         self.multiples()
+        # print((time.time()-a)*1000)
 
     def flushes(self) -> None:
         """
@@ -454,3 +457,5 @@ class Evaluator:
         else:
             raise Exception("Inavlid hand rank, cannot return rank class")
         return LookupTable.RANK_CLASS_TO_STRING[class_int]
+
+evaluator = Evaluator()
