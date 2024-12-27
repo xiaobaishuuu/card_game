@@ -4,12 +4,12 @@ import keywords as kw
 
 path = os.path.dirname(__file__).replace('code','data') + '\\player.json'
 
-def load_players(path = path) -> list[dict]:
+def load_players(path:str = path) -> list[dict]:
     '''return a list include player data [{username:...,},{...}...]'''
     with open(path,mode='r',encoding='utf-8') as fp:
         return json.load(fp)[kw.PLAYER_DATA]
 
-def sign_in(username,password):
+def sign_in(username:str,password:str):
     """return player info after login successful,\n
        else return False"""
     for player in load_players():
@@ -19,7 +19,7 @@ def sign_in(username,password):
             return player
     return False
 
-def sign_up(username,password,c_password,real_player:bool = True) -> bool:
+def sign_up(username:str,password:str,c_password:str,real_player:bool = True) -> bool:
     def check_password(password:str):
         letter = False
         digit = False
@@ -91,4 +91,3 @@ def calculate_ranking(ori_data:dict) -> list[list]:
 
 if __name__ == '__main__':
     pass
-

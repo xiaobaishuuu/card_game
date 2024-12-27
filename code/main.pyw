@@ -95,6 +95,8 @@ def main():
             save_game(game.save_game())
         pygame.quit()
         quit()
+    except Exception:
+        main()
 
 if __name__ == '__main__':
     # from pycallgraph import PyCallGraph
