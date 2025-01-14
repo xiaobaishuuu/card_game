@@ -19,12 +19,12 @@ SIGN_IN = 'sign in'
 SIGN_UP = 'sign up'
 
 #login info
-SIGN_IN_INFO = 'Please login'
+SIGN_IN_INFO = 'please login'
 SIGN_IN_SUCCESSE = 'sign in successful'
-SIGN_IN_FAIL = 'User or password invalid'
-SIGN_UP_INFO = "sign up (Password must be 8 characters long with numbers and letters)"
+SIGN_IN_FAIL = 'user or password invalid'
+SIGN_UP_INFO = "sign up (password must be 8 characters long with numbers and letters)"
 SIGN_UP_SUCCESSE = 'sign up successful'
-SIGN_UP_FAIL = 'User exist or password invalid'
+SIGN_UP_FAIL = 'user exist or password invalid'
 
 # ====================================NO CHANGE==========================================
 # json key,no space

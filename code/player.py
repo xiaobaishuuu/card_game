@@ -1,6 +1,6 @@
 import keywords as kw
 import random
-from evalutor import Card,Evaluator,evaluator
+from evaluator import Card,evaluator
 
 class Player():
 
